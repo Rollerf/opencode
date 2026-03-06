@@ -1,0 +1,9 @@
+name: "openspec-workflow"
+display_name: "OpenSpec Workflow"
+description: "Flujo integral de changes OpenSpec para planning, implementacion y verificacion."
+default_prompt: "Usa $openspec-workflow para avanzar un change de OpenSpec de inicio a archive."
+compatibility:
+  codex: true
+  github_copilot: true
+invocation:
+  explicit_tag: "$openspec-workflow"

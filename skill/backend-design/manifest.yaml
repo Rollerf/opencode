@@ -1,0 +1,9 @@
+name: "backend-design"
+display_name: "Backend Design Guardrails"
+description: "Reglas de arquitectura para handlers Go, casos de uso, storage e infraestructura Pulumi."
+default_prompt: "Usa $backend-design para mantener limites de arquitectura y convenciones del backend."
+compatibility:
+  codex: true
+  github_copilot: true
+invocation:
+  explicit_tag: "$backend-design"
