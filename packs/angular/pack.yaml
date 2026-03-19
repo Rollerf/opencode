@@ -1,0 +1,35 @@
+name: angular
+description: Angular local development guidance.
+context:
+  languages: [typescript, html, css]
+  frameworks: [angular]
+  deployment_owner: external-operator
+  ui_ux_template_paths:
+    - packs/angular/templates/playwright.config.ts
+    - packs/angular/templates/tests/ui/home.spec.ts
+local_only: true
+constraints:
+  - Keep container components thin and move stateful logic into services.
+  - Keep strict typing enabled for inputs, outputs, and API contracts.
+  - Preserve accessibility and responsive behavior on UI changes.
+  - For UI/UX work, run the app and validate key screens in a browser automation flow before finishing.
+  - Capture and review desktop and mobile viewport evidence (screenshots or traces) for major UI changes.
+verification_commands:
+  test: "npm test -- --watch=false"
+  build: "npm run build"
+  lint: "npm run lint"
+  ui_smoke: "npx playwright test --config=playwright.config.ts"
+ui_ux_commands:
+  dev_server: "npm start -- --host 0.0.0.0 --port 4200"
+  snapshots: "npx playwright test tests/ui --config=playwright.config.ts"
+  snapshots_update: "npx playwright test tests/ui --config=playwright.config.ts --update-snapshots"
+  headed_review: "npx playwright test tests/ui --config=playwright.config.ts --headed"
+tdd_commands:
+  red: "npm test -- --watch=false --browsers=ChromeHeadless"
+  green: "npm test -- --watch=false --browsers=ChromeHeadless"
+  refactor: "npm test -- --watch=false"
+safety:
+  prohibited_actions:
+    - deploy
+    - production-feature-flag-toggle
+    - release-approval

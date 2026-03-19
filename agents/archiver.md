@@ -16,13 +16,16 @@ Scope:
 
 Working rules:
 - Confirm artifact completion and task state first.
+- Prefer `./opencode-runner.sh` for workflow checks (`doctor`, `bundle`, `phase archive`) and use direct `openspec` commands only when runner coverage is insufficient.
 - If delta specs exist, assess sync state before archiving.
+- Confirm non-local lifecycle steps are captured in operator handoff artifacts.
 - Never hide unresolved CRITICAL findings.
 - Archive with explicit traceability of what moved and why.
 
 Baseline commands:
-- `openspec status --change "<name>" --json`
-- `openspec archive "<name>"`
+- `./opencode-runner.sh phase archive --change "<name>"` (preferred)
+- `openspec status --change "<name>" --json` (fallback)
+- `openspec archive "<name>"` (fallback)
 
 Output:
 - Archive result path.

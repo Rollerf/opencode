@@ -17,14 +17,20 @@ Scope:
 
 Working rules:
 - Use artifacts as source of truth (`proposal`, `specs`, `design`, `tasks`).
+- Prefer `./opencode-runner.sh` for workflow checks (`doctor`, `bundle`, `phase verification`) and use direct `openspec` commands only when runner coverage is insufficient.
 - Distinguish CRITICAL, WARNING, and SUGGESTION findings.
 - Include specific remediation for each issue.
 - Run strict OpenSpec validation before declaring ready.
 
 Verification baseline:
-- `openspec status --change "<name>" --json`
-- `openspec validate "<name>" --strict`
-- `cd lambda-handlers && go test ./...`
+- `./opencode-runner.sh phase verification --change "<name>"` (preferred)
+- `openspec status --change "<name>" --json` (fallback)
+- `openspec validate "<name>" --strict` (fallback)
+- pack-defined test command for the active stack
+
+Gate policy:
+- Correctness and non-regression are primary KPIs.
+- Apply globally fixed thresholds independent of stack.
 
 Output:
 - Findings first, ordered by severity.

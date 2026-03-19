@@ -1,0 +1,87 @@
+version: 1
+agents:
+  - id: planner
+    path: agents/planner.md
+    phase_scope: planning
+    specialization: openspec-artifacts
+    expected_inputs:
+      - change_name
+      - proposal_or_specs_or_design_or_tasks_request
+    expected_outputs:
+      - artifact_updates
+      - open_questions
+  - id: implementer
+    path: agents/implementer.md
+    phase_scope: implementation
+    specialization: task-execution
+    expected_inputs:
+      - change_name
+      - tasks_md
+      - stack_pack
+    expected_outputs:
+      - code_changes
+      - tdd_evidence
+      - task_progress
+  - id: verifier
+    path: agents/verifier.md
+    phase_scope: verification
+    specialization: readiness-validation
+    expected_inputs:
+      - change_name
+      - specs
+      - tasks
+      - implementation_evidence
+    expected_outputs:
+      - findings_by_severity
+      - traceability_status
+  - id: archiver
+    path: agents/archiver.md
+    phase_scope: archive
+    specialization: change-closure
+    expected_inputs:
+      - change_name
+      - verification_result
+    expected_outputs:
+      - archive_result
+      - follow_up_actions
+  - id: code-documentation-subagent
+    path: agents/subagent/code-documentation-subagent.md
+    phase_scope: cross-phase
+    specialization: documentation
+    expected_inputs:
+      - doc_scope
+    expected_outputs:
+      - docs_changes
+  - id: design-doc-subagent
+    path: agents/subagent/design-doc-subagent.md
+    phase_scope: planning
+    specialization: design-doc
+    expected_inputs:
+      - design_problem
+    expected_outputs:
+      - design_document
+  - id: feature-iteration-subagent
+    path: agents/subagent/feature-iteration-subagent.md
+    phase_scope: implementation
+    specialization: feature-iteration
+    expected_inputs:
+      - existing_feature
+    expected_outputs:
+      - incremental_improvements
+  - id: pulumi-infrastructure-subagent
+    path: agents/subagent/pulumi-infrastructure-subagent.md
+    phase_scope: implementation
+    specialization: infrastructure
+    expected_inputs:
+      - infra_request
+    expected_outputs:
+      - pulumi_changes
+  - id: tdd-tests-subagent
+    path: agents/subagent/tdd-tests-subagent.md
+    phase_scope: implementation
+    specialization: tests
+    expected_inputs:
+      - behavior_change
+      - stack_pack
+    expected_outputs:
+      - red_green_refactor_tests

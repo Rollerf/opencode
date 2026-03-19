@@ -1,0 +1,11 @@
+id: java-onprem-service-regression-guard
+phase_coverage:
+  - implementation
+  - verification
+stack: java-onprem
+description: Add behavior in service layer and prove no regressions with tests.
+expected:
+  - red_first_test
+  - green_minimal_change
+  - refactor_safe
+  - mvnw_test_pass

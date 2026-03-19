@@ -1,0 +1,11 @@
+id: angular-component-state-change
+phase_coverage:
+  - implementation
+  - verification
+stack: angular
+description: Change component behavior with tests and confirm responsive-safe refactor.
+expected:
+  - red_first_test
+  - green_minimal_change
+  - refactor_safe
+  - npm_test_pass

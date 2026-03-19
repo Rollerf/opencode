@@ -1,0 +1,28 @@
+name: java-onprem
+description: Java on-premise local development guidance.
+context:
+  languages: [java]
+  platforms: [onprem]
+  deployment_owner: external-operator
+  architecture_styles: [layered, onion]
+  architecture_source: "Use the active project OpenSpec artifacts as source of truth (design/specs/tasks)."
+local_only: true
+constraints:
+  - Support layered and onion architectures for Java backends.
+  - Confirm selected architecture from active OpenSpec artifacts before coding.
+  - Keep business logic outside transport adapters/controllers.
+  - Prefer explicit transaction boundaries in service layer.
+  - Keep environment-specific config outside source code.
+verification_commands:
+  test: "./mvnw test"
+  build: "./mvnw -DskipTests package"
+  lint: "./mvnw -q checkstyle:check"
+tdd_commands:
+  red: "./mvnw -Dtest=*Test test"
+  green: "./mvnw -Dtest=*Test test"
+  refactor: "./mvnw test"
+safety:
+  prohibited_actions:
+    - deploy
+    - production-db-change
+    - release-approval

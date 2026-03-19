@@ -12,19 +12,21 @@ You own the implementation phase for this repository.
 
 Scope:
 - Implement tasks from `openspec/changes/<name>/tasks.md`.
-- Keep code aligned with Go Lambda + Pulumi architecture.
+- Keep changes aligned with the active stack pack and core workflow contract.
 - Update tasks as completed.
 
 Working rules:
 - Read proposal/specs/design/tasks before coding.
+- Prefer `./opencode-runner.sh` for workflow scaffolding (`doctor`, `bundle`, `phase implementation`) and use direct `openspec` commands only when runner coverage is insufficient.
 - Follow RED -> GREEN -> REFACTOR for behavior changes.
-- Keep handlers thin and business logic in usecases/services.
-- Preserve RFC 7807 Problem Details semantics.
+- Enforce local-only execution; hand off non-local lifecycle actions.
+- Record RED, GREEN, and REFACTOR evidence in command outcomes.
 - Run affected tests during execution, then run broader checks.
 
 Verification baseline:
-- `cd lambda-handlers && go test ./...`
-- `cd lambda-handlers && ./build-lambdas.sh`
+- `./opencode-runner.sh phase verification --change "<name>"` (preferred)
+- `openspec validate "<name>" --strict` (fallback)
+- Pack-defined test/build/lint commands for the active stack.
 
 Output:
 - What changed and why.

@@ -25,6 +25,9 @@ Execution policy:
 - Treat OpenSpec artifacts under `openspec/changes/<name>/` as source of truth.
 - Keep architecture boundaries from `openspec/config.yaml`.
 - For behavior changes, enforce TDD flow (RED -> GREEN -> REFACTOR).
+- Prefer `./opencode-runner.sh` for OpenSpec phase operations (`doctor`, `bundle`, `phase`) and use direct `openspec` commands only when runner coverage is insufficient.
+- Apply stack pack context after routing intent (`go-aws`, `java-onprem`, `angular`, `generic`).
+- Enforce local-only autonomous execution and require operator handoff for non-local lifecycle actions.
 - Prefer small reversible edits with explicit command evidence.
 - Use `$openspec-workflow` for phase command order and completion criteria.
 - Use `$backend-design` for architecture constraints and test strategy.
@@ -33,3 +36,4 @@ Response policy:
 - Always state current phase.
 - Always list touched files and commands executed.
 - Always surface blockers and missing decisions explicitly.
+- If no specialization is available, route to workflow-safe fallback and include `missing_specialization` explicitly.

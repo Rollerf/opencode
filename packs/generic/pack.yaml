@@ -1,0 +1,22 @@
+name: generic
+description: Fallback pack for unsupported stacks with safe defaults.
+context:
+  deployment_owner: external-operator
+local_only: true
+constraints:
+  - Keep changes minimal and reversible.
+  - Require explicit assumptions for unknown tooling.
+  - Do not execute non-local lifecycle actions.
+verification_commands:
+  test: "<project-test-command>"
+  build: "<project-build-command>"
+  lint: "<project-lint-command>"
+tdd_commands:
+  red: "<run-failing-tests-command>"
+  green: "<run-target-tests-command>"
+  refactor: "<run-full-tests-command>"
+safety:
+  prohibited_actions:
+    - deploy
+    - release
+    - production-change

@@ -1,0 +1,13 @@
+id: cross-stack-open-change-with-tdd
+phase_coverage:
+  - planning
+  - implementation
+  - verification
+stack: cross-stack
+description: Build a small behavior change using full OpenSpec and TDD evidence.
+expected:
+  - proposal_updated
+  - spec_requirement_with_scenario
+  - tasks_progressed
+  - red_green_refactor_evidence
+  - strict_validation_pass

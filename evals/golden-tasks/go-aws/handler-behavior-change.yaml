@@ -1,0 +1,11 @@
+id: go-aws-handler-behavior-change
+phase_coverage:
+  - implementation
+  - verification
+stack: go-aws
+description: Introduce a behavior change in handler/usecase path with RFC 7807 preserved.
+expected:
+  - red_first_test
+  - green_minimal_change
+  - refactor_safe
+  - go_test_pass

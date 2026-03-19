@@ -18,8 +18,9 @@ Scope:
 Working rules:
 - Identify a single active change before editing.
 - Read existing artifacts first and preserve consistency.
+- Prefer `./opencode-runner.sh` for workflow scaffolding (`doctor`, `bundle`, `phase planning`) and fall back to direct `openspec` commands only when needed.
 - Mention API contract, security implications, and Pulumi/IaC impact.
-- Include exact verification commands in tasks (`go test ./...`, lambda build).
+- Include exact verification commands and TDD commands from the active stack pack.
 
 Output:
 - Summary of artifact changes.

@@ -1,0 +1,24 @@
+name: go-aws
+description: Go backend and AWS-oriented local development guidance.
+context:
+  languages: [go]
+  platforms: [aws]
+  deployment_owner: external-operator
+local_only: true
+constraints:
+  - Keep Handler -> UseCase -> Storage boundaries.
+  - Preserve RFC 7807 Problem Details semantics.
+  - Avoid hard-coded secrets and account-specific values.
+verification_commands:
+  test: "go test ./..."
+  build: "go build ./..."
+  lint: "go vet ./..."
+tdd_commands:
+  red: "go test ./..."
+  green: "go test ./..."
+  refactor: "go test ./..."
+safety:
+  prohibited_actions:
+    - deploy
+    - apply-infra
+    - production-release

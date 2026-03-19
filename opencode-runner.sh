@@ -2,10 +2,20 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-ROOT_DIR="$(cd -- "${SCRIPT_DIR}/.." && pwd)"
-OPENCODE_DIR="${ROOT_DIR}/.opencode"
-AGENTS_DIR="${OPENCODE_DIR}/agents"
-SKILLS_DIR="${OPENCODE_DIR}/skill"
+if [[ -d "${SCRIPT_DIR}/openspec" ]]; then
+  ROOT_DIR="${SCRIPT_DIR}"
+else
+  ROOT_DIR="$(cd -- "${SCRIPT_DIR}/.." && pwd)"
+fi
+if [[ -d "${ROOT_DIR}/agents" && -d "${ROOT_DIR}/skill" ]]; then
+  OPENCODE_DIR="${ROOT_DIR}"
+  AGENTS_DIR="${ROOT_DIR}/agents"
+  SKILLS_DIR="${ROOT_DIR}/skill"
+else
+  OPENCODE_DIR="${ROOT_DIR}/.opencode"
+  AGENTS_DIR="${OPENCODE_DIR}/agents"
+  SKILLS_DIR="${OPENCODE_DIR}/skill"
+fi
 
 fail() {
   echo "Error: $*" >&2
@@ -117,12 +127,11 @@ run_or_print() {
 }
 
 doctor_cmd() {
-  [[ -d "$OPENCODE_DIR" ]] || fail "Missing directory: .opencode"
-  [[ -d "$AGENTS_DIR" ]] || fail "Missing directory: .opencode/agents"
-  [[ -d "$SKILLS_DIR" ]] || fail "Missing directory: .opencode/skill"
+  [[ -d "$AGENTS_DIR" ]] || fail "Missing agents directory: ${AGENTS_DIR#${ROOT_DIR}/}"
+  [[ -d "$SKILLS_DIR" ]] || fail "Missing skill directory: ${SKILLS_DIR#${ROOT_DIR}/}"
 
   require_cmd openspec
-  echo "ok: .opencode structure"
+  echo "ok: runner structure (${OPENCODE_DIR#${ROOT_DIR}/})"
   echo "ok: openspec command found ($(openspec --version 2>/dev/null || echo unknown))"
 
   if openspec status --json >/dev/null 2>&1; then
@@ -361,11 +370,11 @@ usage() {
 OpenCode helper runner for this repository.
 
 Usage:
-  .opencode/opencode-runner.sh doctor
-  .opencode/opencode-runner.sh list agents
-  .opencode/opencode-runner.sh list skills
-  .opencode/opencode-runner.sh bundle [options]
-  .opencode/opencode-runner.sh phase <planning|implementation|verification|archive> --change <name> [--dry-run]
+  ./opencode-runner.sh doctor
+  ./opencode-runner.sh list agents
+  ./opencode-runner.sh list skills
+  ./opencode-runner.sh bundle [options]
+  ./opencode-runner.sh phase <planning|implementation|verification|archive> --change <name> [--dry-run]
 
 Bundle options:
   --phase <phase>              planning|implementation|verification|archive
@@ -377,10 +386,10 @@ Bundle options:
   --no-references              Skip skill references/*.md
 
 Examples:
-  .opencode/opencode-runner.sh doctor
-  .opencode/opencode-runner.sh list agents
-  .opencode/opencode-runner.sh bundle --phase planning --change my-change --user-prompt "Draft proposal"
-  .opencode/opencode-runner.sh phase verification --change my-change --dry-run
+  ./opencode-runner.sh doctor
+  ./opencode-runner.sh list agents
+  ./opencode-runner.sh bundle --phase planning --change my-change --user-prompt "Draft proposal"
+  ./opencode-runner.sh phase verification --change my-change --dry-run
 EOF
 }
 

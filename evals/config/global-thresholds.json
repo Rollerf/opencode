@@ -1,0 +1,11 @@
+{
+  "first_pass_correctness_min": 95,
+  "regressions_max": 0,
+  "tdd_red_first_rate_min": 100,
+  "tdd_green_pass_rate_min": 100,
+  "tdd_refactor_safety_rate_min": 95,
+  "critical_scenario_coverage_min": 100,
+  "total_scenario_coverage_min": 95,
+  "strict_validation_pass_rate_min": 100,
+  "high_critical_security_findings_max": 0
+}
