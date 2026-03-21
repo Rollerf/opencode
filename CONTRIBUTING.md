@@ -12,6 +12,18 @@ This project defines a cross-cutting platform of agents and skills for OpenCode 
 4. Do not automate non-local actions (staging/production are handled by an external operator).
 5. Do not lower global quality thresholds for a specific stack.
 6. Use Conventional Commits for every commit in English.
+7. Use trunk-based development (short-lived branches, PR to `main`, no long-lived integration branches).
+
+## Branching strategy (trunk-based)
+
+1. Branch from `main` using a short-lived branch (`feat/...`, `fix/...`, `chore/...`).
+2. Keep changes small and open a PR to `main`.
+3. Require passing checks before merge:
+   - `.github/workflows/dependency-review.yml`
+   - `.github/workflows/codeql.yml`
+   - `./scripts/validate/run-all.sh`
+4. Prefer squash merge to keep history clean.
+5. Never commit directly to `main` except controlled emergency fixes.
 
 ## Recommended flow
 
@@ -35,6 +47,8 @@ This project defines a cross-cutting platform of agents and skills for OpenCode 
 
 ./scripts/validate/contracts.sh
 ./scripts/validate/tdd-contract.sh
+./scripts/validate/angular-ui-contract.sh
+./scripts/validate/run-all.sh
 ./scripts/evals/run-all.sh
 openspec validate "<change>" --strict
 ```

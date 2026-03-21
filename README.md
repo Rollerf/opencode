@@ -31,6 +31,7 @@ Routing is intent-first:
 
 - **Mandatory TDD** for behavior changes: RED -> GREEN -> REFACTOR.
 - **Conventional Commits in English** for all repositories and stacks.
+- **Trunk-based development**: short-lived branches and PR-based integration to `main`.
 - **Correctness and no regression** as the main KPI.
 - **Global thresholds** for any stack.
 - **Local-only execution**: staging/production actions are not automated.
