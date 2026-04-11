@@ -2,3 +2,6 @@
 [submodule ".opencode"]
 	path = .opencode
 	url = https://github.com/Rollerf/opencode.git
+[submodule "third_party/n8n_skills"]
+	path = third_party/n8n_skills
+	url = https://github.com/czlonkowski/n8n-skills.git

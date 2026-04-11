@@ -13,6 +13,7 @@ Routing is deterministic and intent-first.
 7. Feature iteration/refactor -> `subagent/feature-iteration-subagent.md`.
 8. Pulumi/IaC requests -> `subagent/pulumi-infrastructure-subagent.md`.
 9. TDD test planning/creation -> `subagent/tdd-tests-subagent.md`.
+10. n8n workflow design/debug/validation requests -> apply `$n8n-gateway` then `$n8n-mcp-tools-expert`.
 
 ## Secondary Selector: Stack Pack
 
@@ -24,6 +25,19 @@ After intent is resolved, apply the active stack pack:
 - `packs/generic`
 
 Stack pack influence is limited to constraints, command sets, and test strategy.
+
+## Optional n8n Skill Routing
+
+Apply n8n skills only when intent is explicit or strongly implied.
+
+Trigger examples:
+
+- "build an n8n workflow"
+- "fix n8n validation errors"
+- "configure n8n node expressions"
+- "use n8n-mcp tools"
+
+Default behavior for non-n8n requests: do not load n8n skills.
 
 ## Fallback Policy
 

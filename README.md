@@ -17,7 +17,7 @@ Its goal is to provide a shared base of agents, skills, quality rules, and workf
 The platform is made up of 5 parts:
 
 1. `agents/`: agents by phase (planner, implementer, verifier, archiver, orchestrator, and sub-agents).
-2. `.opencode/skill/`: reusable skills (`openspec-workflow`, `backend-design`).
+2. `skill/`: reusable skills (`openspec-workflow`, `backend-design`, optional n8n skills).
 3. `core/`: shared workflow contract, agent catalog, routing policy, and templates.
 4. `packs/`: extensions by stack (`go-aws`, `java-onprem`, `angular`, `generic`).
 5. `evals/` + `scripts/`: automated evaluation and validation of contracts and quality thresholds.
@@ -41,7 +41,8 @@ Routing is intent-first:
 
 ```text
 agents/                    # Agents by phase and sub-agents
-.opencode/skill/           # Reusable skills
+skill/                     # Reusable skills
+third_party/n8n_skills/    # Optional external n8n skills source (submodule)
 core/                      # Shared contract and templates
 packs/                     # Pack per stack (go-aws, java-onprem, angular, generic)
 governance/                # Local-only matrix, security baseline, handoff, audit
@@ -88,6 +89,7 @@ This README is the canonical command reference for `opencode-runner.sh`.
 ./scripts/validate/contracts.sh
 ./scripts/validate/tdd-contract.sh
 ./scripts/validate/angular-ui-contract.sh
+./scripts/validate/n8n-skills-contract.sh
 ```
 
 5) Run quality harness:
@@ -98,7 +100,21 @@ This README is the canonical command reference for `opencode-runner.sh`.
 
 ## Global quality thresholds
 
-Definidos en `evals/config/global-thresholds.json`.
+Defined in `evals/config/global-thresholds.json`.
+
+## Optional n8n support
+
+This repository supports optional n8n skills through `third_party/n8n_skills`.
+
+- Default behavior: n8n skills are not loaded for non-n8n requests.
+- Activation: request n8n explicitly (for example, "build an n8n workflow").
+- Gateway strategy: `$n8n-gateway` -> `$n8n-mcp-tools-expert`.
+
+If the submodule is not initialized in a consumer project:
+
+```bash
+git submodule update --init --recursive third_party/n8n_skills
+```
 
 - first-pass correctness >= 95
 - regressions = 0
