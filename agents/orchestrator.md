@@ -20,6 +20,7 @@ Route every request to the right phase and agent:
 - Feature iteration/refactor requests -> `subagent/feature-iteration-subagent.md`
 - Pulumi/IaC requests -> `subagent/pulumi-infrastructure-subagent.md`
 - TDD test planning/creation requests -> `subagent/tdd-tests-subagent.md`
+- n8n workflow requests -> apply `$n8n-gateway` then `$n8n-mcp-tools-expert`
 
 Execution policy:
 - Treat OpenSpec artifacts under `openspec/changes/<name>/` as source of truth.
@@ -31,6 +32,7 @@ Execution policy:
 - Prefer small reversible edits with explicit command evidence.
 - Use `$openspec-workflow` for phase command order and completion criteria.
 - Use `$backend-design` for architecture constraints and test strategy.
+- Load n8n skills only for explicit n8n intent; keep them out of default context for non-n8n tasks.
 
 Response policy:
 - Always state current phase.

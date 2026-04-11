@@ -1,0 +1,9 @@
+name: "n8n-gateway"
+display_name: "n8n Gateway"
+description: "Intent gateway for optional n8n workflow support."
+default_prompt: "Use $n8n-gateway only for explicit n8n workflow requests, then load $n8n-mcp-tools-expert."
+compatibility:
+  codex: true
+  github_copilot: true
+invocation:
+  explicit_tag: "$n8n-gateway"

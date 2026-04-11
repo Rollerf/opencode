@@ -48,6 +48,7 @@ This project defines a cross-cutting platform of agents and skills for OpenCode 
 ./scripts/validate/contracts.sh
 ./scripts/validate/tdd-contract.sh
 ./scripts/validate/angular-ui-contract.sh
+./scripts/validate/n8n-skills-contract.sh
 ./scripts/validate/run-all.sh
 ./scripts/evals/run-all.sh
 openspec validate "<change>" --strict
@@ -69,6 +70,7 @@ Checklist:
 Checklist:
 
 - [ ] Edit the skill in `skill/<name>/`.
+- [ ] For n8n wrappers, keep references aligned with `third_party/n8n_skills`.
 - [ ] Keep instructions aligned with OpenSpec and the core contract.
 - [ ] If you add references, include them in `skill/<name>/references/`.
 - [ ] Verify that agents depending on the skill remain consistent.

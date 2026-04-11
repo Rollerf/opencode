@@ -1,0 +1,9 @@
+name: "n8n-mcp-tools-expert"
+display_name: "n8n MCP Tools Expert"
+description: "Expert guidance for n8n-mcp tool selection, validation, and workflow assembly."
+default_prompt: "Use $n8n-mcp-tools-expert for n8n workflow building, node search, and validation with n8n-mcp tools."
+compatibility:
+  codex: true
+  github_copilot: true
+invocation:
+  explicit_tag: "$n8n-mcp-tools-expert"
