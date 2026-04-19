@@ -17,7 +17,7 @@ Its goal is to provide a shared base of agents, skills, quality rules, and workf
 The platform is made up of 5 parts:
 
 1. `agents/`: agents by phase (planner, implementer, verifier, archiver, orchestrator, and sub-agents).
-2. `skill/`: reusable skills (`openspec-workflow`, `backend-design`, optional n8n skills).
+2. `skill/`: reusable skills (`openspec-workflow`, `backend-design`, `web-ui-ux`, optional n8n skills).
 3. `core/`: shared workflow contract, agent catalog, routing policy, and templates.
 4. `packs/`: extensions by stack (`go-aws`, `java-onprem`, `angular`, `generic`).
 5. `evals/` + `scripts/`: automated evaluation and validation of contracts and quality thresholds.
@@ -69,6 +69,7 @@ This README is the canonical command reference for `opencode-runner.sh`.
 ```bash
 ./opencode-runner.sh list agents
 ./opencode-runner.sh list skills
+./opencode-runner.sh bundle --phase implementation --pack angular --user-prompt "Polish the Angular dashboard UI"
 ```
 
 3) Run OpenSpec phase in dry-run mode:
@@ -97,6 +98,13 @@ This README is the canonical command reference for `opencode-runner.sh`.
 ```bash
 ./scripts/evals/run-all.sh
 ```
+
+## Web UI / Angular frontend guidance
+
+- Use `$web-ui-ux` for frontend/UI tasks involving layout, visual polish, responsive behavior, state coverage, or component reuse.
+- Under `packs/angular`, frontend-only work should use `$web-ui-ux` and should not load `$backend-design`.
+- If a request explicitly combines Angular UI work with backend changes, the guidance set may include both `$web-ui-ux` and `$backend-design`.
+- Future web packs (for example Astro) should reuse `web-ui-ux` for cross-framework UI quality guidance and add framework-specific overlays separately.
 
 ## Global quality thresholds
 
@@ -137,6 +145,7 @@ git submodule update --init --recursive third_party/n8n_skills
 ## Create or extend capability
 
 - New agent: add file in `agents/` and register metadata in `core/agent-catalog.yaml`.
+- New skill: create `skill/<name>/manifest.yaml` + `SKILL.md` and validate its routing/pack integration.
 - New stack pack: create `packs/<stack>/pack.yaml` + `README.md` with verification and TDD commands.
 - New global rule: update `core/workflow-contract.md` and validation scripts in `scripts/validate/`.
 - New quality metric: update `evals/config/global-thresholds.json` and `scripts/evals/run-all.sh`.

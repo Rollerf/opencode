@@ -26,6 +26,16 @@ After intent is resolved, apply the active stack pack:
 
 Stack pack influence is limited to constraints, command sets, and test strategy.
 
+## Angular frontend/UI requests
+
+For Angular frontend/UI requests:
+
+- Keep routing intent-first and select `implementer.md` for implementation work.
+- Apply the Angular pack as the active stack context.
+- Activate `$web-ui-ux` for frontend/UI, responsive, visual polish, component, layout, and design-system intent.
+- Exclude `$backend-design` for frontend-only Angular work.
+- Allow `$backend-design` only when backend scope is explicit in the request.
+
 ## Optional n8n Skill Routing
 
 Apply n8n skills only when intent is explicit or strongly implied.
