@@ -24,6 +24,7 @@ Route every request to the right phase and agent:
 
 Execution policy:
 - Treat OpenSpec artifacts under `openspec/changes/<name>/` as source of truth.
+- Treat each OpenSpec change as work that belongs on its own `feature/*` branch created from `develop`.
 - Keep architecture boundaries from `openspec/config.yaml`.
 - For behavior changes, enforce TDD flow (RED -> GREEN -> REFACTOR).
 - Prefer `./opencode-runner.sh` for OpenSpec phase operations (`doctor`, `bundle`, `phase`) and use direct `openspec` commands only when runner coverage is insufficient.

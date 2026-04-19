@@ -31,11 +31,21 @@ Routing is intent-first:
 
 - **Mandatory TDD** for behavior changes: RED -> GREEN -> REFACTOR.
 - **Conventional Commits in English** for all repositories and stacks.
-- **Trunk-based development**: short-lived branches and PR-based integration to `main`.
+- **Gitflow**: feature branches start from `develop`, reintegrate into `develop`, release from `develop`, merge to `main`, then sync `main` back into `develop`.
 - **Correctness and no regression** as the main KPI.
 - **Global thresholds** for any stack.
 - **Local-only execution**: staging/production actions are not automated.
 - **Mandatory handoff** to an external operator when the flow leaves local.
+
+## Branching strategy (gitflow)
+
+This platform defines gitflow as the default branching strategy for repositories that consume it.
+
+1. Create each OpenSpec-backed unit of work on its own `feature/<change-name>` branch from `develop`.
+2. Keep one OpenSpec change mapped to one feature branch for clean traceability.
+3. Merge completed feature branches back into `develop`.
+4. When a set of completed changes is ready, the release branch is cut from `develop` and merged into `main`.
+5. After the release merge, sync `main` back into `develop`.
 
 ## Main structure
 
@@ -88,8 +98,10 @@ This README is the canonical command reference for `opencode-runner.sh`.
 
 # or run each validator individually
 ./scripts/validate/contracts.sh
+./scripts/validate/gitflow-branching-contract.sh
 ./scripts/validate/tdd-contract.sh
 ./scripts/validate/angular-ui-contract.sh
+./scripts/validate/web-ui-ux-contract.sh
 ./scripts/validate/n8n-skills-contract.sh
 ```
 
@@ -137,10 +149,11 @@ git submodule update --init --recursive third_party/n8n_skills
 ## How to use it in other projects
 
 1. Keep OpenSpec as the source of truth for the change (`proposal`, `design`, `specs`, `tasks`).
-2. Choose the right pack for the stack (`packs/go-aws`, `packs/java-onprem`, `packs/angular`, or `packs/generic`).
-3. Run implementation with TDD evidence.
-4. Verify against global thresholds.
-5. If the flow needs to leave local, generate handoff for an external operator using `governance/operator-handoff-template.md`.
+2. Under gitflow, each OpenSpec change should map to its own `feature/<change-name>` branch created from `develop`.
+3. Choose the right pack for the stack (`packs/go-aws`, `packs/java-onprem`, `packs/angular`, or `packs/generic`).
+4. Run implementation with TDD evidence.
+5. Verify against global thresholds.
+6. If the flow needs to leave local, generate handoff for an external operator using `governance/operator-handoff-template.md`.
 
 ## Create or extend capability
 

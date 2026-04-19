@@ -36,6 +36,17 @@ Required baseline:
 2. Commit header follows `<type>(<optional-scope>): <description>`.
 3. Use standard types such as `feat`, `fix`, `docs`, `refactor`, `test`, `chore`.
 
+## Branching Strategy Contract
+
+All repositories consuming this platform SHALL use gitflow as the default branching model.
+
+Required baseline:
+
+1. `develop` is the default integration branch for ongoing work.
+2. Each OpenSpec change SHALL be implemented on its own `feature/*` branch created from `develop`.
+3. Completed feature branches are reintegrated into `develop` before release preparation.
+4. Releases are prepared from `develop`, merged into `main`, and then synchronized back into `develop`.
+
 ## Local-Only Operational Boundary
 
 Autonomous execution is restricted to local development workflows.
