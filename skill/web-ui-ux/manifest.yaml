@@ -1,0 +1,9 @@
+name: "web-ui-ux"
+display_name: "Web UI UX Guidance"
+description: "Reusable guidance for web frontend implementation, visual audit, responsive behavior, and UI quality checks."
+default_prompt: "Use $web-ui-ux for frontend/UI work to audit existing patterns, reuse components, cover states, and verify responsive/accessibility behavior before closing the task."
+compatibility:
+  codex: true
+  github_copilot: true
+invocation:
+  explicit_tag: "$web-ui-ux"

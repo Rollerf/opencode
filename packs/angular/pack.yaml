@@ -8,10 +8,19 @@ context:
     - packs/angular/templates/playwright.config.ts
     - packs/angular/templates/tests/ui/home.spec.ts
 local_only: true
+skill_overlays:
+  ui_frontend:
+    include:
+      - web-ui-ux
+    exclude:
+      - backend-design
 constraints:
   - Keep container components thin and move stateful logic into services.
   - Keep strict typing enabled for inputs, outputs, and API contracts.
   - Preserve accessibility and responsive behavior on UI changes.
+  - Audit existing components, styles, and layout patterns before major UI changes.
+  - Use shared `web-ui-ux` guidance for Angular frontend/UI tasks.
+  - Exclude `backend-design` from Angular frontend-only work unless backend scope is explicitly requested.
   - For UI/UX work, run the app and validate key screens in a browser automation flow before finishing.
   - Capture and review desktop and mobile viewport evidence (screenshots or traces) for major UI changes.
 verification_commands:
