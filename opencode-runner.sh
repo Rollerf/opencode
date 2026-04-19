@@ -52,13 +52,89 @@ phase_default_agent() {
   esac
 }
 
+text_matches() {
+  local text="$1"
+  local pattern="$2"
+  [[ -n "$text" ]] || return 1
+  printf '%s' "$text" | grep -Eiq "$pattern"
+}
+
+is_frontend_intent() {
+  local text="$1"
+  text_matches "$text" 'front-?end|\bui\b|\bux\b|responsive|layout|component|design system|design-system|visual|screen|page|css|style'
+}
+
+is_backend_intent() {
+  local text="$1"
+  text_matches "$text" 'backend|\bapi\b|handler|usecase|use-case|storage|pulumi|infra|infrastructure|lambda|migration|database|schema|endpoint'
+}
+
+append_skill() {
+  local skills_csv="$1"
+  local skill="$2"
+  if [[ -z "$skills_csv" ]]; then
+    printf '%s' "$skill"
+  elif [[ ",${skills_csv}," == *",${skill},"* ]]; then
+    printf '%s' "$skills_csv"
+  else
+    printf '%s,%s' "$skills_csv" "$skill"
+  fi
+}
+
 phase_default_skills() {
   local phase="$1"
+  local pack="${2:-}"
+  local user_prompt="${3:-}"
+  local skills_csv="openspec-workflow"
+  local frontend_intent="false"
+  local backend_intent="false"
+
   case "$phase" in
-    planning|implementation|verification) echo "openspec-workflow,backend-design" ;;
-    archive) echo "openspec-workflow" ;;
-    *) echo "openspec-workflow,backend-design" ;;
+    archive)
+      echo "$skills_csv"
+      return
+      ;;
   esac
+
+  if is_frontend_intent "$user_prompt"; then
+    frontend_intent="true"
+    skills_csv="$(append_skill "$skills_csv" "web-ui-ux")"
+  fi
+
+  if is_backend_intent "$user_prompt"; then
+    backend_intent="true"
+  fi
+
+  case "$pack" in
+    go-aws)
+      skills_csv="$(append_skill "$skills_csv" "backend-design")"
+      ;;
+    angular)
+      if [[ "$backend_intent" == "true" ]]; then
+        skills_csv="$(append_skill "$skills_csv" "backend-design")"
+      fi
+      ;;
+    java-onprem|generic)
+      ;;
+    "")
+      if [[ "$frontend_intent" != "true" ]]; then
+        case "$phase" in
+          planning|implementation|verification)
+            skills_csv="$(append_skill "$skills_csv" "backend-design")"
+            ;;
+        esac
+      elif [[ "$backend_intent" == "true" ]]; then
+        skills_csv="$(append_skill "$skills_csv" "backend-design")"
+      fi
+      ;;
+    *)
+      if [[ "$backend_intent" == "true" ]]; then
+        skills_csv="$(append_skill "$skills_csv" "backend-design")"
+      fi
+      ;;
+  esac
+
+  echo "$skills_csv"
 }
 
 resolve_agent_file() {
@@ -168,6 +244,7 @@ bundle_cmd() {
   local phase=""
   local change=""
   local agent=""
+  local pack=""
   local skills_csv=""
   local user_prompt=""
   local out_file=""
@@ -188,6 +265,11 @@ bundle_cmd() {
       --agent)
         [[ $# -gt 1 ]] || fail "--agent requires a value"
         agent="$2"
+        shift 2
+        ;;
+      --pack)
+        [[ $# -gt 1 ]] || fail "--pack requires a value"
+        pack="$2"
         shift 2
         ;;
       --skills)
@@ -229,9 +311,9 @@ bundle_cmd() {
 
   if [[ -z "$skills_csv" ]]; then
     if [[ -n "$phase" ]]; then
-      skills_csv="$(phase_default_skills "$phase")"
+      skills_csv="$(phase_default_skills "$phase" "$pack" "$user_prompt")"
     else
-      skills_csv="openspec-workflow,backend-design"
+      skills_csv="$(phase_default_skills "implementation" "$pack" "$user_prompt")"
     fi
   fi
 
@@ -251,6 +333,9 @@ bundle_cmd() {
     printf -- '- Repo: `%s`\n' "$ROOT_DIR"
     if [[ -n "$phase" ]]; then
       printf -- '- Phase: `%s`\n' "$phase"
+    fi
+    if [[ -n "$pack" ]]; then
+      printf -- '- Pack: `%s`\n' "$pack"
     fi
     if [[ -n "$change" ]]; then
       printf -- '- Change: `%s`\n' "$change"
@@ -380,6 +465,7 @@ Bundle options:
   --phase <phase>              planning|implementation|verification|archive
   --change <name>              OpenSpec change name to include artifacts
   --agent <name|path>          Agent file or name (default: phase default or orchestrator)
+  --pack <name>                Optional stack pack hint (go-aws|java-onprem|angular|generic)
   --skills <csv>               Comma-separated skills (default from phase)
   --user-prompt "<text>"       Optional user prompt section
   --out <file>                 Output bundle file
@@ -389,6 +475,7 @@ Examples:
   ./opencode-runner.sh doctor
   ./opencode-runner.sh list agents
   ./opencode-runner.sh bundle --phase planning --change my-change --user-prompt "Draft proposal"
+  ./opencode-runner.sh bundle --phase implementation --pack angular --user-prompt "Polish the Angular dashboard UI"
   ./opencode-runner.sh phase verification --change my-change --dry-run
 EOF
 }

@@ -31,7 +31,10 @@ Execution policy:
 - Enforce local-only autonomous execution and require operator handoff for non-local lifecycle actions.
 - Prefer small reversible edits with explicit command evidence.
 - Use `$openspec-workflow` for phase command order and completion criteria.
-- Use `$backend-design` for architecture constraints and test strategy.
+- Use `$backend-design` for Go/AWS backend architecture constraints and test strategy.
+- Use `$web-ui-ux` for Angular frontend/UI, responsive, design-system, layout, and visual polish requests.
+- Do not route frontend-only work through `$backend-design`.
+- Only combine `$web-ui-ux` with `$backend-design` when the request explicitly spans frontend and backend work.
 - Load n8n skills only for explicit n8n intent; keep them out of default context for non-n8n tasks.
 
 Response policy:
