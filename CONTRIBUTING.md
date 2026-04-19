@@ -12,26 +12,32 @@ This project defines a cross-cutting platform of agents and skills for OpenCode 
 4. Do not automate non-local actions (staging/production are handled by an external operator).
 5. Do not lower global quality thresholds for a specific stack.
 6. Use Conventional Commits for every commit in English.
-7. Use trunk-based development (short-lived branches, PR to `main`, no long-lived integration branches).
+7. Use gitflow for branch lifecycle across all consumer projects.
 
-## Branching strategy (trunk-based)
+## Branching strategy (gitflow)
 
-1. Branch from `main` using a short-lived branch (`feat/...`, `fix/...`, `chore/...`).
-2. Keep changes small and open a PR to `main`.
-3. Require passing checks before merge:
+1. Create a dedicated `feature/<change-name>` branch from `develop` for each OpenSpec change.
+2. Keep one OpenSpec change mapped to one feature branch.
+3. Merge completed feature branches into `develop`.
+4. Create `release/*` branches from `develop` when a releasable set of changes is ready.
+5. Merge the release branch into `main`.
+6. After release merges to `main`, sync `main` back into `develop`.
+7. Require passing checks before merge:
    - `.github/workflows/dependency-review.yml`
    - `.github/workflows/codeql.yml`
    - `./scripts/validate/run-all.sh`
-4. Prefer squash merge to keep history clean.
-5. Never commit directly to `main` except controlled emergency fixes.
+8. Prefer a merge strategy that preserves the intended gitflow history for the target repository.
+9. Never commit directly to `main` except controlled emergency fixes.
 
 ## Recommended flow
 
 1. Create or select an OpenSpec change.
-2. Prepare planning artifacts.
-3. Implement tasks in small, reversible changes.
-4. Verify contracts, TDD, and thresholds.
-5. Leave a handoff if there are non-local steps.
+2. Create its matching `feature/<change-name>` branch from `develop`.
+3. Prepare planning artifacts.
+4. Implement tasks in small, reversible changes.
+5. Verify contracts, TDD, and thresholds.
+6. Merge the feature back into `develop`, continue through `release/*`, merge into `main`, and sync `main` back into `develop`.
+7. Leave a handoff if there are non-local steps.
 
 ## Useful commands
 
@@ -46,6 +52,7 @@ This project defines a cross-cutting platform of agents and skills for OpenCode 
 ./opencode-runner.sh phase archive --change <change> --dry-run
 
 ./scripts/validate/contracts.sh
+./scripts/validate/gitflow-branching-contract.sh
 ./scripts/validate/tdd-contract.sh
 ./scripts/validate/angular-ui-contract.sh
 ./scripts/validate/web-ui-ux-contract.sh
