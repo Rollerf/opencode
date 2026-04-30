@@ -1,0 +1,9 @@
+name: "playwright-cli"
+display_name: "Playwright CLI Browser Automation"
+description: "Browser automation, tracing, snapshots, and Playwright test workflows for frontend development."
+default_prompt: "Use $playwright-cli for browser automation, snapshots, tracing, and Playwright test debugging when frontend work needs executable browser evidence."
+compatibility:
+  codex: true
+  github_copilot: true
+invocation:
+  explicit_tag: "$playwright-cli"
