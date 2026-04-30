@@ -56,6 +56,7 @@ This project defines a cross-cutting platform of agents and skills for OpenCode 
 ./scripts/validate/tdd-contract.sh
 ./scripts/validate/angular-ui-contract.sh
 ./scripts/validate/web-ui-ux-contract.sh
+./scripts/validate/playwright-cli-contract.sh
 ./scripts/validate/n8n-skills-contract.sh
 ./scripts/validate/run-all.sh
 ./scripts/evals/run-all.sh
@@ -81,6 +82,7 @@ Checklist:
 - [ ] For n8n wrappers, keep references aligned with `third_party/n8n_skills`.
 - [ ] Keep instructions aligned with OpenSpec and the core contract.
 - [ ] If the skill targets frontend/UI work, document when `$web-ui-ux` applies and when `$backend-design` must stay excluded.
+- [ ] If the skill provides browser tooling, document when it composes with `$web-ui-ux`.
 - [ ] If you add references, include them in `skill/<name>/references/`.
 - [ ] Verify that agents depending on the skill remain consistent.
 
