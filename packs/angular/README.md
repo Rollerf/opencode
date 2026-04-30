@@ -5,6 +5,7 @@ This pack is for local development in Angular projects.
 ## Skill Overlay
 
 - For Angular frontend/UI work, load `$web-ui-ux` alongside the Angular pack.
+- For browser-driven UI evidence, interactive debugging, or trace capture, compose `$web-ui-ux` with `$playwright-cli`.
 - Do not use `$backend-design` for Angular frontend-only work.
 - Only include `$backend-design` when the request explicitly combines Angular UI work with backend scope.
 

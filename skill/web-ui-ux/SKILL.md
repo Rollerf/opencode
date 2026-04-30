@@ -24,6 +24,8 @@ Do not use this skill as a substitute for framework-specific architecture rules.
 6. Verify accessibility basics: semantic structure, labels, keyboard focus, and contrast-sensitive decisions when applicable.
 7. Close the task with explicit visual verification evidence, not only code completion.
 
+When the task needs executable browser evidence, tracing, snapshots, or Playwright debugging, compose this skill with `$playwright-cli`.
+
 ## Design Guardrails
 
 - Avoid generic SaaS-style filler layouts when the repository already has established UI patterns.
@@ -38,3 +40,4 @@ Do not use this skill as a substitute for framework-specific architecture rules.
 - Reused components/patterns and any new UI primitives introduced.
 - Covered states and responsive/accessibility considerations.
 - Verification commands or evidence used for UI review.
+- Whether `$playwright-cli` was used for browser evidence, traces, or Playwright test debugging.
