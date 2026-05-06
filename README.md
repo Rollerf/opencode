@@ -26,6 +26,7 @@ Routing is intent-first:
 
 - First, the type of work is detected (planning, implementation, verification, archive, docs, etc.).
 - Then, the context of the active stack pack is applied.
+- `orchestrator.md` is the recommended single interactive entrypoint: it selects the phase contract and executes local work directly unless a specialized subagent clearly reduces context, adds expertise, enables parallelism, or produces a distinct deliverable.
 
 ## Operating principles
 
@@ -119,6 +120,8 @@ This README is the canonical command reference for `opencode-runner.sh`.
 - Under `packs/angular`, frontend-only work should use `$web-ui-ux` and should not load `$backend-design`.
 - If a request explicitly combines Angular UI work with backend changes, the guidance set may include both `$web-ui-ux` and `$backend-design`.
 - Future web packs (for example Astro) should reuse `web-ui-ux` for cross-framework UI quality guidance and add framework-specific overlays separately.
+
+If a consumer runtime exposes a narrower `available_skills` list than the module imports, module-owned skills remain usable through the repository-local skill files. For example, when `$web-ui-ux` is not available through the runtime skill loader but `.opencode/skill/web-ui-ux/SKILL.md` exists in the consumer project, agents should read and apply that local file instead of reporting `missing_specialization`.
 
 ## Global quality thresholds
 

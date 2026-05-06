@@ -33,5 +33,8 @@ require_file "$ORCHESTRATOR"
 require_contains "$ORCHESTRATOR" "Always state current phase"
 require_contains "$ORCHESTRATOR" "Always list touched files and commands executed"
 require_contains "$ORCHESTRATOR" "RED -> GREEN -> REFACTOR"
+require_contains "$ORCHESTRATOR" "Single-entrypoint execution mode"
+require_contains "$ORCHESTRATOR" "routing selects the phase contract"
+require_contains "${ROOT_DIR}/core/routing-policy.md" "Single-entrypoint orchestration"
 
 echo "Contract validation passed"
