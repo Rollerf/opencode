@@ -18,6 +18,7 @@
 - [x] 3.1 Define canonical agent taxonomy with metadata: phase scope, specialization, expected inputs, and outputs.
 - [x] 3.2 Implement intent-first routing policy with stack context as secondary selector.
 - [x] 3.3 Implement explicit fallback routing to a workflow-safe general agent and decision-gap reporting.
+- [x] 3.4 Document and implement Orchestrator single-entrypoint execution so routing applies phase contracts without requiring manual agent switching.
 
 ## 4. Evaluation Harness
 

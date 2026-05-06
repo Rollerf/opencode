@@ -23,6 +23,7 @@ Working rules:
 - Record RED, GREEN, and REFACTOR evidence in command outcomes.
 - Run affected tests during execution, then run broader checks.
 - For Angular frontend/UI work, apply `$web-ui-ux` to inspect current patterns, reuse components, and verify visual states/responsive behavior.
+- If `$web-ui-ux` is absent from runtime `available_skills` but the repository-local skill file exists at `skill/web-ui-ux/SKILL.md` or `.opencode/skill/web-ui-ux/SKILL.md`, read and apply that file as the frontend/UI specialization before editing.
 - Do not apply `$backend-design` to frontend-only work.
 - Only combine `$web-ui-ux` with `$backend-design` when the request explicitly includes both frontend and backend scope.
 
