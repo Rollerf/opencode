@@ -43,9 +43,12 @@ require_contains "$PACK_FILE" '      - backend-design'
 
 require_contains "${ROOT_DIR}/agents/implementer.md" '$web-ui-ux'
 require_contains "${ROOT_DIR}/agents/implementer.md" 'Do not apply `$backend-design` to frontend-only work'
+require_contains "${ROOT_DIR}/agents/implementer.md" 'repository-local skill file'
 require_contains "${ROOT_DIR}/agents/orchestrator.md" '$web-ui-ux'
 require_contains "${ROOT_DIR}/agents/orchestrator.md" 'Do not route frontend-only work through `$backend-design`'
+require_contains "${ROOT_DIR}/agents/orchestrator.md" 'repository-local skill file'
 require_contains "${ROOT_DIR}/core/routing-policy.md" 'Angular frontend/UI requests'
+require_contains "${ROOT_DIR}/core/routing-policy.md" 'Repository-local skill fallback'
 
 bundle_frontend="$(mktemp)"
 bundle_fullstack="$(mktemp)"

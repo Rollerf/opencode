@@ -26,6 +26,16 @@ After intent is resolved, apply the active stack pack:
 
 Stack pack influence is limited to constraints, command sets, and test strategy.
 
+## Single-entrypoint orchestration
+
+`orchestrator.md` is the default interactive entrypoint. Routing selects the phase contract to apply, but it does not require a manual switch to `planner.md`, `implementer.md`, `verifier.md`, or `archiver.md` when the orchestrator can execute the selected local workflow safely.
+
+Use phase agents and subagents as contracts or targeted helpers:
+
+- Apply `planner.md`, `implementer.md`, `verifier.md`, and `archiver.md` rules according to the selected phase.
+- Invoke specialized subagents only when expertise, parallelism, context reduction, or a distinct deliverable justifies the handoff.
+- Keep the orchestrator responsible for final decisions, command evidence, touched files, blockers, and missing decisions.
+
 ## Angular frontend/UI requests
 
 For Angular frontend/UI requests:
@@ -35,6 +45,12 @@ For Angular frontend/UI requests:
 - Activate `$web-ui-ux` for frontend/UI, responsive, visual polish, component, layout, and design-system intent.
 - Exclude `$backend-design` for frontend-only Angular work.
 - Allow `$backend-design` only when backend scope is explicit in the request.
+
+## Repository-local skill fallback
+
+The runtime `available_skills` registry can be narrower than the skills imported in this module. When a route asks for a module-owned skill such as `$web-ui-ux`, first prefer the runtime skill loader. If the runtime registry does not list it, but a repository-local skill file exists at `skill/<name>/SKILL.md` or `.opencode/skill/<name>/SKILL.md`, load and apply that file as the specialization.
+
+Only emit `missing_specialization` when neither the runtime registry nor the repository-local skill file provides the requested specialization.
 
 ## Optional n8n Skill Routing
 

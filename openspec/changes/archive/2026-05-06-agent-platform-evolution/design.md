@@ -25,9 +25,14 @@ The repository is used as a transversal OpenCode/OpenSpec foundation across proj
    - Alternative considered: Separate agent sets per stack. Rejected due to duplication and maintenance cost.
 
 2. Routing by work type and phase, not by language first.
-   - Decision: Route to planner/implementer/verifier/archiver and specialized subagents by intent; stack context is a secondary selector.
-   - Rationale: Most developer requests map to process intent before technology details.
-   - Alternative considered: Route primarily by stack. Rejected because mixed tasks (docs, design, refactor) would fragment.
+    - Decision: Route to planner/implementer/verifier/archiver and specialized subagents by intent; stack context is a secondary selector.
+    - Rationale: Most developer requests map to process intent before technology details.
+    - Alternative considered: Route primarily by stack. Rejected because mixed tasks (docs, design, refactor) would fragment.
+
+2a. Orchestrator as the single interactive entrypoint.
+   - Decision: Users may work exclusively through `orchestrator.md`; routing selects the phase contract to apply, but does not require a manual agent switch before local execution.
+   - Rationale: This is more token-efficient for day-to-day work because the main agent keeps one conversation context and applies only the selected phase contract or specialized subagent when it materially reduces scope, parallelizes work, or provides distinct expertise.
+   - Alternative considered: Force every phase through separate top-level agents. Rejected because it adds handoff overhead and repeated context transfer for users who naturally operate from one agent.
 
 3. Golden-task evaluation as release gate.
    - Decision: Maintain versioned eval suites by stack and cross-stack, with pass thresholds required for updates.
