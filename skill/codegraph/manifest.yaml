@@ -1,0 +1,9 @@
+name: "codegraph"
+display_name: "CodeGraph"
+description: "Optional MCP-backed semantic code exploration, call graph, impact analysis, and affected-test guidance."
+default_prompt: "Use $codegraph when CodeGraph MCP tools are available for structural code exploration, call graph questions, impact analysis, symbol lookup, and affected-test discovery."
+compatibility:
+  codex: true
+  github_copilot: true
+invocation:
+  explicit_tag: "$codegraph"

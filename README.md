@@ -17,7 +17,7 @@ Its goal is to provide a shared base of agents, skills, quality rules, and workf
 The platform is made up of 5 parts:
 
 1. `agents/`: agents by phase (planner, implementer, verifier, archiver, orchestrator, and sub-agents).
-2. `skill/`: reusable skills (`openspec-workflow`, `backend-design`, `web-ui-ux`, `playwright-cli`, optional n8n skills).
+2. `skill/`: reusable skills (`openspec-workflow`, `backend-design`, `web-ui-ux`, `playwright-cli`, optional CodeGraph, RTK, and n8n skills).
 3. `core/`: shared workflow contract, agent catalog, routing policy, and templates.
 4. `packs/`: extensions by stack (`go-aws`, `java-onprem`, `angular`, `generic`).
 5. `evals/` + `scripts/`: automated evaluation and validation of contracts and quality thresholds.
@@ -151,7 +151,89 @@ git submodule update --init --recursive third_party/n8n_skills
 - strict validation pass rate = 100
 - high/critical security findings = 0
 
+## Optional CodeGraph support
+
+This repository includes a `$codegraph` wrapper skill at `skill/codegraph/SKILL.md` for projects that use [CodeGraph](https://github.com/colbymchenry/codegraph) as an OpenCode MCP integration. See `skill/codegraph/README.md` for consumer setup details.
+
+CodeGraph is not only a prompt skill. Consumer machines must install and wire the MCP server into OpenCode:
+
+```bash
+npm i -g @colbymchenry/codegraph
+codegraph install --target=opencode --location=global
+```
+
+Each consumer project must also initialize its local code graph index:
+
+```bash
+codegraph init -i
+```
+
+The generated `.codegraph/` directory is an index/cache and should normally be ignored by git.
+
+Agents should use `$codegraph` when CodeGraph MCP tools are available and the task involves structural code exploration, call graph questions, impact analysis, symbol lookup, or affected-test discovery. If CodeGraph MCP tools are not available, or the project has not been indexed, agents should fall back to normal Glob/Grep/Read exploration and explain the missing setup when relevant.
+
+## Optional RTK support
+
+This repository includes an `$rtk` wrapper skill at `skill/rtk/SKILL.md` for projects that use [RTK](https://github.com/rtk-ai/rtk) to reduce token usage from shell command output. See `skill/rtk/README.md` for consumer setup details.
+
+RTK is not only a prompt skill. Consumer machines must install RTK and wire the OpenCode integration:
+
+```bash
+brew install rtk
+# or
+curl -fsSL https://raw.githubusercontent.com/rtk-ai/rtk/refs/heads/master/install.sh | sh
+
+rtk init -g --opencode
+```
+
+Restart OpenCode after setup.
+
+Agents should use `$rtk` when RTK is available and the task involves shell commands with large or noisy output, such as `git diff`, test runners, lint/build commands, logs, Docker/Kubernetes/AWS output, or repeated command execution. If RTK is not available, agents should run normal commands and continue the task.
+
+## Consumer readiness checklist
+
+For CodeGraph:
+
+- `codegraph --version` works.
+- OpenCode has the CodeGraph MCP server configured.
+- OpenCode has been restarted after CodeGraph setup.
+- The project has `.codegraph/` created with `codegraph init -i`.
+- The agent can access CodeGraph MCP tools.
+
+For RTK:
+
+- `rtk --version` works.
+- `rtk init -g --opencode` has been run.
+- OpenCode has been restarted after RTK setup.
+- `rtk init --show` confirms the OpenCode integration.
+- `rtk gain` works.
+
+If any check fails, agents should fall back to normal tools and explain the missing setup when relevant.
+
 ## How to use it in other projects
+
+Consumer projects install this repository as a submodule at `.opencode`:
+
+```bash
+git submodule add <repo-url> .opencode
+git submodule update --init --recursive .opencode
+```
+
+OpenCode can then use the reusable agents from the submodule:
+
+- `.opencode/agents/orchestrator.md`
+- `.opencode/agents/planner.md`
+- `.opencode/agents/implementer.md`
+- `.opencode/agents/verifier.md`
+- `.opencode/agents/archiver.md`
+- `.opencode/agents/subagent/*.md`
+
+OpenCode can also use wrapper skills from the submodule, including:
+
+- `.opencode/skill/codegraph/SKILL.md`
+- `.opencode/skill/rtk/SKILL.md`
+
+Recommended consumer flow:
 
 1. Keep OpenSpec as the source of truth for the change (`proposal`, `design`, `specs`, `tasks`).
 2. Under gitflow, each OpenSpec change should map to its own `feature/<change-name>` branch created from `develop`.
@@ -159,6 +241,22 @@ git submodule update --init --recursive third_party/n8n_skills
 4. Run implementation with TDD evidence.
 5. Verify against global thresholds.
 6. If the flow needs to leave local, generate handoff for an external operator using `governance/operator-handoff-template.md`.
+
+## Caveman in consumer projects
+
+Caveman skills live in this module under `.agents/skills`. When this repository is installed as `.opencode`, those skills are available at:
+
+- `.opencode/.agents/skills/caveman/SKILL.md`
+- `.opencode/.agents/skills/cavecrew/SKILL.md`
+- `.opencode/.agents/skills/caveman-review/SKILL.md`
+- `.opencode/.agents/skills/caveman-commit/SKILL.md`
+- `.opencode/.agents/skills/caveman-compress/SKILL.md`
+- `.opencode/.agents/skills/caveman-help/SKILL.md`
+- `.opencode/.agents/skills/caveman-stats/SKILL.md`
+
+If the OpenCode runtime exposes these entries in `available_skills`, agents should load them through the normal skill loader.
+
+If the runtime does not expose them, agents should read and apply the local `SKILL.md` file from `.opencode/.agents/skills/<name>/SKILL.md` instead of reporting the skill as missing. This keeps Caveman available to projects that consume this repository as a submodule even when the runtime skill registry is narrower than the files present in the workspace.
 
 ## Create or extend capability
 

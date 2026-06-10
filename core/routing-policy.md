@@ -13,7 +13,9 @@ Routing is deterministic and intent-first.
 7. Feature iteration/refactor -> `subagent/feature-iteration-subagent.md`.
 8. Pulumi/IaC requests -> `subagent/pulumi-infrastructure-subagent.md`.
 9. TDD test planning/creation -> `subagent/tdd-tests-subagent.md`.
-10. n8n workflow design/debug/validation requests -> apply `$n8n-gateway` then `$n8n-mcp-tools-expert`.
+10. Semantic code exploration, call graph questions, impact analysis, or affected-test discovery -> apply `$codegraph` when CodeGraph MCP tools are available.
+11. Shell commands with large or noisy output -> apply `$rtk` when RTK is installed or the OpenCode RTK hook is active.
+12. n8n workflow design/debug/validation requests -> apply `$n8n-gateway` then `$n8n-mcp-tools-expert`.
 
 ## Secondary Selector: Stack Pack
 
@@ -50,7 +52,41 @@ For Angular frontend/UI requests:
 
 The runtime `available_skills` registry can be narrower than the skills imported in this module. When a route asks for a module-owned skill such as `$web-ui-ux`, first prefer the runtime skill loader. If the runtime registry does not list it, but a repository-local skill file exists at `skill/<name>/SKILL.md` or `.opencode/skill/<name>/SKILL.md`, load and apply that file as the specialization.
 
+For `$codegraph`, also use the repository-local skill fallback at `skill/codegraph/SKILL.md` or `.opencode/skill/codegraph/SKILL.md`. This fallback only provides guidance; CodeGraph still requires the MCP tools to be installed and the consumer project to have a `.codegraph/` index.
+
+For `$rtk`, also use the repository-local skill fallback at `skill/rtk/SKILL.md` or `.opencode/skill/rtk/SKILL.md`. This fallback only provides guidance; RTK still requires the CLI and OpenCode hook/plugin to be installed when command output rewriting is expected.
+
+For Caveman skills (`$caveman`, `$cavecrew`, `$caveman-review`, `$caveman-commit`, `$caveman-compress`, `$caveman-help`, `$caveman-stats`), also check `.agents/skills/<name>/SKILL.md` and `.opencode/.agents/skills/<name>/SKILL.md`. Projects that consume this repository as a `.opencode` submodule can use those local files even when the runtime does not list them in `available_skills`.
+
 Only emit `missing_specialization` when neither the runtime registry nor the repository-local skill file provides the requested specialization.
+
+## Optional CodeGraph Routing
+
+Apply `$codegraph` when CodeGraph MCP tools are available and intent is codebase discovery or graph analysis.
+
+Trigger examples:
+
+- "how does this flow work?"
+- "find callers of this function"
+- "what breaks if I change this API?"
+- "which tests are affected by these files?"
+- "where is this route handled?"
+
+Default behavior when CodeGraph MCP tools are unavailable: fall back to Glob/Grep/Read and, when useful, tell the user to run `codegraph install --target=opencode` and `codegraph init -i`.
+
+## Optional RTK Routing
+
+Apply `$rtk` when RTK is available and intent involves Bash commands with large, noisy, or repetitive output.
+
+Trigger examples:
+
+- "show git diff/status/log"
+- "run tests and inspect failures"
+- "run build/lint/typecheck"
+- "inspect Docker/Kubernetes/AWS logs"
+- "search/list/read through shell output compactly"
+
+Default behavior when RTK is unavailable: run normal commands and continue. When useful, tell the user to install RTK and run `rtk init -g --opencode`.
 
 ## Optional n8n Skill Routing
 

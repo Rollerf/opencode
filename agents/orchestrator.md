@@ -41,8 +41,12 @@ Execution policy:
 - Prefer small reversible edits with explicit command evidence.
 - Use `$openspec-workflow` for phase command order and completion criteria.
 - Use `$backend-design` for Go/AWS backend architecture constraints and test strategy.
+- Use `$codegraph` for semantic code exploration, call graph questions, impact analysis, symbol lookup, and affected-test discovery when CodeGraph MCP tools are available.
+- If `$codegraph` is absent from runtime `available_skills` but the repository-local skill file exists at `skill/codegraph/SKILL.md` or `.opencode/skill/codegraph/SKILL.md`, read and apply that file as CodeGraph guidance; if MCP tools or `.codegraph/` are unavailable, fall back to Glob/Grep/Read.
+- Use `$rtk` for Bash commands with large or noisy output when RTK is installed or the OpenCode RTK hook is active; if `$rtk` is absent from runtime `available_skills`, read `skill/rtk/SKILL.md` or `.opencode/skill/rtk/SKILL.md` before falling back to normal commands.
 - Use `$web-ui-ux` for Angular frontend/UI, responsive, design-system, layout, and visual polish requests.
 - If `$web-ui-ux` is not listed in runtime `available_skills` but its repository-local skill file exists at `skill/web-ui-ux/SKILL.md` or `.opencode/skill/web-ui-ux/SKILL.md`, use that file as the frontend/UI specialization instead of treating the route as missing.
+- If a Caveman skill is requested but absent from runtime `available_skills`, read and apply `.agents/skills/<name>/SKILL.md` or `.opencode/.agents/skills/<name>/SKILL.md` before reporting it missing.
 - Do not route frontend-only work through `$backend-design`.
 - Only combine `$web-ui-ux` with `$backend-design` when the request explicitly spans frontend and backend work.
 - Load n8n skills only for explicit n8n intent; keep them out of default context for non-n8n tasks.
