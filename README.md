@@ -210,6 +210,30 @@ For RTK:
 
 If any check fails, agents should fall back to normal tools and explain the missing setup when relevant.
 
+## Consumer optional tools setup script
+
+Consumer projects can run the helper script from the `.opencode` submodule to check Caveman, CodeGraph, and RTK readiness:
+
+```bash
+bash .opencode/scripts/setup-opencode-tools.sh
+```
+
+The script is submodule-aware:
+
+- It checks tool wrapper files inside `.opencode`.
+- It checks or initializes `.codegraph/` in the consumer project root.
+- It does not modify global OpenCode configuration unless `--configure-global` is passed.
+
+Useful modes:
+
+```bash
+bash .opencode/scripts/setup-opencode-tools.sh --strict
+bash .opencode/scripts/setup-opencode-tools.sh --init-codegraph
+bash .opencode/scripts/setup-opencode-tools.sh --configure-global
+```
+
+Use `--configure-global` only as an explicit operator step because it changes files outside the repository.
+
 ## How to use it in other projects
 
 Consumer projects install this repository as a submodule at `.opencode`:
