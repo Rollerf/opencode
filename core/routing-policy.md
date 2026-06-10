@@ -5,17 +5,18 @@ Routing is deterministic and intent-first.
 ## Primary Selector: Workflow Intent
 
 1. Planning artifacts (`proposal`, `design`, `specs`, `tasks`) -> `planner.md`.
-2. Code implementation from `tasks.md` -> `implementer.md`.
-3. Readiness checks and traceability -> `verifier.md`.
-4. Archive/closure -> `archiver.md`.
-5. Documentation requests -> `subagent/code-documentation-subagent.md`.
-6. Design-document requests -> `subagent/design-doc-subagent.md`.
-7. Feature iteration/refactor -> `subagent/feature-iteration-subagent.md`.
-8. Pulumi/IaC requests -> `subagent/pulumi-infrastructure-subagent.md`.
-9. TDD test planning/creation -> `subagent/tdd-tests-subagent.md`.
-10. Semantic code exploration, call graph questions, impact analysis, or affected-test discovery -> apply `$codegraph` when CodeGraph MCP tools are available.
-11. Shell commands with large or noisy output -> apply `$rtk` when RTK is installed or the OpenCode RTK hook is active.
-12. n8n workflow design/debug/validation requests -> apply `$n8n-gateway` then `$n8n-mcp-tools-expert`.
+2. Spec hardening, ambiguity review, or turning drafted OpenSpec artifacts into an implementation-ready hard spec -> `spec-hardener.md`.
+3. Code implementation from `tasks.md` -> `implementer.md`.
+4. Readiness checks and traceability -> `verifier.md`.
+5. Archive/closure -> `archiver.md`.
+6. Documentation requests -> `subagent/code-documentation-subagent.md`.
+7. Design-document requests -> `subagent/design-doc-subagent.md`.
+8. Feature iteration/refactor -> `subagent/feature-iteration-subagent.md`.
+9. Pulumi/IaC requests -> `subagent/pulumi-infrastructure-subagent.md`.
+10. TDD test planning/creation -> `subagent/tdd-tests-subagent.md`.
+11. Semantic code exploration, call graph questions, impact analysis, or affected-test discovery -> apply `$codegraph` when CodeGraph MCP tools are available.
+12. Shell commands with large or noisy output -> apply `$rtk` when RTK is installed or the OpenCode RTK hook is active.
+13. n8n workflow design/debug/validation requests -> apply `$n8n-gateway` then `$n8n-mcp-tools-expert`.
 
 ## Secondary Selector: Stack Pack
 
@@ -35,8 +36,24 @@ Stack pack influence is limited to constraints, command sets, and test strategy.
 Use phase agents and subagents as contracts or targeted helpers:
 
 - Apply `planner.md`, `implementer.md`, `verifier.md`, and `archiver.md` rules according to the selected phase.
+- Apply `spec-hardener.md` during planning when drafted OpenSpec artifacts need ambiguity review before implementation.
 - Invoke specialized subagents only when expertise, parallelism, context reduction, or a distinct deliverable justifies the handoff.
 - Keep the orchestrator responsible for final decisions, command evidence, touched files, blockers, and missing decisions.
+
+## OpenSpec spec hardening
+
+Route to `spec-hardener.md` when the user asks to harden, polish, de-risk, clarify, or review drafted OpenSpec artifacts before implementation.
+
+Trigger examples:
+
+- "harden this spec"
+- "make this a hard spec"
+- "review OpenSpec ambiguity"
+- "ask questions before implementation"
+- "find unclear requirements"
+- "turn this change into an implementation-ready spec"
+
+Default behavior: ask targeted clarification questions first. Do not edit artifacts until the user answers or explicitly asks for artifact updates.
 
 ## Angular frontend/UI requests
 

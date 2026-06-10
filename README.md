@@ -247,6 +247,7 @@ OpenCode can then use the reusable agents from the submodule:
 
 - `.opencode/agents/orchestrator.md`
 - `.opencode/agents/planner.md`
+- `.opencode/agents/spec-hardener.md`
 - `.opencode/agents/implementer.md`
 - `.opencode/agents/verifier.md`
 - `.opencode/agents/archiver.md`
@@ -260,11 +261,28 @@ OpenCode can also use wrapper skills from the submodule, including:
 Recommended consumer flow:
 
 1. Keep OpenSpec as the source of truth for the change (`proposal`, `design`, `specs`, `tasks`).
-2. Under gitflow, each OpenSpec change should map to its own `feature/<change-name>` branch created from `develop`.
-3. Choose the right pack for the stack (`packs/go-aws`, `packs/java-onprem`, `packs/angular`, or `packs/generic`).
-4. Run implementation with TDD evidence.
-5. Verify against global thresholds.
-6. If the flow needs to leave local, generate handoff for an external operator using `governance/operator-handoff-template.md`.
+2. Use `spec-hardener.md` after drafting artifacts and before implementation when the change needs ambiguity review or hard-spec readiness questions.
+3. Under gitflow, each OpenSpec change should map to its own `feature/<change-name>` branch created from `develop`.
+4. Choose the right pack for the stack (`packs/go-aws`, `packs/java-onprem`, `packs/angular`, or `packs/generic`).
+5. Run implementation with TDD evidence.
+6. Verify against global thresholds.
+7. If the flow needs to leave local, generate handoff for an external operator using `governance/operator-handoff-template.md`.
+
+## OpenSpec spec hardening
+
+Use `agents/spec-hardener.md` after a change has drafted OpenSpec artifacts and before implementation starts. The agent reviews `proposal.md`, `design.md`, `tasks.md`, and `specs/**/spec.md`, then asks targeted questions about ambiguity, missing decisions, weak acceptance criteria, and incomplete scenario coverage.
+
+Example bundle:
+
+```bash
+./.opencode/opencode-runner.sh bundle \
+  --agent spec-hardener \
+  --change <change-name> \
+  --skills openspec-workflow \
+  --user-prompt "Harden this OpenSpec change before implementation"
+```
+
+The hardener does not implement code. It edits OpenSpec artifacts only after the user answers the questions or explicitly asks for artifact updates.
 
 ## Caveman in consumer projects
 

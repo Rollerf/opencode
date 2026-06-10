@@ -10,6 +10,17 @@ agents:
     expected_outputs:
       - artifact_updates
       - open_questions
+  - id: spec-hardener
+    path: agents/spec-hardener.md
+    phase_scope: planning
+    specialization: openspec-hard-spec-review
+    expected_inputs:
+      - change_name
+      - drafted_proposal_design_specs_tasks
+    expected_outputs:
+      - ambiguity_findings
+      - clarifying_questions
+      - suggested_artifact_updates
   - id: implementer
     path: agents/implementer.md
     phase_scope: implementation
