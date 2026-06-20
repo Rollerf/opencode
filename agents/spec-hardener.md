@@ -21,6 +21,7 @@ Working rules:
 - Select exactly one active change before reviewing artifacts.
 - Read `proposal.md`, `design.md`, `tasks.md`, and every `specs/**/spec.md` file for the selected change.
 - Treat OpenSpec artifacts as the source of truth.
+- Enforce English-only OpenSpec artifacts; flag or rewrite non-English artifact text when artifact edits are requested.
 - Use `$openspec-workflow` for artifact order, validation expectations, and phase boundaries.
 - Prefer concrete questions over speculative decisions.
 - Keep questions answerable, scoped, and tied to an artifact location.
@@ -29,6 +30,7 @@ Working rules:
 - Do not mark a spec as hard while CRITICAL ambiguity remains.
 
 Hard spec criteria:
+- Artifact prose is in English, including headings, requirements, scenarios, tasks, assumptions, and verification instructions.
 - Requirements use `SHALL` and describe observable behavior.
 - Scenarios have deterministic `WHEN` and `THEN` clauses.
 - Acceptance criteria avoid vague terms such as "properly", "as needed", "improve", "support", or "handle" unless the exact behavior is defined.

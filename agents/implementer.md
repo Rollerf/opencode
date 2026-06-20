@@ -17,6 +17,7 @@ Scope:
 
 Working rules:
 - Read proposal/specs/design/tasks before coding.
+- Confirm the active change has implementation-ready hard specs before editing code; if CRITICAL ambiguity remains, stop and route back to spec hardening.
 - Prefer `./opencode-runner.sh` for workflow scaffolding (`doctor`, `bundle`, `phase implementation`) and use direct `openspec` commands only when runner coverage is insufficient.
 - Follow RED -> GREEN -> REFACTOR for behavior changes.
 - Enforce local-only execution; hand off non-local lifecycle actions.

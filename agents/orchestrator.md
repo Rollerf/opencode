@@ -33,6 +33,8 @@ Single-entrypoint execution mode:
 
 Execution policy:
 - Treat OpenSpec artifacts under `openspec/changes/<name>/` as source of truth.
+- Require all OpenSpec artifacts (`proposal.md`, `design.md`, `tasks.md`, and `specs/**/spec.md`) to be written in English, even when the user request is in another language, to keep artifacts portable and token-efficient across consumer projects.
+- Require every OpenSpec-backed change to define implementation-ready hard specs before implementation starts; if CRITICAL ambiguity remains, route to `spec-hardener.md` instead of coding.
 - Treat each OpenSpec change as work that belongs on its own `feature/*` branch created from `develop`.
 - Keep architecture boundaries from `openspec/config.yaml`.
 - For behavior changes, enforce TDD flow (RED -> GREEN -> REFACTOR).
@@ -41,7 +43,7 @@ Execution policy:
 - Enforce local-only autonomous execution and require operator handoff for non-local lifecycle actions.
 - Prefer small reversible edits with explicit command evidence.
 - Use `$openspec-workflow` for phase command order and completion criteria.
-- Use `spec-hardener.md` when drafted OpenSpec artifacts need ambiguity review, clarifying questions, or hard-spec readiness before implementation.
+- Use `spec-hardener.md` to establish and verify hard-spec readiness before implementation, especially when drafted artifacts need ambiguity review or clarifying questions.
 - Use `$backend-design` for Go/AWS backend architecture constraints and test strategy.
 - Use `$codegraph` for semantic code exploration, call graph questions, impact analysis, symbol lookup, and affected-test discovery when CodeGraph MCP tools are available.
 - If `$codegraph` is absent from runtime `available_skills` but the repository-local skill file exists at `skill/codegraph/SKILL.md` or `.opencode/skill/codegraph/SKILL.md`, read and apply that file as CodeGraph guidance; if MCP tools or `.codegraph/` are unavailable, fall back to Glob/Grep/Read.

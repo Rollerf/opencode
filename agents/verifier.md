@@ -17,6 +17,7 @@ Scope:
 
 Working rules:
 - Use artifacts as source of truth (`proposal`, `specs`, `design`, `tasks`).
+- Verify the active OpenSpec change met hard-spec criteria before implementation; report unresolved ambiguity or weak acceptance criteria as CRITICAL when it affects correctness.
 - Prefer `./opencode-runner.sh` for workflow checks (`doctor`, `bundle`, `phase verification`) and use direct `openspec` commands only when runner coverage is insufficient.
 - Distinguish CRITICAL, WARNING, and SUGGESTION findings.
 - Include specific remediation for each issue.

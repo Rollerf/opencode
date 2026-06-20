@@ -33,10 +33,14 @@ Stack pack influence is limited to constraints, command sets, and test strategy.
 
 `orchestrator.md` is the default interactive entrypoint. Routing selects the phase contract to apply, but it does not require a manual switch to `planner.md`, `implementer.md`, `verifier.md`, or `archiver.md` when the orchestrator can execute the selected local workflow safely.
 
+OpenSpec artifact language is global: write and maintain `proposal.md`, `design.md`, `tasks.md`, and `specs/**/spec.md` in English regardless of the user's conversation language. Consumer projects that include this repository as a submodule inherit this rule through the shared agents and skills.
+
+Hard-spec readiness is mandatory for OpenSpec-backed implementation: before coding, artifacts must resolve CRITICAL ambiguity, contain deterministic requirements/scenarios, and define concrete tasks plus verification evidence. If readiness is unclear, route to `spec-hardener.md` first.
+
 Use phase agents and subagents as contracts or targeted helpers:
 
 - Apply `planner.md`, `implementer.md`, `verifier.md`, and `archiver.md` rules according to the selected phase.
-- Apply `spec-hardener.md` during planning when drafted OpenSpec artifacts need ambiguity review before implementation.
+- Apply `spec-hardener.md` during planning to define hard specs and resolve ambiguity before implementation.
 - Invoke specialized subagents only when expertise, parallelism, context reduction, or a distinct deliverable justifies the handoff.
 - Keep the orchestrator responsible for final decisions, command evidence, touched files, blockers, and missing decisions.
 

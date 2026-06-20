@@ -9,6 +9,10 @@ schema: spec-driven
 #     We use conventional commits
 #     Domain: e-commerce platform
 
+context: |
+  OpenSpec artifacts must be written in English, regardless of the user's conversation language, so requirements remain portable and token-efficient across projects.
+  Every OpenSpec-backed change must define implementation-ready hard specs before coding starts. Hard specs resolve critical ambiguity, use deterministic requirements and scenarios, and include concrete tasks plus verification evidence.
+
 # Per-artifact rules (optional)
 # Add custom rules for specific artifacts.
 # Example:
@@ -18,3 +22,17 @@ schema: spec-driven
 #       - Always include a "Non-goals" section
 #     tasks:
 #       - Break tasks into chunks of max 2 hours
+
+rules:
+  proposal:
+    - Write all prose in English.
+    - Include goals, non-goals, scope boundaries, and open decisions needed to reach hard-spec readiness.
+  design:
+    - Write all prose in English.
+    - Document chosen approach, trade-offs, and decisions needed to remove critical implementation ambiguity.
+  specs:
+    - Write all requirements, scenarios, acceptance criteria, and notes in English.
+    - Define hard specs with observable SHALL requirements, deterministic WHEN/THEN scenarios, edge cases, and failure modes.
+  tasks:
+    - Write all task descriptions and verification commands in English.
+    - Include concrete implementation and verification steps traceable to hard-spec requirements and scenarios.
