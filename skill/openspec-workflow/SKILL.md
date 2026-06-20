@@ -29,15 +29,18 @@ Use completion criteria from [phase-checklists.md](references/phase-checklists.m
 1. Check status before writing artifacts.
 2. Build artifacts in sequence if missing: proposal -> specs -> design -> tasks.
 3. Keep artifacts consistent with `openspec/config.yaml`.
-4. Keep requirements testable and tasks concrete.
+4. Write all OpenSpec artifacts in English (`proposal.md`, `design.md`, `tasks.md`, and `specs/**/spec.md`), regardless of the user's conversation language.
+5. Define hard specs before implementation: resolve CRITICAL ambiguity, make requirements/scenarios deterministic, and map tasks to verification evidence.
+6. Keep requirements testable and tasks concrete.
 
 ## Implementation Rules
 
 1. Read active change artifacts before coding.
-2. Execute tasks in order and keep changes small.
-3. Follow RED -> GREEN -> REFACTOR for behavior changes.
-4. Mark completed tasks in `tasks.md`.
-5. Run affected tests during execution, not only at the end.
+2. Confirm hard-spec readiness before coding; if CRITICAL ambiguity remains, return to planning/spec hardening.
+3. Execute tasks in order and keep changes small.
+4. Follow RED -> GREEN -> REFACTOR for behavior changes.
+5. Mark completed tasks in `tasks.md`.
+6. Run affected tests during execution, not only at the end.
 
 ## Verification and Archive Rules
 
