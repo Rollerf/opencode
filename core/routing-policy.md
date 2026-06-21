@@ -79,6 +79,8 @@ For `$rtk`, also use the repository-local skill fallback at `skill/rtk/SKILL.md`
 
 For Caveman skills (`$caveman`, `$cavecrew`, `$caveman-review`, `$caveman-commit`, `$caveman-compress`, `$caveman-help`, `$caveman-stats`), also check `.agents/skills/<name>/SKILL.md` and `.opencode/.agents/skills/<name>/SKILL.md`. Projects that consume this repository as a `.opencode` submodule can use those local files even when the runtime does not list them in `available_skills`.
 
+When the user requests Caveman or token-saving mode for the session, apply `$caveman` to reasoning/status updates and conversational user output unless clarity, safety, or irreversible-action wording requires normal prose. Do not apply Caveman prose to OpenSpec artifacts: keep `proposal.md`, `design.md`, `tasks.md`, and `specs/**/spec.md` as normal English technical prose.
+
 Only emit `missing_specialization` when neither the runtime registry nor the repository-local skill file provides the requested specialization.
 
 ## Optional CodeGraph Routing

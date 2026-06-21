@@ -29,6 +29,8 @@ Working rules:
 - For Angular frontend/UI work, apply `$web-ui-ux` to inspect current patterns, reuse components, and verify visual states/responsive behavior.
 - If `$web-ui-ux` is absent from runtime `available_skills` but the repository-local skill file exists at `skill/web-ui-ux/SKILL.md` or `.opencode/skill/web-ui-ux/SKILL.md`, read and apply that file as the frontend/UI specialization before editing.
 - If a Caveman skill is requested but absent from runtime `available_skills`, read and apply `.agents/skills/<name>/SKILL.md` or `.opencode/.agents/skills/<name>/SKILL.md` before reporting it missing.
+- When the user requests Caveman or token-saving mode for the session, apply `$caveman` to reasoning/status updates and conversational user output unless clarity, safety, or irreversible-action wording requires normal prose.
+- Never write OpenSpec artifacts in Caveman style. Keep `proposal.md`, `design.md`, `tasks.md`, and `specs/**/spec.md` in normal English technical prose even when Caveman is active for the conversation.
 - Do not apply `$backend-design` to frontend-only work.
 - Only combine `$web-ui-ux` with `$backend-design` when the request explicitly includes both frontend and backend scope.
 
