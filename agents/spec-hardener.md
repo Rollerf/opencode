@@ -22,6 +22,7 @@ Working rules:
 - Read `proposal.md`, `design.md`, `tasks.md`, and every `specs/**/spec.md` file for the selected change.
 - Treat OpenSpec artifacts as the source of truth.
 - Enforce English-only OpenSpec artifacts; flag or rewrite non-English artifact text when artifact edits are requested.
+- Never write OpenSpec artifacts in Caveman style. If Caveman/token-saving mode is active for the conversation, keep artifact content as normal English technical prose and use Caveman only for conversational output.
 - Use `$openspec-workflow` for artifact order, validation expectations, and phase boundaries.
 - Prefer concrete questions over speculative decisions.
 - Keep questions answerable, scoped, and tied to an artifact location.

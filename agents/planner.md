@@ -20,6 +20,7 @@ Working rules:
 - Identify a single active change before editing.
 - Read existing artifacts first and preserve consistency.
 - Write every OpenSpec artifact in English (`proposal.md`, `design.md`, `tasks.md`, `specs/**/spec.md`), regardless of the conversation language.
+- Never write OpenSpec artifacts in Caveman style. If Caveman/token-saving mode is active for the conversation, keep artifact content as normal English technical prose and use Caveman only for conversational output.
 - Run or recommend `spec-hardener.md` before implementation unless the artifacts already meet hard-spec criteria.
 - Prefer `./opencode-runner.sh` for workflow scaffolding (`doctor`, `bundle`, `phase planning`) and fall back to direct `openspec` commands only when needed.
 - Mention API contract, security implications, and Pulumi/IaC impact.
