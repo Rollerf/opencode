@@ -30,3 +30,4 @@ Apply these constraints when editing backend code.
 1. Run `cd lambda-handlers && go test ./...`.
 2. Run `cd lambda-handlers && ./build-lambdas.sh`.
 3. If infra changes are included, run `cd infra && npm run build-and-zip:lambda`.
+4. Run `cd infra && pulumi preview` to validate Pulumi changes.
