@@ -69,9 +69,19 @@ For Angular frontend/UI requests:
 - Exclude `$backend-design` for frontend-only Angular work.
 - Allow `$backend-design` only when backend scope is explicit in the request.
 
+## Node DeFi arbitrage requests
+
+For Node.js/TypeScript requests involving DeFi arbitrage, DEX integrations, blockchain RPC, transaction simulation or execution, MEV, or on-chain trading risk:
+
+- Keep routing intent-first and apply the selected phase contract.
+- Use the generic stack pack unless a dedicated Node/DeFi pack is introduced.
+- Activate `$node-defi-arbitrage` for architecture, numeric correctness, reliability, testing, and live-execution safety.
+- Exclude `$backend-design` unless the request explicitly also changes the Go/AWS backend.
+- Treat wallet funding, secret provisioning, deployment, transaction signing, and public-network broadcasting as operator actions.
+
 ## Repository-local skill fallback
 
-The runtime `available_skills` registry can be narrower than the skills imported in this module. When a route asks for a module-owned skill such as `$web-ui-ux`, first prefer the runtime skill loader. If the runtime registry does not list it, but a repository-local skill file exists at `skill/<name>/SKILL.md` or `.opencode/skill/<name>/SKILL.md`, load and apply that file as the specialization.
+The runtime `available_skills` registry can be narrower than the skills imported in this module. When a route asks for a module-owned skill such as `$web-ui-ux` or `$node-defi-arbitrage`, first prefer the runtime skill loader. If the runtime registry does not list it, but a repository-local skill file exists at `skill/<name>/SKILL.md` or `.opencode/skill/<name>/SKILL.md`, load and apply that file as the specialization.
 
 For `$codegraph`, also use the repository-local skill fallback at `skill/codegraph/SKILL.md` or `.opencode/skill/codegraph/SKILL.md`. This fallback only provides guidance; CodeGraph still requires the MCP tools to be installed and the consumer project to have a `.codegraph/` index.
 

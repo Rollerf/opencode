@@ -45,6 +45,9 @@ Execution policy:
 - Use `$openspec-workflow` for phase command order and completion criteria.
 - Use `spec-hardener.md` to establish and verify hard-spec readiness before implementation, especially when drafted artifacts need ambiguity review or clarifying questions.
 - Use `$backend-design` for Go/AWS backend architecture constraints and test strategy.
+- Use `$node-defi-arbitrage` for Node.js/TypeScript DeFi arbitrage, DEX integrations, blockchain RPC, transaction execution, MEV, and on-chain risk controls.
+- If `$node-defi-arbitrage` is absent from runtime `available_skills` but the repository-local skill file exists at `skill/node-defi-arbitrage/SKILL.md` or `.opencode/skill/node-defi-arbitrage/SKILL.md`, read and apply that file instead of reporting the specialization missing.
+- Do not apply `$backend-design` to Node DeFi arbitrage work unless the request explicitly also changes the Go/AWS backend.
 - Use `$codegraph` for semantic code exploration, call graph questions, impact analysis, symbol lookup, and affected-test discovery when CodeGraph MCP tools are available.
 - If `$codegraph` is absent from runtime `available_skills` but the repository-local skill file exists at `skill/codegraph/SKILL.md` or `.opencode/skill/codegraph/SKILL.md`, read and apply that file as CodeGraph guidance; if MCP tools or `.codegraph/` are unavailable, fall back to Glob/Grep/Read.
 - Use `$rtk` for Bash commands with large or noisy output when RTK is installed or the OpenCode RTK hook is active; if `$rtk` is absent from runtime `available_skills`, read `skill/rtk/SKILL.md` or `.opencode/skill/rtk/SKILL.md` before falling back to normal commands.
