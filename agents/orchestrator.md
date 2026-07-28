@@ -53,6 +53,9 @@ Execution policy:
 - Use `$rtk` for Bash commands with large or noisy output when RTK is installed or the OpenCode RTK hook is active; if `$rtk` is absent from runtime `available_skills`, read `skill/rtk/SKILL.md` or `.opencode/skill/rtk/SKILL.md` before falling back to normal commands.
 - Use `$web-ui-ux` for Angular frontend/UI, responsive, design-system, layout, and visual polish requests.
 - If `$web-ui-ux` is not listed in runtime `available_skills` but its repository-local skill file exists at `skill/web-ui-ux/SKILL.md` or `.opencode/skill/web-ui-ux/SKILL.md`, use that file as the frontend/UI specialization instead of treating the route as missing.
+- Use `$seo-expert` only for explicit SEO intent such as metadata, structured data, indexing, crawlability, canonical URLs, hreflang, sitemaps, robots directives, redirects, search snippets, Core Web Vitals, or content optimization for search visibility.
+- If `$seo-expert` is absent from runtime `available_skills` but `skill/seo-expert/SKILL.md` or `.opencode/skill/seo-expert/SKILL.md` exists, read and apply the repository-local skill instead of reporting the specialization missing.
+- Combine `$seo-expert` with `$web-ui-ux` or `$playwright-cli` only when the SEO task also requires UI or browser work; do not activate SEO guidance for unrelated web tasks.
 - If a Caveman skill is requested but absent from runtime `available_skills`, read and apply `.agents/skills/<name>/SKILL.md` or `.opencode/.agents/skills/<name>/SKILL.md` before reporting it missing.
 - When the user requests Caveman or token-saving mode for the session, apply `$caveman` to reasoning/status updates and conversational user output unless clarity, safety, or irreversible-action wording requires normal prose.
 - Never write OpenSpec artifacts in Caveman style. Keep `proposal.md`, `design.md`, `tasks.md`, and `specs/**/spec.md` in normal English technical prose even when Caveman is active for the conversation.

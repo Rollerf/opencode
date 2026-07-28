@@ -58,6 +58,7 @@ This project defines a cross-cutting platform of agents and skills for OpenCode 
 ./scripts/validate/web-ui-ux-contract.sh
 ./scripts/validate/playwright-cli-contract.sh
 ./scripts/validate/n8n-skills-contract.sh
+./scripts/validate/seo-expert-contract.sh
 ./scripts/validate/run-all.sh
 ./scripts/evals/run-all.sh
 openspec validate "<change>" --strict
@@ -83,6 +84,7 @@ Checklist:
 - [ ] Keep instructions aligned with OpenSpec and the core contract.
 - [ ] If the skill targets frontend/UI work, document when `$web-ui-ux` applies and when `$backend-design` must stay excluded.
 - [ ] If the skill provides browser tooling, document when it composes with `$web-ui-ux`.
+- [ ] If the skill targets SEO, keep activation explicit, require inspection and validation evidence, and run `./scripts/validate/seo-expert-contract.sh`.
 - [ ] If you add references, include them in `skill/<name>/references/`.
 - [ ] Verify that agents depending on the skill remain consistent.
 

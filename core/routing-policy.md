@@ -79,6 +79,20 @@ For Node.js/TypeScript requests involving DeFi arbitrage, DEX integrations, bloc
 - Exclude `$backend-design` unless the request explicitly also changes the Go/AWS backend.
 - Treat wallet funding, secret provisioning, deployment, transaction signing, and public-network broadcasting as operator actions.
 
+## SEO requests
+
+For explicit SEO intent involving metadata, structured data, indexing, crawlability, canonical URLs, hreflang, robots directives, sitemaps, redirects, search snippets, Core Web Vitals, or content optimization for search visibility:
+
+- Keep phase selection primary and activate `$seo-expert` as a specialization overlay.
+- Do not activate SEO guidance solely because a task is web-facing, frontend-related, backend-related, or documentation-related.
+- Combine `$seo-expert` with `$web-ui-ux` when SEO changes also affect page hierarchy, semantics, responsive presentation, or UX.
+- Combine `$seo-expert` with `$playwright-cli` when rendered metadata, browser redirects, navigation, or executable browser evidence must be inspected.
+- Reject deceptive or black-hat tactics and never promise ranking outcomes.
+
+### Repository-local SEO fallback
+
+If `$seo-expert` is not in runtime `available_skills` but `skill/seo-expert/SKILL.md` or `.opencode/skill/seo-expert/SKILL.md` exists, load and apply that repository-local file. Emit `missing_specialization` only when neither source is available.
+
 ## Repository-local skill fallback
 
 The runtime `available_skills` registry can be narrower than the skills imported in this module. When a route asks for a module-owned skill such as `$web-ui-ux` or `$node-defi-arbitrage`, first prefer the runtime skill loader. If the runtime registry does not list it, but a repository-local skill file exists at `skill/<name>/SKILL.md` or `.opencode/skill/<name>/SKILL.md`, load and apply that file as the specialization.

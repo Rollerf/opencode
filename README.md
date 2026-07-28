@@ -17,7 +17,7 @@ Its goal is to provide a shared base of agents, skills, quality rules, and workf
 The platform is made up of 5 parts:
 
 1. `agents/`: agents by phase (planner, implementer, verifier, archiver, orchestrator, and sub-agents).
-2. `skill/`: reusable skills (`openspec-workflow`, `backend-design`, `node-defi-arbitrage`, `web-ui-ux`, `playwright-cli`, optional CodeGraph, RTK, and n8n skills).
+2. `skill/`: reusable skills (`openspec-workflow`, `backend-design`, `node-defi-arbitrage`, `seo-expert`, `web-ui-ux`, `playwright-cli`, optional CodeGraph, RTK, and n8n skills).
 3. `core/`: shared workflow contract, agent catalog, routing policy, and templates.
 4. `packs/`: extensions by stack (`go-aws`, `java-onprem`, `angular`, `generic`).
 5. `evals/` + `scripts/`: automated evaluation and validation of contracts and quality thresholds.
@@ -105,6 +105,7 @@ This README is the canonical command reference for `opencode-runner.sh`.
 ./scripts/validate/web-ui-ux-contract.sh
 ./scripts/validate/playwright-cli-contract.sh
 ./scripts/validate/n8n-skills-contract.sh
+./scripts/validate/seo-expert-contract.sh
 ```
 
 5) Run quality harness:
@@ -130,6 +131,14 @@ If a consumer runtime exposes a narrower `available_skills` list than the module
 - Blockchains, DEXs, tokens, providers, relays, hosting, storage, contracts, risk thresholds, and operational commands remain decisions of each consuming project.
 - Public testnet liquidity must not be treated as representative of mainnet arbitrage performance; projects may use mainnet forks, historical backtesting, and live-data shadow mode as appropriate.
 - Do not apply `$backend-design` unless the request also changes the Go/AWS backend.
+
+## SEO guidance
+
+- Use `$seo-expert` only for explicit SEO work involving metadata, structured data, indexing controls, crawlability, canonical URLs, hreflang, robots directives, sitemaps, redirects, search snippets, Core Web Vitals, or search-focused content optimization.
+- The skill requires inspection of current routes, templates, rendering, metadata, indexing controls, and content context before broad recommendations or edits.
+- Combine `$seo-expert` with `$web-ui-ux` when SEO work also changes page semantics or user experience, and with `$playwright-cli` when rendered output or browser behavior needs executable evidence.
+- The skill prohibits deceptive tactics and ranking guarantees. External crawlers, Search Console, and production indexing checks remain explicit operator actions when local access is unavailable.
+- Validate the contract with `./scripts/validate/seo-expert-contract.sh`.
 
 ## Global quality thresholds
 
