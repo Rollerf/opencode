@@ -45,11 +45,17 @@ Execution policy:
 - Use `$openspec-workflow` for phase command order and completion criteria.
 - Use `spec-hardener.md` to establish and verify hard-spec readiness before implementation, especially when drafted artifacts need ambiguity review or clarifying questions.
 - Use `$backend-design` for Go/AWS backend architecture constraints and test strategy.
+- Use `$node-defi-arbitrage` for Node.js/TypeScript DeFi arbitrage, DEX integrations, blockchain RPC, transaction execution, MEV, and on-chain risk controls.
+- If `$node-defi-arbitrage` is absent from runtime `available_skills` but the repository-local skill file exists at `skill/node-defi-arbitrage/SKILL.md` or `.opencode/skill/node-defi-arbitrage/SKILL.md`, read and apply that file instead of reporting the specialization missing.
+- Do not apply `$backend-design` to Node DeFi arbitrage work unless the request explicitly also changes the Go/AWS backend.
 - Use `$codegraph` for semantic code exploration, call graph questions, impact analysis, symbol lookup, and affected-test discovery when CodeGraph MCP tools are available.
 - If `$codegraph` is absent from runtime `available_skills` but the repository-local skill file exists at `skill/codegraph/SKILL.md` or `.opencode/skill/codegraph/SKILL.md`, read and apply that file as CodeGraph guidance; if MCP tools or `.codegraph/` are unavailable, fall back to Glob/Grep/Read.
 - Use `$rtk` for Bash commands with large or noisy output when RTK is installed or the OpenCode RTK hook is active; if `$rtk` is absent from runtime `available_skills`, read `skill/rtk/SKILL.md` or `.opencode/skill/rtk/SKILL.md` before falling back to normal commands.
 - Use `$web-ui-ux` for Angular frontend/UI, responsive, design-system, layout, and visual polish requests.
 - If `$web-ui-ux` is not listed in runtime `available_skills` but its repository-local skill file exists at `skill/web-ui-ux/SKILL.md` or `.opencode/skill/web-ui-ux/SKILL.md`, use that file as the frontend/UI specialization instead of treating the route as missing.
+- Use `$seo-expert` only for explicit SEO intent such as metadata, structured data, indexing, crawlability, canonical URLs, hreflang, sitemaps, robots directives, redirects, search snippets, Core Web Vitals, or content optimization for search visibility.
+- If `$seo-expert` is absent from runtime `available_skills` but `skill/seo-expert/SKILL.md` or `.opencode/skill/seo-expert/SKILL.md` exists, read and apply the repository-local skill instead of reporting the specialization missing.
+- Combine `$seo-expert` with `$web-ui-ux` or `$playwright-cli` only when the SEO task also requires UI or browser work; do not activate SEO guidance for unrelated web tasks.
 - If a Caveman skill is requested but absent from runtime `available_skills`, read and apply `.agents/skills/<name>/SKILL.md` or `.opencode/.agents/skills/<name>/SKILL.md` before reporting it missing.
 - When the user requests Caveman or token-saving mode for the session, apply `$caveman` to reasoning/status updates and conversational user output unless clarity, safety, or irreversible-action wording requires normal prose.
 - Never write OpenSpec artifacts in Caveman style. Keep `proposal.md`, `design.md`, `tasks.md`, and `specs/**/spec.md` in normal English technical prose even when Caveman is active for the conversation.
