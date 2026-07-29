@@ -1,7 +1,7 @@
 ## MODIFIED Requirements
 
 ### Requirement: Core-plus-pack composition model
-The platform SHALL compose the common workflow, one phase-contract skill, one validated stack pack, and applicable specialization skills. The selected pack's constraints, commands, and safety metadata SHALL be present in generated runtime context without overriding mandatory core lifecycle requirements.
+The platform SHALL compose the common workflow, one phase-contract skill, one resolved and validated stack pack, and applicable specialization skills. The selected pack's constraints, commands, and safety metadata SHALL be present in generated runtime context without overriding mandatory core lifecycle requirements.
 
 #### Scenario: Stack pack extends runtime context
 - **WHEN** a project activates the `angular` pack
@@ -14,8 +14,55 @@ The platform SHALL compose the common workflow, one phase-contract skill, one va
 
 ## ADDED Requirements
 
+### Requirement: Structured pack detection metadata
+Every non-generic stack pack SHALL define `detection.required` markers that the orchestrator can evaluate against the consumer project. Supported markers SHALL be `path_exists` with `type` and `path`, and `file_contains` with `type`, `path`, and literal `value`. A non-generic pack matches only when every required marker matches. The `generic` pack SHALL be confirmation-only and SHALL NOT define an automatic match.
+
+#### Scenario: Angular project matches one pack
+- **WHEN** every required Angular marker matches the consumer project and no other non-generic pack fully matches
+- **THEN** the orchestrator infers `angular`
+- **AND** reports the matching marker evidence before starting phase work
+
+#### Scenario: Pack metadata is incomplete
+- **WHEN** a non-generic pack lacks `detection.required` or uses an unsupported marker type
+- **THEN** structured validation fails with the pack path and invalid marker
+
+### Requirement: Pre-work pack resolution
+Before planning, implementation, verification, or archive work begins, the orchestrator SHALL resolve one pack using this precedence: explicit operator or CLI selection, compatible confirmed project configuration, then structured project-evidence inference.
+
+#### Scenario: Explicit pack is supplied
+- **WHEN** the operator or runner supplies `--pack angular` and that pack exists
+- **THEN** `angular` is selected without heuristic inference
+- **AND** its detection evidence may still be reported for transparency
+
+#### Scenario: Exactly one pack is inferred
+- **WHEN** no explicit or confirmed pack is available and exactly one non-generic pack matches all required markers
+- **THEN** the orchestrator selects that pack and reports the evidence
+- **AND** phase work may begin
+
+#### Scenario: Multiple packs match
+- **WHEN** more than one non-generic pack matches the project evidence
+- **THEN** the orchestrator lists each candidate and its matching markers
+- **AND** asks the operator to confirm one before phase work begins
+
+#### Scenario: No pack matches
+- **WHEN** no non-generic pack matches the project evidence
+- **THEN** the orchestrator reports the inspected evidence and does not silently select `generic`
+- **AND** asks the operator either to explicitly confirm `generic` or request definition of a new pack before phase work begins
+
+#### Scenario: Confirmed pack conflicts with current evidence
+- **WHEN** `.opencode-project.yaml` names a pack whose required markers no longer match the project
+- **THEN** the orchestrator reports the mismatch and asks for confirmation or correction before phase work begins
+
+### Requirement: Consumer-owned pack confirmation
+The platform SHALL provide `core/templates/opencode-project.yaml` for recording an operator-confirmed `default_pack` and optional `allowed_packs` without embedding project stack choices in agent definitions.
+
+#### Scenario: Operator approves persistence
+- **WHEN** the operator confirms an inferred or explicit pack and requests persistence
+- **THEN** the consumer records the choice in `.opencode-project.yaml`
+- **AND** future sessions validate that choice against current detection evidence
+
 ### Requirement: Stack-neutral shared subagents
-Shared subagents SHALL avoid stack-specific paths, commands, error formats, and architecture assumptions unless those details are supplied by the active pack or a loaded specialization skill.
+Retained shared subagents SHALL avoid stack-specific paths, commands, error formats, and architecture assumptions unless those details are supplied by the active pack or a loaded specialization skill.
 
 #### Scenario: TDD helper runs under a non-Go stack
 - **WHEN** the TDD helper is used with the `angular`, `java-onprem`, or `generic` pack

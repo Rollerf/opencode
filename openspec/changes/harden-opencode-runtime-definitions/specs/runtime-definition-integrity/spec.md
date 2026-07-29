@@ -39,7 +39,7 @@ Every repository-owned `skill/<name>/SKILL.md` SHALL contain parseable OpenCode 
 - **AND** files under `third_party/n8n_skills` remain unchanged
 
 ### Requirement: Consumer default entrypoint configuration
-The platform SHALL provide a schema-valid consumer configuration template that selects `orchestrator` as the default primary agent without overwriting consumer-owned provider or permission settings.
+The platform SHALL provide a schema-valid consumer configuration template that selects `orchestrator` as the default primary agent without overwriting consumer-owned provider or permission settings, plus a separate consumer-owned template for recording confirmed stack-pack choices.
 
 #### Scenario: New consumer applies the template
 - **WHEN** a consumer follows the documented setup
@@ -49,6 +49,11 @@ The platform SHALL provide a schema-valid consumer configuration template that s
 #### Scenario: Consumer already has configuration
 - **WHEN** a consumer has an existing `opencode.json` or `opencode.jsonc`
 - **THEN** setup guidance provides merge instructions instead of replacing the existing file
+
+#### Scenario: Operator confirms a pack selection
+- **WHEN** the operator approves persisting an inferred or explicitly selected pack
+- **THEN** the project records `default_pack` and optional `allowed_packs` in `.opencode-project.yaml`
+- **AND** provider and permission configuration remains in the consumer's OpenCode configuration
 
 ### Requirement: Context-selective bundle generation
 Bundle generation SHALL minimize default context while preserving explicit access to references and SHALL emit context-size diagnostics without enforcing a token threshold.
@@ -111,9 +116,14 @@ Runtime agent definitions SHALL use centralized model and step assignments based
 - **AND** its configured step limit matches the central role matrix
 
 #### Scenario: Code-changing helper is validated
-- **WHEN** a feature, Pulumi, or TDD subagent is inspected
+- **WHEN** a Pulumi or TDD subagent is inspected
 - **THEN** its model is `openai/gpt-5.6-sol`
 - **AND** its step limit is `20`
+
+#### Scenario: Feature iteration is not a runtime agent
+- **WHEN** runtime agent definitions and catalogs are inspected
+- **THEN** no feature-iteration subagent exists
+- **AND** incremental feature work is defined by the implementation phase skill
 
 #### Scenario: Leaf delegation is blocked
 - **WHEN** a leaf subagent definition is inspected

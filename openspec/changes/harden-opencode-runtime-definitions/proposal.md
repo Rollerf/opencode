@@ -8,10 +8,11 @@ The repository's validated source definitions can diverge from what OpenCode act
 - Separate the runner's platform module directory from the consuming project root so agents, skills, and packs come from the module while OpenSpec artifacts and project commands come from the consumer.
 - Add valid native OpenCode frontmatter to every repository-owned skill. Keep `third_party/n8n_skills` immutable as an external submodule and fix only the repository-owned n8n wrapper skills.
 - **BREAKING** Replace phase agents (`planner`, `spec-hardener`, `implementer`, `verifier`, and `archiver`) with loadable phase-contract skills used by the single primary orchestrator.
-- Define deterministic routing precedence: phase first, stack second, skill overlays third, and bounded subagent delegation last.
-- Assign `openai/gpt-5.6-sol` to the orchestrator and code-changing/high-risk specialists, and `openai/gpt-5.6-luna` to bounded documentation and design helpers. Add role-specific step limits and deny nested delegation from leaf subagents.
+- Require the orchestrator to inspect each consumer project and infer its stack pack before phase work starts. Explicit selections and confirmed project configuration take precedence; ambiguous or unsupported stacks block work pending operator confirmation or a new pack definition.
+- Define deterministic task routing precedence after pack resolution: phase first, resolved stack second, skill overlays third, and bounded subagent delegation last.
+- Keep only documentation, design-document, Pulumi, and TDD subagents. Assign `openai/gpt-5.6-sol` to the orchestrator and high-risk specialists, and `openai/gpt-5.6-luna` to bounded documentation and design helpers. Remove the feature-iteration subagent and absorb feature iteration into the implementation phase skill.
 - **BREAKING** Make bundle references opt-in, place the user goal before bundled context, include the selected pack contract, select phase-relevant OpenSpec artifacts, and use safe content boundaries. Report bundle size without enforcing a maximum token budget.
-- Make shared subagents stack-neutral and move Go/AWS assumptions into the `go-aws` pack and `$backend-design` overlay.
+- Make retained subagents stack-neutral and move Go/AWS assumptions into the `go-aws` pack and `$backend-design` overlay.
 - Make `core/agent-catalog.yaml` match runtime names and paths, include the orchestrator, and become an input to routing and validation instead of documentation-only metadata.
 - Replace string-presence validation with structured checks plus a disposable consumer fixture that verifies native agent/skill discovery, runner path resolution, pack inclusion, model/step policy, routing references, bundle behavior, and self-submodule absence.
 - Keep the migration from deprecated broad `tools` declarations to least-privilege `permission` rules outside this change, as explicitly deferred by the operator. Validators may report the deprecation but SHALL NOT fail this change for it.
@@ -22,7 +23,7 @@ The repository's validated source definitions can diverge from what OpenCode act
 - Prevent recursive/stale self-installation and consumer path confusion.
 - Reduce unnecessary context and subagent cost without imposing an arbitrary token ceiling.
 - Preserve a single orchestrator entrypoint with explicit, loadable phase contracts.
-- Make stack and specialization behavior deterministic and testable.
+- Make stack inference, confirmation, composition, and specialization behavior deterministic and testable.
 
 ## Non-Goals
 
@@ -40,9 +41,9 @@ The repository's validated source definitions can diverge from what OpenCode act
 
 ### Modified Capabilities
 
-- `agent-catalog-routing`: Make routing precedence deterministic, convert phase ownership to skill-based contracts, bound specialist delegation, and align catalog IDs with runtime names.
+- `agent-catalog-routing`: Make routing precedence deterministic, convert phase ownership to skill-based contracts, remove feature iteration as a subagent, bound the retained specialist delegation, and align catalog IDs with runtime names.
 - `core-workflow-contracts`: Preserve phase completion criteria through loadable phase skills under the single orchestrator entrypoint.
-- `stack-capability-packs`: Ensure selected pack constraints and commands reach the runtime and shared subagents remain stack-neutral.
+- `stack-capability-packs`: Define evidence-based pack inference and confirmation, ensure selected pack constraints and commands reach the runtime, and keep retained subagents stack-neutral.
 - `quality-evaluation-harness`: Add structured validation and consumer-fixture checks that exercise actual runtime definitions instead of raw text presence.
 
 ## Impact
@@ -50,7 +51,7 @@ The repository's validated source definitions can diverge from what OpenCode act
 - Distribution and repository structure: `.gitmodules`, the `.opencode` gitlink, README installation guidance, and a new consumer fixture.
 - Runtime definitions: `agents/`, `skill/`, `core/agent-catalog.yaml`, and `core/routing-policy.md`.
 - Bundling and phase execution: `opencode-runner.sh` and its validation fixtures.
-- Stack behavior: `packs/*/pack.yaml`, especially moving Go/AWS-only guidance out of shared subagents.
+- Stack behavior: `packs/*/pack.yaml`, a consumer-owned `.opencode-project.yaml` confirmation record, and moving Go/AWS-only guidance out of retained subagents.
 - Validation: `scripts/validate/`, package metadata for structured parsing if required, and evaluation fixtures.
 - External source boundary: `third_party/n8n_skills` remains unchanged; repository-owned wrappers under `skill/n8n-*` are updated.
 - Security: no live deployment behavior changes; the known broad/deprecated agent tool declarations remain a documented follow-up risk.

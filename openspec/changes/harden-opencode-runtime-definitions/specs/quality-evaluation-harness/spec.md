@@ -37,13 +37,26 @@ The validation suite SHALL exercise runner behavior from both the platform sourc
 - **WHEN** a bundle is generated with `--pack angular`
 - **THEN** validation confirms that Angular constraints and verification commands are present
 
+#### Scenario: Unique pack inference is checked
+- **WHEN** a fixture matches exactly one non-generic pack's required markers
+- **THEN** validation confirms that the orchestrator selects that pack and reports its evidence
+
+#### Scenario: Ambiguous pack inference is checked
+- **WHEN** a fixture matches multiple non-generic packs
+- **THEN** validation confirms that phase work is blocked pending operator confirmation
+
+#### Scenario: Unsupported stack inference is checked
+- **WHEN** a fixture matches no non-generic pack
+- **THEN** validation confirms that `generic` is not silently selected
+- **AND** the result requests explicit generic confirmation or a new pack definition
+
 #### Scenario: Default reference behavior is checked
 - **WHEN** a bundle is generated without `--references`
 - **THEN** validation confirms skill reference bodies are absent
 - **AND** size diagnostics are present
 
 ### Requirement: Distribution integrity validation
-The validation suite SHALL fail on recursive self-submodule declarations, unresolved catalog paths, invalid phase-skill mappings, duplicate IDs, missing manifests, and tracked `Zone.Identifier` sidecar files.
+The validation suite SHALL fail on recursive self-submodule declarations, unresolved catalog paths, invalid phase-skill mappings, duplicate IDs, missing manifests, invalid pack detection metadata, and tracked `Zone.Identifier` sidecar files.
 
 #### Scenario: Self-submodule is introduced
 - **WHEN** `.gitmodules` declares the platform repository at `.opencode`

@@ -60,14 +60,24 @@ OpenCode 1.17.19 provides native debug commands (`opencode debug skill`, `openco
 
 ### 5. Use a deterministic routing pipeline
 
-- **Decision:** Routing executes in this order:
+- **Decision:** Before phase work starts, the orchestrator resolves one pack through this precedence:
+  1. Use an explicit `--pack` or operator selection after validating that the pack exists.
+  2. Use a previously confirmed `.opencode-project.yaml` selection when current project evidence remains compatible.
+  3. Inspect the consumer project against structured `detection.required` markers in every non-generic `pack.yaml`.
+  4. If exactly one non-generic pack matches, select it and report the evidence.
+  5. If multiple packs match, stop before phase execution, show the candidates and evidence, and ask the operator to confirm one.
+  6. If no non-generic pack matches, stop before phase execution and ask the operator either to explicitly confirm `generic` or request a new pack definition. The orchestrator must not silently choose `generic`.
+
+  Supported detection markers are `path_exists` and `file_contains`. Every marker declares `type`, `path`, and, for `file_contains`, a literal `value`. A non-generic pack matches only when all `detection.required` markers match. The `generic` pack is confirmation-only and has no automatic match rule.
+
+  After pack resolution, task routing executes in this order:
   1. Select one phase contract.
-  2. Select one stack pack.
+  2. Apply the resolved stack pack.
   3. Add zero or more skill overlays based on explicit intent.
   4. Delegate a bounded unit only when the helper produces a distinct deliverable, supplies specialized expertise, enables safe parallel work, or materially reduces the orchestrator context.
 
   Specialized helpers supplement the phase owner and never replace phase selection. Ambiguous phase requests require clarification or the safest non-mutating phase. Routing references must resolve through catalogs.
-- **Rationale:** This removes peer-route collisions between planning, implementation, documentation, tests, Pulumi, and refactoring.
+- **Rationale:** Evidence-based pack resolution prevents old stack assumptions from moving into generic agents, while the task pipeline removes peer-route collisions between planning, implementation, documentation, tests, Pulumi, and refactoring.
 - **Alternative considered:** Continue keyword-first peer routing. Rejected because overlapping terms cannot provide deterministic precedence.
 
 ### 6. Assign Sol and Luna by responsibility
@@ -79,13 +89,12 @@ OpenCode 1.17.19 provides native debug commands (`opencode debug skill`, `openco
   | `orchestrator` | `openai/gpt-5.6-sol` | 40 |
   | `subagent/code-documentation-subagent` | `openai/gpt-5.6-luna` | 10 |
   | `subagent/design-doc-subagent` | `openai/gpt-5.6-luna` | 12 |
-  | `subagent/feature-iteration-subagent` | `openai/gpt-5.6-sol` | 20 |
   | `subagent/pulumi-infrastructure-subagent` | `openai/gpt-5.6-sol` | 20 |
   | `subagent/tdd-tests-subagent` | `openai/gpt-5.6-sol` | 20 |
 
   Leaf subagents receive `permission.task: deny` to prevent nested delegation. The broader migration from deprecated `tools` to least-privilege permissions remains deferred.
 - **Rationale:** Luna handles bounded prose-oriented deliverables at lower cost, while Sol owns final decisions and code-changing or high-risk work. Step limits prevent unbounded loops while leaving the orchestrator enough room for multi-phase local work.
-- **Alternative considered:** Use Luna for every subagent. Rejected because code and infrastructure specialists require stronger reasoning and failure analysis. Using Sol everywhere was rejected because it provides no cost control for routine documentation.
+- **Alternative considered:** Use Luna for every subagent. Rejected because tests and infrastructure require stronger reasoning and failure analysis. Using Sol everywhere was rejected because it provides no cost control for routine documentation.
 
 ### 7. Make bundles selective and diagnostic
 
@@ -99,10 +108,10 @@ OpenCode 1.17.19 provides native debug commands (`opencode debug skill`, `openco
 - **Rationale:** Default bundles should be useful without eagerly duplicating every reference. Diagnostics establish a measurement baseline before a future token budget is selected.
 - **Alternative considered:** Set an immediate maximum token count. Rejected because the operator requested evidence before choosing a reference value.
 
-### 8. Make shared subagents stack-neutral
+### 8. Reduce and neutralize shared subagents
 
-- **Decision:** Remove Go/Lambda/API Gateway/RFC 7807/Pulumi assumptions from shared documentation, design, TDD, and feature-iteration subagents. Stack-specific rules are supplied only by the selected pack and specialized skills. The TDD helper owns test planning and test edits; production changes remain with the orchestrator unless explicitly delegated. Feature iteration may update tests when behavior changes and must not weaken valid tests.
-- **Rationale:** Shared helpers must behave correctly under Java, Angular, generic, and future stacks.
+- **Decision:** Retain only documentation, design-document, Pulumi, and TDD subagents. Remove `feature-iteration-subagent` and absorb its incremental implementation workflow into `openspec-implementation`. Remove Go/Lambda/API Gateway/RFC 7807/Pulumi assumptions from retained cross-stack documentation, design, and TDD helpers. Stack-specific rules are supplied only by the resolved pack and specialized skills. The TDD helper owns test planning and test edits; production changes remain with the orchestrator unless explicitly delegated. Feature iteration under the implementation skill may update tests when behavior changes and must not weaken valid tests.
+- **Rationale:** Documentation and design can produce bounded independent deliverables with Luna; Pulumi and TDD provide distinct specialist work with Sol. Feature iteration directly overlaps phase implementation and creates avoidable editing and context conflicts.
 - **Alternative considered:** Duplicate every helper per stack. Rejected because it multiplies prompts and drift.
 
 ### 9. Make catalogs executable contracts
@@ -119,7 +128,7 @@ OpenCode 1.17.19 provides native debug commands (`opencode debug skill`, `openco
 
 ### 11. Provide an explicit consumer configuration template
 
-- **Decision:** Add `core/templates/opencode.consumer.json` with `default_agent: "orchestrator"`, schema declaration, and documented safe merge instructions. The fixture copies this template to its consumer root. Installation documentation states that the consumer, not the module, owns final provider and permission configuration.
+- **Decision:** Add `core/templates/opencode.consumer.json` with `default_agent: "orchestrator"`, schema declaration, and documented safe merge instructions. Also add `core/templates/opencode-project.yaml` as the consumer-owned record for a confirmed `default_pack` and optional `allowed_packs`. The orchestrator still validates the confirmed pack against current project evidence and asks again when evidence conflicts. The fixture copies these templates to its consumer root. Installation documentation states that the consumer, not the module, owns final provider, permission, and confirmed pack configuration.
 - **Rationale:** A submodule cannot safely overwrite an existing consumer configuration, but the advertised default entrypoint must be reproducibly configurable.
 - **Alternative considered:** Place `opencode.json` at the module source root. Rejected because that configuration would also apply when developing the module directly, where root `agents/` are not native project agent paths.
 
@@ -132,6 +141,8 @@ OpenCode 1.17.19 provides native debug commands (`opencode debug skill`, `openco
 - [References omitted by default hide useful detail] -> Print available reference names in the bundle and support explicit `--references` selection.
 - [Permission risk remains] -> Keep the known deprecated broad tool policy visible as a non-blocking validator warning and open a dedicated follow-up change.
 - [Model availability differs in consumers] -> Validate configured model identifiers against `opencode models openai` during environment readiness checks and report a clear fallback requirement instead of silently changing models.
+- [Stack evidence matches multiple packs] -> Stop before phase work, show matching markers, and require operator confirmation; persist the accepted selection only with operator approval.
+- [No existing pack represents the project] -> Report the inspected evidence and request a new pack definition or explicit use of `generic` instead of silently applying unrelated constraints.
 
 ## Migration Plan
 
@@ -139,7 +150,7 @@ OpenCode 1.17.19 provides native debug commands (`opencode debug skill`, `openco
 2. Correct repository-owned skill frontmatter and catalog metadata.
 3. Introduce phase-contract skills and update orchestrator and runner routing while old phase agents still exist.
 4. Update runner root resolution, pack inclusion, selective bundling, and diagnostics.
-5. Make shared subagents neutral and apply the Sol/Luna step policy.
+5. Add pack detection metadata and pre-work inference/confirmation, then reduce and neutralize retained subagents and apply the Sol/Luna step policy.
 6. Switch validators and documentation to the new contracts.
 7. Remove obsolete phase agents and the self-referential `.opencode` submodule last.
 8. Run native fixture discovery, all validators, evaluation harness, and strict OpenSpec validation.

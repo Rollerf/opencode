@@ -16,7 +16,12 @@ The platform SHALL maintain a canonical catalog of actual runtime agents with un
 - **THEN** it contains exactly one primary orchestrator entry
 
 ### Requirement: Deterministic routing policy
-Routing SHALL select exactly one workflow phase first, one stack pack second, zero or more specialization skills third, and optional bounded subagent delegation last. A specialized helper SHALL supplement rather than replace the selected phase contract.
+The orchestrator SHALL resolve exactly one stack pack before executing phase work. After pack resolution, routing SHALL select exactly one workflow phase first, apply the resolved stack second, add zero or more specialization skills third, and use optional bounded subagent delegation last. A specialized helper SHALL supplement rather than replace the selected phase contract.
+
+#### Scenario: Pack is unresolved before work starts
+- **WHEN** the orchestrator cannot identify exactly one valid pack from explicit selection, confirmed project configuration, or project evidence
+- **THEN** it performs only read-only discovery
+- **AND** does not begin planning, implementation, verification, or archive work until the operator resolves the pack decision
 
 #### Scenario: Composite implementation and documentation request
 - **WHEN** a request implements an OpenSpec task and also updates documentation
@@ -69,5 +74,10 @@ Specialist subagents SHALL have bounded responsibilities that do not duplicate p
 
 #### Scenario: Feature iteration changes behavior
 - **WHEN** feature iteration changes observable behavior
-- **THEN** valid tests may be added or updated under the TDD contract
+- **THEN** the implementation phase skill keeps the work with the orchestrator and valid tests may be added or updated under the TDD contract
 - **AND** existing valid tests are not weakened or removed without explicit approval
+
+#### Scenario: Feature iteration specialization is inspected
+- **WHEN** runtime agents and skills are cataloged
+- **THEN** feature iteration is part of `openspec-implementation`
+- **AND** no `feature-iteration-subagent` is registered
