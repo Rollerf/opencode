@@ -1,0 +1,9 @@
+name: "openspec-spec-hardening"
+display_name: "OpenSpec Spec Hardening"
+description: "Ambiguity review and implementation-readiness contract for drafted OpenSpec changes."
+default_prompt: "Use $openspec-spec-hardening to remove critical ambiguity before implementation."
+compatibility:
+  codex: true
+  github_copilot: true
+invocation:
+  explicit_tag: "$openspec-spec-hardening"

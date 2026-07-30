@@ -1,5 +1,12 @@
 name: angular
 description: Angular local development guidance.
+detection:
+  required:
+    - type: path_exists
+      path: angular.json
+    - type: file_contains
+      path: package.json
+      value: '"@angular/core"'
 context:
   languages: [typescript, html, css]
   frameworks: [angular]

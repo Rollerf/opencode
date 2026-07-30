@@ -41,9 +41,9 @@ require_contains "$PACK_FILE" 'ui_frontend:'
 require_contains "$PACK_FILE" '      - web-ui-ux'
 require_contains "$PACK_FILE" '      - backend-design'
 
-require_contains "${ROOT_DIR}/agents/implementer.md" '$web-ui-ux'
-require_contains "${ROOT_DIR}/agents/implementer.md" 'Do not apply `$backend-design` to frontend-only work'
-require_contains "${ROOT_DIR}/agents/implementer.md" 'repository-local skill file'
+require_file "${ROOT_DIR}/skill/openspec-implementation/SKILL.md"
+require_contains "${ROOT_DIR}/skill/openspec-implementation/SKILL.md" 'resolved pack'
+require_contains "${ROOT_DIR}/skill/openspec-implementation/SKILL.md" 'RED -> GREEN -> REFACTOR'
 require_contains "${ROOT_DIR}/agents/orchestrator.md" '$web-ui-ux'
 require_contains "${ROOT_DIR}/agents/orchestrator.md" 'Do not route frontend-only work through `$backend-design`'
 require_contains "${ROOT_DIR}/agents/orchestrator.md" 'repository-local skill file'

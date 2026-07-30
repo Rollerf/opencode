@@ -1,0 +1,9 @@
+version: 1
+phases:
+  - id: planning
+    skill: missing-phase-skill
+    path: skill/missing-phase-skill/SKILL.md
+    entry_criteria:
+      - approved
+    completion_criteria:
+      - planned

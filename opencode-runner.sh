@@ -2,20 +2,16 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-if [[ -d "${SCRIPT_DIR}/openspec" ]]; then
-  ROOT_DIR="${SCRIPT_DIR}"
+MODULE_DIR="$SCRIPT_DIR"
+if [[ "$(basename "$MODULE_DIR")" == ".opencode" ]]; then
+  PROJECT_ROOT="$(cd -- "${MODULE_DIR}/.." && pwd)"
 else
-  ROOT_DIR="$(cd -- "${SCRIPT_DIR}/.." && pwd)"
+  PROJECT_ROOT="$MODULE_DIR"
 fi
-if [[ -d "${ROOT_DIR}/agents" && -d "${ROOT_DIR}/skill" ]]; then
-  OPENCODE_DIR="${ROOT_DIR}"
-  AGENTS_DIR="${ROOT_DIR}/agents"
-  SKILLS_DIR="${ROOT_DIR}/skill"
-else
-  OPENCODE_DIR="${ROOT_DIR}/.opencode"
-  AGENTS_DIR="${OPENCODE_DIR}/agents"
-  SKILLS_DIR="${OPENCODE_DIR}/skill"
-fi
+OPENCODE_DIR="$MODULE_DIR"
+AGENTS_DIR="${MODULE_DIR}/agents"
+SKILLS_DIR="${MODULE_DIR}/skill"
+PACKS_DIR="${MODULE_DIR}/packs"
 
 fail() {
   echo "Error: $*" >&2
@@ -41,14 +37,15 @@ manifest_value() {
   strip_quotes "$line"
 }
 
-phase_default_agent() {
+phase_contract_skill() {
   local phase="$1"
   case "$phase" in
-    planning) echo "planner" ;;
-    implementation) echo "implementer" ;;
-    verification) echo "verifier" ;;
-    archive) echo "archiver" ;;
-    *) echo "orchestrator" ;;
+    planning) echo "openspec-planning" ;;
+    spec-hardening) echo "openspec-spec-hardening" ;;
+    implementation) echo "openspec-implementation" ;;
+    verification) echo "openspec-verification" ;;
+    archive) echo "openspec-archive" ;;
+    *) fail "Unknown phase: ${phase}. Expected planning|spec-hardening|implementation|verification|archive" ;;
   esac
 }
 
@@ -89,12 +86,12 @@ phase_default_skills() {
   local frontend_intent="false"
   local backend_intent="false"
 
-  case "$phase" in
-    archive)
-      echo "$skills_csv"
-      return
-      ;;
-  esac
+  skills_csv="$(append_skill "$skills_csv" "$(phase_contract_skill "$phase")")"
+
+  [[ "$phase" != "archive" ]] || {
+    echo "$skills_csv"
+    return
+  }
 
   if is_frontend_intent "$user_prompt"; then
     frontend_intent="true"
@@ -164,8 +161,8 @@ resolve_skill_dir() {
 
 resolve_change_dir() {
   local change="$1"
-  local active="${ROOT_DIR}/openspec/changes/${change}"
-  local archived="${ROOT_DIR}/openspec/changes/archive/${change}"
+  local active="${PROJECT_ROOT}/openspec/changes/${change}"
+  local archived="${PROJECT_ROOT}/openspec/changes/archive/${change}"
 
   if [[ -d "$active" ]]; then
     printf '%s\n' "$active"
@@ -178,39 +175,81 @@ resolve_change_dir() {
   return 1
 }
 
+markdown_fence_for_text() {
+  local text="$1"
+  local rest="$text"
+  local max_run=2
+  local run
+  while [[ "$rest" =~ (\`+) ]]; do
+    run="${BASH_REMATCH[1]}"
+    (( ${#run} > max_run )) && max_run=${#run}
+    rest="${rest#*"$run"}"
+  done
+  local fence=""
+  printf -v fence '%*s' "$((max_run + 1))" ''
+  printf '%s' "${fence// /\`}"
+}
+
+include_text_as_fenced_md() {
+  local label="$1"
+  local language="$2"
+  local text="$3"
+  local fence
+  fence="$(markdown_fence_for_text "$text")"
+  {
+    printf '### %s\n\n' "$label"
+    printf '%s%s\n' "$fence" "$language"
+    printf '%s\n' "$text"
+    printf '%s\n\n' "$fence"
+  }
+}
+
 include_file_as_fenced_md() {
   local label="$1"
   local file="$2"
-  {
-    printf '### %s\n\n' "$label"
-    printf '```md\n'
-    cat "$file"
-    printf '\n```\n\n'
-  }
+  local content
+  content="$(<"$file")"
+  include_text_as_fenced_md "$label" "md" "$content"
+}
+
+resolve_pack_selection() {
+  local explicit_pack="${1:-}"
+  local resolver="${MODULE_DIR}/scripts/resolve-pack.mjs"
+  [[ -f "$resolver" ]] || fail "Missing pack resolver: $resolver"
+  require_cmd node
+  local -a args=(node "$resolver" --module-dir "$MODULE_DIR" --project-root "$PROJECT_ROOT" --field pack)
+  if [[ -n "$explicit_pack" ]]; then
+    args+=(--pack "$explicit_pack")
+  fi
+  "${args[@]}"
 }
 
 run_or_print() {
   local dry_run="$1"
   shift
-  printf '+'
+  printf '+ (cd %q &&' "$PROJECT_ROOT"
   for arg in "$@"; do
     printf ' %q' "$arg"
   done
-  printf '\n'
+  printf ')\n'
   if [[ "$dry_run" == "false" ]]; then
-    "$@"
+    (cd "$PROJECT_ROOT" && "$@")
   fi
 }
 
 doctor_cmd() {
-  [[ -d "$AGENTS_DIR" ]] || fail "Missing agents directory: ${AGENTS_DIR#${ROOT_DIR}/}"
-  [[ -d "$SKILLS_DIR" ]] || fail "Missing skill directory: ${SKILLS_DIR#${ROOT_DIR}/}"
+  [[ -d "$AGENTS_DIR" ]] || fail "Missing agents directory: $AGENTS_DIR"
+  [[ -d "$SKILLS_DIR" ]] || fail "Missing skill directory: $SKILLS_DIR"
+  [[ -d "$PACKS_DIR" ]] || fail "Missing packs directory: $PACKS_DIR"
 
   require_cmd openspec
-  echo "ok: runner structure (${OPENCODE_DIR#${ROOT_DIR}/})"
+  require_cmd node
+  node "${MODULE_DIR}/scripts/resolve-pack.mjs" --help >/dev/null || fail "Pack resolver dependencies are unavailable; run npm install --prefix ${MODULE_DIR}"
+  echo "ok: module directory ($MODULE_DIR)"
+  echo "ok: project root ($PROJECT_ROOT)"
   echo "ok: openspec command found ($(openspec --version 2>/dev/null || echo unknown))"
 
-  if openspec status --json >/dev/null 2>&1; then
+  if (cd "$PROJECT_ROOT" && openspec status --json >/dev/null 2>&1); then
     echo "ok: openspec status available"
   else
     echo "warn: openspec has no active changes yet (this is fine)"
@@ -218,7 +257,7 @@ doctor_cmd() {
 }
 
 list_agents_cmd() {
-  find "$AGENTS_DIR" -type f -name '*.md' | sort | sed "s#^${ROOT_DIR}/##"
+  find "$AGENTS_DIR" -type f -name '*.md' | sort | sed "s#^${MODULE_DIR}/##"
 }
 
 list_skills_cmd() {
@@ -248,7 +287,7 @@ bundle_cmd() {
   local skills_csv=""
   local user_prompt=""
   local out_file=""
-  local include_refs="true"
+  local include_refs="false"
 
   while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -291,6 +330,10 @@ bundle_cmd() {
         include_refs="false"
         shift
         ;;
+      --references)
+        include_refs="true"
+        shift
+        ;;
       -h|--help)
         usage
         exit 0
@@ -301,12 +344,12 @@ bundle_cmd() {
     esac
   done
 
+  [[ -z "$phase" ]] || phase_contract_skill "$phase" >/dev/null
+
+  pack="$(resolve_pack_selection "$pack")" || exit $?
+
   if [[ -z "$agent" ]]; then
-    if [[ -n "$phase" ]]; then
-      agent="$(phase_default_agent "$phase")"
-    else
-      agent="orchestrator"
-    fi
+    agent="orchestrator"
   fi
 
   if [[ -z "$skills_csv" ]]; then
@@ -329,14 +372,18 @@ bundle_cmd() {
 
   {
     printf '# OpenCode Session Bundle\n\n'
+    if [[ -n "$user_prompt" ]]; then
+      printf '## User Goal\n\n'
+      include_text_as_fenced_md "Operator Request" "text" "$user_prompt"
+    fi
+    printf '## Generated Context\n\n'
     printf -- '- Generated: %s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-    printf -- '- Repo: `%s`\n' "$ROOT_DIR"
+    printf -- '- Module directory: `%s`\n' "$MODULE_DIR"
+    printf -- '- Project root: `%s`\n' "$PROJECT_ROOT"
     if [[ -n "$phase" ]]; then
       printf -- '- Phase: `%s`\n' "$phase"
     fi
-    if [[ -n "$pack" ]]; then
-      printf -- '- Pack: `%s`\n' "$pack"
-    fi
+    printf -- '- Pack: `%s`\n' "$pack"
     if [[ -n "$change" ]]; then
       printf -- '- Change: `%s`\n' "$change"
     fi
@@ -348,6 +395,7 @@ bundle_cmd() {
   local -a skills=()
   IFS=',' read -r -a skills <<<"$skills_csv"
   local raw skill_dir skill_name skill_file
+  local references_listed="false"
   for raw in "${skills[@]}"; do
     [[ -n "$raw" ]] || continue
     skill_dir="$(resolve_skill_dir "$raw")"
@@ -357,12 +405,27 @@ bundle_cmd() {
 
     include_file_as_fenced_md "Skill: ${skill_name}" "$skill_file" >> "$out_file"
 
-    if [[ "$include_refs" == "true" && -d "${skill_dir}/references" ]]; then
-      while IFS= read -r ref_file; do
-        include_file_as_fenced_md "Skill Reference: ${skill_name}/$(basename "$ref_file")" "$ref_file" >> "$out_file"
-      done < <(find "${skill_dir}/references" -type f -name '*.md' | sort)
+    if [[ -d "${skill_dir}/references" ]]; then
+      if [[ "$include_refs" == "true" ]]; then
+        while IFS= read -r ref_file; do
+          include_file_as_fenced_md "Skill Reference: ${skill_name}/${ref_file#${skill_dir}/references/}" "$ref_file" >> "$out_file"
+        done < <(find "${skill_dir}/references" -type f -name '*.md' | sort)
+      else
+        if [[ "$references_listed" == "false" ]]; then
+          printf '## Available Skill References\n\n' >> "$out_file"
+          references_listed="true"
+        fi
+        while IFS= read -r ref_file; do
+          printf -- '- `%s/%s` (include with `--references`)\n' "$skill_name" "${ref_file#${skill_dir}/references/}" >> "$out_file"
+        done < <(find "${skill_dir}/references" -type f -name '*.md' | sort)
+        printf '\n' >> "$out_file"
+      fi
     fi
   done
+
+  local pack_file="${PACKS_DIR}/${pack}/pack.yaml"
+  [[ -f "$pack_file" ]] || fail "Unknown pack after resolution: $pack"
+  include_file_as_fenced_md "Pack Contract: ${pack}/pack.yaml" "$pack_file" >> "$out_file"
 
   if [[ -n "$change" ]]; then
     local change_dir
@@ -370,11 +433,18 @@ bundle_cmd() {
 
     {
       printf '## OpenSpec Artifacts\n\n'
-      printf -- '- Path: `%s`\n\n' "${change_dir#${ROOT_DIR}/}"
+      printf -- '- Path: `%s`\n\n' "${change_dir#${PROJECT_ROOT}/}"
     } >> "$out_file"
 
     local artifact_file
-    for artifact_file in proposal.md design.md tasks.md; do
+    local -a artifacts=()
+    case "${phase:-planning}" in
+      planning) artifacts=(proposal.md design.md tasks.md) ;;
+      implementation|verification) artifacts=(design.md tasks.md) ;;
+      archive) artifacts=(proposal.md tasks.md) ;;
+      spec-hardening) artifacts=(proposal.md design.md tasks.md) ;;
+    esac
+    for artifact_file in "${artifacts[@]}"; do
       if [[ -f "${change_dir}/${artifact_file}" ]]; then
         include_file_as_fenced_md "Change Artifact: ${artifact_file}" "${change_dir}/${artifact_file}" >> "$out_file"
       fi
@@ -385,16 +455,21 @@ bundle_cmd() {
         include_file_as_fenced_md "Change Spec: ${spec_file#${change_dir}/}" "$spec_file" >> "$out_file"
       done < <(find "${change_dir}/specs" -type f -name 'spec.md' | sort)
     fi
-  fi
-
-  if [[ -n "$user_prompt" ]]; then
-    {
-      printf '## User Prompt\n\n'
-      printf '```text\n%s\n```\n' "$user_prompt"
-    } >> "$out_file"
+    if [[ "$phase" == "archive" && -d "${change_dir}/evidence" ]]; then
+      while IFS= read -r evidence_file; do
+        include_file_as_fenced_md "Change Evidence: ${evidence_file#${change_dir}/}" "$evidence_file" >> "$out_file"
+      done < <(find "${change_dir}/evidence" -type f -name '*.md' | sort)
+    fi
   fi
 
   echo "$out_file"
+  local lines bytes approximate_tokens
+  lines="$(wc -l < "$out_file")"
+  bytes="$(wc -c < "$out_file")"
+  approximate_tokens=$(( (bytes + 3) / 4 ))
+  printf 'Bundle lines: %s\n' "$lines" >&2
+  printf 'Bundle bytes: %s\n' "$bytes" >&2
+  printf 'Approximate tokens: %s (byte-count/4 estimate)\n' "$approximate_tokens" >&2
 }
 
 phase_cmd() {
@@ -403,6 +478,7 @@ phase_cmd() {
 
   local change=""
   local dry_run="false"
+  local pack=""
 
   while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -414,6 +490,11 @@ phase_cmd() {
       --dry-run)
         dry_run="true"
         shift
+        ;;
+      --pack)
+        [[ $# -gt 1 ]] || fail "--pack requires a value"
+        pack="$2"
+        shift 2
         ;;
       -h|--help)
         usage
@@ -427,10 +508,21 @@ phase_cmd() {
 
   [[ -n "$change" ]] || fail "--change is required for phase command"
 
+  local phase_skill
+  phase_skill="$(phase_contract_skill "$phase")"
+  pack="$(resolve_pack_selection "$pack")" || exit $?
+  printf 'Agent: orchestrator\n'
+  printf 'Phase skill: %s\n' "$phase_skill"
+  printf 'Pack: %s\n' "$pack"
+
   case "$phase" in
     planning)
       run_or_print "$dry_run" openspec status --change "$change"
       run_or_print "$dry_run" openspec status --change "$change" --json
+      ;;
+    spec-hardening)
+      run_or_print "$dry_run" openspec status --change "$change" --json
+      run_or_print "$dry_run" openspec instructions apply --change "$change" --json
       ;;
     implementation)
       run_or_print "$dry_run" openspec status --change "$change" --json
@@ -444,9 +536,6 @@ phase_cmd() {
       run_or_print "$dry_run" openspec status --change "$change" --json
       run_or_print "$dry_run" openspec archive "$change"
       ;;
-    *)
-      fail "Unknown phase: ${phase}. Expected planning|implementation|verification|archive"
-      ;;
   esac
 }
 
@@ -459,17 +548,18 @@ Usage:
   ./opencode-runner.sh list agents
   ./opencode-runner.sh list skills
   ./opencode-runner.sh bundle [options]
-  ./opencode-runner.sh phase <planning|implementation|verification|archive> --change <name> [--dry-run]
+  ./opencode-runner.sh phase <planning|spec-hardening|implementation|verification|archive> --change <name> [--pack <name>] [--dry-run]
 
 Bundle options:
-  --phase <phase>              planning|implementation|verification|archive
+  --phase <phase>              planning|spec-hardening|implementation|verification|archive
   --change <name>              OpenSpec change name to include artifacts
-  --agent <name|path>          Agent file or name (default: phase default or orchestrator)
-  --pack <name>                Optional stack pack hint (go-aws|java-onprem|angular|generic)
+  --agent <name|path>          Agent file or name (default: orchestrator)
+  --pack <name>                Explicit pack selection; otherwise config/evidence resolves it
   --skills <csv>               Comma-separated skills (default from phase)
   --user-prompt "<text>"       Optional user prompt section
   --out <file>                 Output bundle file
-  --no-references              Skip skill references/*.md
+  --references                 Include skill references/*.md (opt-in)
+  --no-references              Compatibility alias that keeps references omitted
 
 Examples:
   ./opencode-runner.sh doctor

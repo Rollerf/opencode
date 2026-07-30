@@ -16,16 +16,17 @@ Its goal is to provide a shared base of agents, skills, quality rules, and workf
 
 The platform is made up of 5 parts:
 
-1. `agents/`: agents by phase (planner, implementer, verifier, archiver, orchestrator, and sub-agents).
-2. `skill/`: reusable skills (`openspec-workflow`, `backend-design`, `node-defi-arbitrage`, `seo-expert`, `web-ui-ux`, `playwright-cli`, optional CodeGraph, RTK, and n8n skills).
+1. `agents/`: the primary orchestrator and four bounded specialist subagents (documentation, design document, Pulumi, and TDD).
+2. `skill/`: reusable phase contracts and specialization skills (`openspec-*`, `backend-design`, `node-defi-arbitrage`, `seo-expert`, `web-ui-ux`, `playwright-cli`, optional CodeGraph, RTK, and n8n skills).
 3. `core/`: shared workflow contract, agent catalog, routing policy, and templates.
 4. `packs/`: extensions by stack (`go-aws`, `java-onprem`, `angular`, `generic`).
 5. `evals/` + `scripts/`: automated evaluation and validation of contracts and quality thresholds.
 
-Routing is intent-first:
+Routing is evidence- and intent-first:
 
-- First, the type of work is detected (planning, implementation, verification, archive, docs, etc.).
-- Then, the context of the active stack pack is applied.
+- First, the stack pack is resolved from explicit selection, compatible project confirmation, or pack detection markers. Ambiguous or unsupported stacks require operator confirmation before phase work.
+- Then, the type of work is detected and exactly one phase-contract skill is loaded.
+- Finally, stack and specialization overlays are applied and bounded delegation remains optional.
 - `orchestrator.md` is the recommended single interactive entrypoint: it selects the phase contract and executes local work directly unless a specialized subagent clearly reduces context, adds expertise, enables parallelism, or produces a distinct deliverable.
 
 ## Operating principles
@@ -37,6 +38,30 @@ Routing is intent-first:
 - **Global thresholds** for any stack.
 - **Local-only execution**: staging/production actions are not automated.
 - **Mandatory handoff** to an external operator when the flow leaves local.
+
+## Global workstation consumption model
+
+The standard workstation setup uses this repository as the global OpenCode platform:
+
+- `main` is the stable distribution branch consumed by local OpenCode installations.
+- `develop` is the integration branch and MUST NOT be used as the global runtime source.
+- Feature and release branches are validation stages and do not affect other local projects until their changes reach `main`.
+- `~/.config/opencode` is a checkout of this repository on `main`.
+- `~/.config/opencode/opencode.json` selects `orchestrator` as the default agent, registers global skill paths, and exposes the checkout as the `opencode-platform` reference.
+
+This means every project opened on the workstation receives the agents, skills, packs, workflow contracts, and quality rules from the `main` revision checked out under `~/.config/opencode`.
+
+Publishing a platform change and activating it globally are separate operations:
+
+1. Complete and verify the OpenSpec change on `feature/<change-name>`.
+2. Merge the feature into `develop`.
+3. Create and verify a `release/*` branch from `develop`.
+4. Merge the release into `main` and push `main` to `origin`.
+5. In `~/.config/opencode`, reconcile any machine-local commits or configuration changes, then update from `origin/main` without discarding them.
+6. Run `npm install` and initialize required external submodules when dependency or submodule metadata changed.
+7. Restart OpenCode because agents, skills, and configuration are loaded only at startup.
+
+Do not point the global installation at a feature branch for normal use. Do not reset or overwrite `~/.config/opencode/opencode.json` blindly: it is machine-owned configuration and may contain local provider, MCP, permission, or reference settings that must be merged deliberately.
 
 ## Branching strategy (gitflow)
 
@@ -106,6 +131,10 @@ This README is the canonical command reference for `opencode-runner.sh`.
 ./scripts/validate/playwright-cli-contract.sh
 ./scripts/validate/n8n-skills-contract.sh
 ./scripts/validate/seo-expert-contract.sh
+node ./scripts/validate/runtime-definitions.mjs --self-test
+node ./scripts/validate/runtime-definitions.mjs
+./scripts/validate/runtime-runner-contract.sh
+./scripts/validate/runtime-consumer-contract.sh
 ```
 
 5) Run quality harness:
@@ -257,20 +286,33 @@ Consumer projects install this repository as a submodule at `.opencode`:
 
 ```bash
 git submodule add <repo-url> .opencode
-git submodule update --init --recursive .opencode
+git submodule update --init .opencode
+git -C .opencode submodule update --init third_party/n8n_skills
+npm install --prefix .opencode
 ```
 
-OpenCode can then use the reusable agents from the submodule:
+Copy or merge the consumer templates:
+
+```bash
+cp .opencode/core/templates/opencode.consumer.json opencode.json
+# Only after the operator confirms the inferred pack:
+cp .opencode/core/templates/opencode-project.yaml .opencode-project.yaml
+```
+
+OpenCode then uses the orchestrator and bounded specialist subagents from the module:
 
 - `.opencode/agents/orchestrator.md`
-- `.opencode/agents/planner.md`
-- `.opencode/agents/spec-hardener.md`
-- `.opencode/agents/implementer.md`
-- `.opencode/agents/verifier.md`
-- `.opencode/agents/archiver.md`
 - `.opencode/agents/subagent/*.md`
 
-OpenCode can also use wrapper skills from the submodule, including:
+Workflow phases are native skills:
+
+- `.opencode/skill/openspec-planning/SKILL.md`
+- `.opencode/skill/openspec-spec-hardening/SKILL.md`
+- `.opencode/skill/openspec-implementation/SKILL.md`
+- `.opencode/skill/openspec-verification/SKILL.md`
+- `.opencode/skill/openspec-archive/SKILL.md`
+
+OpenCode can also use specialization skills from the submodule, including:
 
 - `.opencode/skill/codegraph/SKILL.md`
 - `.opencode/skill/rtk/SKILL.md`
@@ -280,28 +322,41 @@ Recommended consumer flow:
 1. Keep OpenSpec as the source of truth for the change (`proposal`, `design`, `specs`, `tasks`).
 2. Write every OpenSpec artifact in English, regardless of the conversation language, to keep shared specs portable and token-efficient.
 3. Define implementation-ready hard specs before coding: no unresolved CRITICAL ambiguity, deterministic requirements/scenarios, traceable tasks, and explicit verification evidence.
-4. Use `spec-hardener.md` after drafting artifacts and before implementation to establish hard-spec readiness.
+4. Use `$openspec-spec-hardening` after drafting artifacts and before implementation to establish hard-spec readiness.
 5. Under gitflow, each OpenSpec change should map to its own `feature/<change-name>` branch created from `develop`.
-6. Choose the right pack for the stack (`packs/go-aws`, `packs/java-onprem`, `packs/angular`, or `packs/generic`).
+6. Let the orchestrator infer the pack from project evidence; confirm ambiguous matches, or explicitly confirm `generic`/request a new pack when none matches.
 7. Run implementation with TDD evidence.
 8. Verify against global thresholds.
 9. If the flow needs to leave local, generate handoff for an external operator using `governance/operator-handoff-template.md`.
 
 ## OpenSpec spec hardening
 
-Use `agents/spec-hardener.md` after a change has drafted OpenSpec artifacts and before implementation starts. The agent reviews `proposal.md`, `design.md`, `tasks.md`, and `specs/**/spec.md`, then asks targeted questions about ambiguity, missing decisions, weak acceptance criteria, and incomplete scenario coverage. Implementation should not start until the change has hard specs or any remaining gaps are explicitly accepted as non-critical.
+Use `$openspec-spec-hardening` after a change has drafted OpenSpec artifacts and before implementation starts. The phase skill makes the orchestrator review `proposal.md`, `design.md`, `tasks.md`, and `specs/**/spec.md`, then ask targeted questions about ambiguity, missing decisions, weak acceptance criteria, and incomplete scenario coverage. Implementation must not start until the change has hard specs or any remaining gaps are explicitly accepted as non-critical.
 
 Example bundle:
 
 ```bash
 ./.opencode/opencode-runner.sh bundle \
-  --agent spec-hardener \
+  --phase planning \
   --change <change-name> \
-  --skills openspec-workflow \
+  --pack <confirmed-pack> \
+  --skills openspec-workflow,openspec-spec-hardening \
   --user-prompt "Harden this OpenSpec change before implementation"
 ```
 
 The hardener does not implement code. It edits OpenSpec artifacts only after the user answers the questions or explicitly asks for artifact updates.
+
+## Agent migration and model policy
+
+| Previous primary agent | Replacement phase skill |
+| --- | --- |
+| `planner` | `$openspec-planning` |
+| `spec-hardener` | `$openspec-spec-hardening` |
+| `implementer` | `$openspec-implementation` |
+| `verifier` | `$openspec-verification` |
+| `archiver` | `$openspec-archive` |
+
+`orchestrator` is the only phase-owning primary agent and uses `openai/gpt-5.6-sol` with 40 steps. Documentation and design-document helpers use Luna with 10 and 12 steps. Pulumi and TDD helpers use Sol with 20 steps. Feature iteration is part of `$openspec-implementation`, not a subagent.
 
 ## Caveman in consumer projects
 
@@ -323,7 +378,7 @@ If the runtime does not expose them, agents should read and apply the local `SKI
 
 - New agent: add file in `agents/` and register metadata in `core/agent-catalog.yaml`.
 - New skill: create `skill/<name>/manifest.yaml` + `SKILL.md` and validate its routing/pack integration.
-- New stack pack: create `packs/<stack>/pack.yaml` + `README.md` with verification and TDD commands.
+- New stack pack: create `packs/<stack>/pack.yaml` + `README.md` with `detection.required`, verification, TDD, and safety commands.
 - New global rule: update `core/workflow-contract.md` and validation scripts in `scripts/validate/`.
 - New quality metric: update `evals/config/global-thresholds.json` and `scripts/evals/run-all.sh`.
 

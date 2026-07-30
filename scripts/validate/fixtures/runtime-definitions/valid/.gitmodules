@@ -1,0 +1,3 @@
+[submodule "external"]
+	path = third_party/external
+	url = https://github.com/example/external.git

@@ -1,3 +1,8 @@
+---
+name: codegraph
+description: Use when CodeGraph MCP tools are available for semantic code exploration, call graphs, impact analysis, symbol lookup, or affected-test discovery.
+---
+
 # CodeGraph
 
 Use this skill when CodeGraph MCP tools are available and the task benefits from semantic code intelligence, structural exploration, call graph analysis, impact analysis, or affected-test discovery.

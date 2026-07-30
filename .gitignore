@@ -4,3 +4,5 @@ session-bundle-*.md
 .codex
 .opencode.diff
 .opencode
+.codegraph/
+*:Zone.Identifier

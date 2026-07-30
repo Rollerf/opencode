@@ -1,0 +1,27 @@
+version: 1
+phases:
+  - id: planning
+    skill: openspec-planning
+    path: skill/openspec-planning/SKILL.md
+    entry_criteria: [change_requested]
+    completion_criteria: [artifacts_ready]
+  - id: spec-hardening
+    skill: openspec-spec-hardening
+    path: skill/openspec-spec-hardening/SKILL.md
+    entry_criteria: [drafts_ready]
+    completion_criteria: [hard_specs_ready]
+  - id: implementation
+    skill: openspec-implementation
+    path: skill/openspec-implementation/SKILL.md
+    entry_criteria: [tasks_ready]
+    completion_criteria: [tasks_complete]
+  - id: verification
+    skill: openspec-verification
+    path: skill/openspec-verification/SKILL.md
+    entry_criteria: [implementation_complete]
+    completion_criteria: [verification_complete]
+  - id: archive
+    skill: openspec-archive
+    path: skill/openspec-archive/SKILL.md
+    entry_criteria: [verification_passed]
+    completion_criteria: [change_archived]

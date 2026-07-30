@@ -3,6 +3,10 @@ set -euo pipefail
 
 ROOT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/../.." && pwd)"
 
+node "${ROOT_DIR}/scripts/validate/runtime-definitions.mjs" --self-test
+node "${ROOT_DIR}/scripts/validate/runtime-definitions.mjs"
+"${ROOT_DIR}/scripts/validate/runtime-runner-contract.sh"
+"${ROOT_DIR}/scripts/validate/runtime-consumer-contract.sh"
 "${ROOT_DIR}/scripts/validate/contracts.sh"
 "${ROOT_DIR}/scripts/validate/gitflow-branching-contract.sh"
 "${ROOT_DIR}/scripts/validate/tdd-contract.sh"

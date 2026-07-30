@@ -1,0 +1,2 @@
+expected_errors:
+  - gitmodules-self-submodule

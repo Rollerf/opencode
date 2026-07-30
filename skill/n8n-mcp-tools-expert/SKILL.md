@@ -1,3 +1,8 @@
+---
+name: n8n-mcp-tools-expert
+description: Use ONLY for explicit n8n work requiring n8n MCP tool selection, node discovery, workflow validation, or workflow assembly.
+---
+
 # n8n MCP Tools Expert (Wrapper)
 
 This wrapper exposes the upstream n8n MCP tools skill in a way that is compatible with this repository's skill loader and routing model.
