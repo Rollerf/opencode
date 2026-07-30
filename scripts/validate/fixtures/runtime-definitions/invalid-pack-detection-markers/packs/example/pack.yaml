@@ -1,0 +1,6 @@
+name: example
+description: Fixture pack.
+detection:
+  required:
+    - type: glob
+      path: "src/**"

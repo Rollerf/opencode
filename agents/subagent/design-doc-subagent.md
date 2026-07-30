@@ -1,7 +1,11 @@
 ---
 description: "SUBAGENT | Create pragmatic design docs with architecture, trade-offs, and rollout plan."
 mode: subagent
+model: openai/gpt-5.6-luna
+steps: 12
 temperature: 0.1
+permission:
+  task: deny
 tools:
   write: true
   edit: true
@@ -31,8 +35,8 @@ Design output structure:
 8. Risks and mitigations.
 
 Repository guardrails:
-- Respect `Handler -> UseCase -> Storage` boundaries.
-- Identify impact on `apis/apiManagment.yml`, migrations, and `infra/`.
+- Apply architecture, commands, and safety constraints from the resolved stack pack and project documentation.
+- Do not assume handlers, storage layers, API formats, migration tools, or infrastructure directories.
 - Align with OpenSpec artifacts when a change is active.
 
 Expected output:

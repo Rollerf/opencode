@@ -1,6 +1,6 @@
 ---
 name: openspec-workflow
-description: End-to-end OpenSpec workflow for this backend. Use when creating or continuing a change, writing proposal/design/specs/tasks, implementing tasks, validating readiness, syncing specs, or archiving.
+description: Use for end-to-end OpenSpec changes, including proposal, design, specs, tasks, implementation, readiness validation, spec synchronization, and archive.
 ---
 
 # OpenSpec Workflow

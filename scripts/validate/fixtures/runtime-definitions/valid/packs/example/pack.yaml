@@ -1,0 +1,9 @@
+name: example
+description: Fixture pack.
+detection:
+  required:
+    - type: path_exists
+      path: package.json
+    - type: file_contains
+      path: package.json
+      value: fixture

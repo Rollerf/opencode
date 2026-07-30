@@ -1,3 +1,8 @@
+---
+name: playwright-cli
+description: Use when frontend work requires browser automation, interactive inspection, Playwright debugging, snapshots, traces, or executable browser evidence.
+---
+
 # Playwright CLI Browser Automation
 
 Use this skill when frontend work requires executable browser automation, interactive page inspection, Playwright-oriented debugging, snapshots, traces, or browser-generated evidence.

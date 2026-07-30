@@ -1,0 +1,5 @@
+expected_errors:
+  - tracked-zone-identifier
+tracked_files:
+  - agents/helper.md
+  - agents/helper.md:Zone.Identifier

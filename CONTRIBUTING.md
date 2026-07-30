@@ -29,6 +29,17 @@ This project defines a cross-cutting platform of agents and skills for OpenCode 
 8. Prefer a merge strategy that preserves the intended gitflow history for the target repository.
 9. Never commit directly to `main` except controlled emergency fixes.
 
+## Global distribution through `main`
+
+The workstation-wide OpenCode installation is a checkout of this repository at `~/.config/opencode` on the `main` branch. Therefore:
+
+1. Treat `main` as the stable distribution channel for all local projects.
+2. Do not consider a feature globally available until it has passed `feature -> develop -> release -> main` and `main` has been pushed.
+3. Update the global checkout only after the release reaches `origin/main`.
+4. Preserve and reconcile machine-local `opencode.json`, package metadata, commits, and uncommitted changes before updating the global checkout.
+5. Run dependency/submodule setup and restart OpenCode after updating because configuration-time definitions are not hot-reloaded.
+6. Keep non-local `push`, release merge, and global checkout update as explicit operator actions with command evidence.
+
 ## Recommended flow
 
 1. Create or select an OpenSpec change.
@@ -59,6 +70,10 @@ This project defines a cross-cutting platform of agents and skills for OpenCode 
 ./scripts/validate/playwright-cli-contract.sh
 ./scripts/validate/n8n-skills-contract.sh
 ./scripts/validate/seo-expert-contract.sh
+node ./scripts/validate/runtime-definitions.mjs --self-test
+node ./scripts/validate/runtime-definitions.mjs
+./scripts/validate/runtime-runner-contract.sh
+./scripts/validate/runtime-consumer-contract.sh
 ./scripts/validate/run-all.sh
 ./scripts/evals/run-all.sh
 openspec validate "<change>" --strict
@@ -72,6 +87,8 @@ Checklist:
 - [ ] Keep phase and evidence policies (phase, touched files, commands, blockers, decisions).
 - [ ] Keep TDD for behavior changes.
 - [ ] Register metadata in `core/agent-catalog.yaml`.
+- [ ] Keep phase contracts in `skill/openspec-*/`, not as additional primary agents.
+- [ ] Set the approved model, step limit, and `permission.task: deny` for leaf subagents.
 - [ ] Adjust routing if applicable in `core/routing-policy.md`.
 - [ ] Validate with `./scripts/validate/contracts.sh`.
 
@@ -94,6 +111,8 @@ Checklist:
 
 - [ ] Create `packs/<stack>/pack.yaml`.
 - [ ] Create `packs/<stack>/README.md`.
+- [ ] Define deterministic `detection.required` markers using only `path_exists` and literal `file_contains`.
+- [ ] Do not add automatic detection to the `generic` pack.
 - [ ] Define `verification_commands` (test/build/lint).
 - [ ] Define `tdd_commands` (red/green/refactor).
 - [ ] If the pack supports frontend/UI work, define `skill_overlays` for shared UI guidance and explicit exclusions.

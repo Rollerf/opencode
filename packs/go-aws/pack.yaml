@@ -1,5 +1,12 @@
 name: go-aws
 description: Go backend and AWS-oriented local development guidance.
+detection:
+  required:
+    - type: path_exists
+      path: go.mod
+    - type: file_contains
+      path: go.mod
+      value: github.com/aws/aws-sdk-go
 context:
   languages: [go]
   platforms: [aws]
