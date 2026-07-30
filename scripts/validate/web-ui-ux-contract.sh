@@ -17,7 +17,7 @@ require_file() {
 require_contains() {
   local file="$1"
   local text="$2"
-  if ! grep -Fq "$text" "$file"; then
+  if ! grep -Fq -- "$text" "$file"; then
     fail "Missing required text in ${file#${ROOT_DIR}/}: $text"
   fi
 }
@@ -25,7 +25,7 @@ require_contains() {
 require_not_contains() {
   local file="$1"
   local text="$2"
-  if grep -Fq "$text" "$file"; then
+  if grep -Fq -- "$text" "$file"; then
     fail "Unexpected text in ${file#${ROOT_DIR}/}: $text"
   fi
 }
