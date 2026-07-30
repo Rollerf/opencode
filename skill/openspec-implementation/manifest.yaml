@@ -1,0 +1,9 @@
+name: "openspec-implementation"
+display_name: "OpenSpec Implementation Contract"
+description: "Implementation and feature-iteration phase contract with mandatory TDD."
+default_prompt: "Use $openspec-implementation to execute OpenSpec tasks with RED, GREEN, and REFACTOR evidence."
+compatibility:
+  codex: true
+  github_copilot: true
+invocation:
+  explicit_tag: "$openspec-implementation"

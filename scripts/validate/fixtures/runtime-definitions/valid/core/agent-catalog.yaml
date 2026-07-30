@@ -1,0 +1,12 @@
+version: 1
+agents:
+  - id: orchestrator
+    runtime_name: orchestrator
+    path: agents/orchestrator.md
+    phase_scope: cross-phase
+    specialization: orchestration
+    model: openai/gpt-5.6-sol
+    steps: 40
+    delegation_scope: bounded
+    expected_inputs: [user_goal]
+    expected_outputs: [phase_result]

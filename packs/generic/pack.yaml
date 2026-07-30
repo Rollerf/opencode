@@ -1,5 +1,5 @@
 name: generic
-description: Fallback pack for unsupported stacks with safe defaults.
+description: Confirmation-only pack for unsupported stacks with safe defaults.
 context:
   deployment_owner: external-operator
 local_only: true

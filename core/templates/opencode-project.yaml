@@ -1,0 +1,5 @@
+# Copy to <project>/.opencode-project.yaml only after the operator confirms the pack.
+# Merge these keys into an existing file; project provider and permission settings belong in opencode.json.
+default_pack: generic
+allowed_packs:
+  - generic

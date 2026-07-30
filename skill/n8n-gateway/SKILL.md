@@ -1,3 +1,8 @@
+---
+name: n8n-gateway
+description: Use ONLY when the user explicitly requests n8n workflow creation, debugging, validation, expressions, nodes, or n8n MCP support.
+---
+
 # n8n Gateway
 
 Use this skill only when the user explicitly requests n8n support or the intent clearly references n8n workflows.

@@ -1,5 +1,12 @@
 name: java-onprem
 description: Java on-premise local development guidance.
+detection:
+  required:
+    - type: path_exists
+      path: pom.xml
+    - type: file_contains
+      path: pom.xml
+      value: <packaging>war</packaging>
 context:
   languages: [java]
   platforms: [onprem]

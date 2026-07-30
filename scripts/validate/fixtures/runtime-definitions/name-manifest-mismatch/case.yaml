@@ -1,0 +1,3 @@
+expected_errors:
+  - skill-name-mismatch
+  - skill-manifest-name-mismatch

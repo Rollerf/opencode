@@ -1,0 +1,9 @@
+name: "openspec-planning"
+display_name: "OpenSpec Planning Contract"
+description: "Planning phase contract for implementation-ready OpenSpec artifacts."
+default_prompt: "Use $openspec-planning to create implementation-ready OpenSpec artifacts in English."
+compatibility:
+  codex: true
+  github_copilot: true
+invocation:
+  explicit_tag: "$openspec-planning"

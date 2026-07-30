@@ -1,3 +1,8 @@
+---
+name: web-ui-ux
+description: Use for web frontend UI, UX, responsive layout, visual polish, design systems, component composition, and accessibility review.
+---
+
 # Web UI UX Guidance
 
 Use this skill for web frontend implementation work when the request involves UI, UX, responsive behavior, layout, visual polish, component composition, design-system usage, or screen/page refinement.

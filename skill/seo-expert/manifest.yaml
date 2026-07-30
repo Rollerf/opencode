@@ -1,0 +1,9 @@
+name: "seo-expert"
+display_name: "SEO Expert Guidance"
+description: "Inspection-first guidance for technical SEO, metadata, structured data, indexing controls, crawlability, and validation evidence."
+default_prompt: "Use $seo-expert for explicit SEO work and keep recommendations evidence-based, safe, and scoped to the consuming project."
+compatibility:
+  codex: true
+  github_copilot: true
+invocation:
+  explicit_tag: "$seo-expert"

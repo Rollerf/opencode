@@ -1,0 +1,9 @@
+name: "openspec-archive"
+display_name: "OpenSpec Archive Contract"
+description: "Archive phase contract for verified changes and synchronized specs."
+default_prompt: "Use $openspec-archive to close a verified OpenSpec change safely."
+compatibility:
+  codex: true
+  github_copilot: true
+invocation:
+  explicit_tag: "$openspec-archive"
