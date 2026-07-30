@@ -2,25 +2,28 @@
 
 Routing is deterministic and intent-first.
 
+## Precondition: Resolve the Stack Pack
+
+Before phase work, resolve one pack from an explicit selection, compatible `.opencode-project.yaml`, or project evidence evaluated against `packs/*/pack.yaml` detection markers. If multiple packs match, ask the operator to confirm one. If none match, ask the operator to confirm `generic` or request a new pack definition. Do not silently select a pack or begin mutating work while the decision is unresolved.
+
 ## Primary Selector: Workflow Intent
 
-1. Planning artifacts (`proposal`, `design`, `specs`, `tasks`) -> `planner.md`.
-2. Spec hardening, ambiguity review, or turning drafted OpenSpec artifacts into an implementation-ready hard spec -> `spec-hardener.md`.
-3. Code implementation from `tasks.md` -> `implementer.md`.
-4. Readiness checks and traceability -> `verifier.md`.
-5. Archive/closure -> `archiver.md`.
+1. Planning artifacts (`proposal`, `design`, `specs`, `tasks`) -> `$openspec-planning`.
+2. Spec hardening, ambiguity review, or turning drafted OpenSpec artifacts into an implementation-ready hard spec -> `$openspec-spec-hardening`.
+3. Code implementation and feature iteration from `tasks.md` -> `$openspec-implementation`.
+4. Readiness checks and traceability -> `$openspec-verification`.
+5. Archive/closure -> `$openspec-archive`.
 6. Documentation requests -> `subagent/code-documentation-subagent.md`.
 7. Design-document requests -> `subagent/design-doc-subagent.md`.
-8. Feature iteration/refactor -> `subagent/feature-iteration-subagent.md`.
-9. Pulumi/IaC requests -> `subagent/pulumi-infrastructure-subagent.md`.
-10. TDD test planning/creation -> `subagent/tdd-tests-subagent.md`.
-11. Semantic code exploration, call graph questions, impact analysis, or affected-test discovery -> apply `$codegraph` when CodeGraph MCP tools are available.
-12. Shell commands with large or noisy output -> apply `$rtk` when RTK is installed or the OpenCode RTK hook is active.
-13. n8n workflow design/debug/validation requests -> apply `$n8n-gateway` then `$n8n-mcp-tools-expert`.
+8. Pulumi/IaC requests -> `subagent/pulumi-infrastructure-subagent.md`.
+9. TDD test planning/creation -> `subagent/tdd-tests-subagent.md`.
+10. Semantic code exploration, call graph questions, impact analysis, or affected-test discovery -> apply `$codegraph` when CodeGraph MCP tools are available.
+11. Shell commands with large or noisy output -> apply `$rtk` when RTK is installed or the OpenCode RTK hook is active.
+12. n8n workflow design/debug/validation requests -> apply `$n8n-gateway` then `$n8n-mcp-tools-expert`.
 
 ## Secondary Selector: Stack Pack
 
-After intent is resolved, apply the active stack pack:
+After phase selection, apply the already resolved stack pack:
 
 - `packs/go-aws`
 - `packs/java-onprem`
@@ -31,22 +34,22 @@ Stack pack influence is limited to constraints, command sets, and test strategy.
 
 ## Single-entrypoint orchestration
 
-`orchestrator.md` is the default interactive entrypoint. Routing selects the phase contract to apply, but it does not require a manual switch to `planner.md`, `implementer.md`, `verifier.md`, or `archiver.md` when the orchestrator can execute the selected local workflow safely.
+`orchestrator.md` is the only phase-owning interactive entrypoint. Routing loads exactly one native phase-contract skill in the same session.
 
 OpenSpec artifact language is global: write and maintain `proposal.md`, `design.md`, `tasks.md`, and `specs/**/spec.md` in English regardless of the user's conversation language. Consumer projects that include this repository as a submodule inherit this rule through the shared agents and skills.
 
-Hard-spec readiness is mandatory for OpenSpec-backed implementation: before coding, artifacts must resolve CRITICAL ambiguity, contain deterministic requirements/scenarios, and define concrete tasks plus verification evidence. If readiness is unclear, route to `spec-hardener.md` first.
+Hard-spec readiness is mandatory for OpenSpec-backed implementation: before coding, artifacts must resolve CRITICAL ambiguity, contain deterministic requirements/scenarios, and define concrete tasks plus verification evidence. If readiness is unclear, apply `$openspec-spec-hardening` first.
 
-Use phase agents and subagents as contracts or targeted helpers:
+Use phase skills and subagents as contracts or targeted helpers:
 
-- Apply `planner.md`, `implementer.md`, `verifier.md`, and `archiver.md` rules according to the selected phase.
-- Apply `spec-hardener.md` during planning to define hard specs and resolve ambiguity before implementation.
+- Load exactly one phase-contract skill according to `core/phase-contract-catalog.yaml`.
+- Apply `$openspec-spec-hardening` during planning to resolve ambiguity before implementation.
 - Invoke specialized subagents only when expertise, parallelism, context reduction, or a distinct deliverable justifies the handoff.
 - Keep the orchestrator responsible for final decisions, command evidence, touched files, blockers, and missing decisions.
 
 ## OpenSpec spec hardening
 
-Route to `spec-hardener.md` when the user asks to harden, polish, de-risk, clarify, or review drafted OpenSpec artifacts before implementation.
+Apply `$openspec-spec-hardening` when the user asks to harden, polish, de-risk, clarify, or review drafted OpenSpec artifacts before implementation.
 
 Trigger examples:
 
@@ -63,15 +66,39 @@ Default behavior: ask targeted clarification questions first. Do not edit artifa
 
 For Angular frontend/UI requests:
 
-- Keep routing intent-first and select `implementer.md` for implementation work.
+- Keep routing intent-first and select `$openspec-implementation` for implementation work.
 - Apply the Angular pack as the active stack context.
 - Activate `$web-ui-ux` for frontend/UI, responsive, visual polish, component, layout, and design-system intent.
 - Exclude `$backend-design` for frontend-only Angular work.
 - Allow `$backend-design` only when backend scope is explicit in the request.
 
+## Node DeFi arbitrage requests
+
+For Node.js/TypeScript requests involving DeFi arbitrage, DEX integrations, blockchain RPC, transaction simulation or execution, MEV, or on-chain trading risk:
+
+- Keep routing intent-first and apply the selected phase contract.
+- Require explicit confirmation of `generic` unless a dedicated Node/DeFi pack is introduced and detected.
+- Activate `$node-defi-arbitrage` for architecture, numeric correctness, reliability, testing, and live-execution safety.
+- Exclude `$backend-design` unless the request explicitly also changes the Go/AWS backend.
+- Treat wallet funding, secret provisioning, deployment, transaction signing, and public-network broadcasting as operator actions.
+
+## SEO requests
+
+For explicit SEO intent involving metadata, structured data, indexing, crawlability, canonical URLs, hreflang, robots directives, sitemaps, redirects, search snippets, Core Web Vitals, or content optimization for search visibility:
+
+- Keep phase selection primary and activate `$seo-expert` as a specialization overlay.
+- Do not activate SEO guidance solely because a task is web-facing, frontend-related, backend-related, or documentation-related.
+- Combine `$seo-expert` with `$web-ui-ux` when SEO changes also affect page hierarchy, semantics, responsive presentation, or UX.
+- Combine `$seo-expert` with `$playwright-cli` when rendered metadata, browser redirects, navigation, or executable browser evidence must be inspected.
+- Reject deceptive or black-hat tactics and never promise ranking outcomes.
+
+### Repository-local SEO fallback
+
+If `$seo-expert` is not in runtime `available_skills` but `skill/seo-expert/SKILL.md` or `.opencode/skill/seo-expert/SKILL.md` exists, load and apply that repository-local file. Emit `missing_specialization` only when neither source is available.
+
 ## Repository-local skill fallback
 
-The runtime `available_skills` registry can be narrower than the skills imported in this module. When a route asks for a module-owned skill such as `$web-ui-ux`, first prefer the runtime skill loader. If the runtime registry does not list it, but a repository-local skill file exists at `skill/<name>/SKILL.md` or `.opencode/skill/<name>/SKILL.md`, load and apply that file as the specialization.
+The runtime `available_skills` registry can be narrower than the skills imported in this module. When a route asks for a module-owned skill such as `$web-ui-ux` or `$node-defi-arbitrage`, first prefer the runtime skill loader. If the runtime registry does not list it, but a repository-local skill file exists at `skill/<name>/SKILL.md` or `.opencode/skill/<name>/SKILL.md`, load and apply that file as the specialization.
 
 For `$codegraph`, also use the repository-local skill fallback at `skill/codegraph/SKILL.md` or `.opencode/skill/codegraph/SKILL.md`. This fallback only provides guidance; CodeGraph still requires the MCP tools to be installed and the consumer project to have a `.codegraph/` index.
 

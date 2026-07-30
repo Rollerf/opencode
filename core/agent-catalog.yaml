@@ -1,98 +1,78 @@
-version: 1
+version: 2
 agents:
-  - id: planner
-    path: agents/planner.md
-    phase_scope: planning
-    specialization: openspec-artifacts
+  - id: orchestrator
+    runtime_name: orchestrator
+    path: agents/orchestrator.md
+    phase_scope: cross-phase
+    specialization: workflow-orchestration
+    model: openai/gpt-5.6-sol
+    steps: 40
+    delegation_scope: Final decisions, phase execution, local edits, and bounded specialist delegation.
     expected_inputs:
-      - change_name
-      - proposal_or_specs_or_design_or_tasks_request
+      - user_goal
+      - consumer_project
+      - resolved_stack_pack
     expected_outputs:
-      - artifact_updates
-      - open_questions
-  - id: spec-hardener
-    path: agents/spec-hardener.md
-    phase_scope: planning
-    specialization: openspec-hard-spec-review
-    expected_inputs:
-      - change_name
-      - drafted_proposal_design_specs_tasks
-    expected_outputs:
-      - ambiguity_findings
-      - clarifying_questions
-      - suggested_artifact_updates
-  - id: implementer
-    path: agents/implementer.md
-    phase_scope: implementation
-    specialization: task-execution
-    expected_inputs:
-      - change_name
-      - tasks_md
-      - stack_pack
-    expected_outputs:
-      - code_changes
-      - tdd_evidence
-      - task_progress
-  - id: verifier
-    path: agents/verifier.md
-    phase_scope: verification
-    specialization: readiness-validation
-    expected_inputs:
-      - change_name
-      - specs
-      - tasks
-      - implementation_evidence
-    expected_outputs:
-      - findings_by_severity
-      - traceability_status
-  - id: archiver
-    path: agents/archiver.md
-    phase_scope: archive
-    specialization: change-closure
-    expected_inputs:
-      - change_name
-      - verification_result
-    expected_outputs:
-      - archive_result
-      - follow_up_actions
+      - completed_local_work
+      - execution_evidence
+      - blockers_and_decisions
   - id: code-documentation-subagent
+    runtime_name: subagent/code-documentation-subagent
     path: agents/subagent/code-documentation-subagent.md
     phase_scope: cross-phase
-    specialization: documentation
+    specialization: bounded-documentation-deliverable
+    model: openai/gpt-5.6-luna
+    steps: 10
+    delegation_scope: Produce or update a distinct documentation deliverable from supplied code, contracts, pack, and scope.
     expected_inputs:
-      - doc_scope
+      - documentation_scope
+      - relevant_files_and_contracts
+      - resolved_stack_pack
     expected_outputs:
-      - docs_changes
+      - documentation_changes
+      - validation_notes
   - id: design-doc-subagent
+    runtime_name: subagent/design-doc-subagent
     path: agents/subagent/design-doc-subagent.md
     phase_scope: planning
-    specialization: design-doc
+    specialization: bounded-design-deliverable
+    model: openai/gpt-5.6-luna
+    steps: 12
+    delegation_scope: Draft a standalone design document for orchestrator review without owning final decisions.
     expected_inputs:
       - design_problem
+      - architecture_context
+      - resolved_stack_pack
     expected_outputs:
       - design_document
-  - id: feature-iteration-subagent
-    path: agents/subagent/feature-iteration-subagent.md
-    phase_scope: implementation
-    specialization: feature-iteration
-    expected_inputs:
-      - existing_feature
-    expected_outputs:
-      - incremental_improvements
+      - open_decisions
   - id: pulumi-infrastructure-subagent
+    runtime_name: subagent/pulumi-infrastructure-subagent
     path: agents/subagent/pulumi-infrastructure-subagent.md
     phase_scope: implementation
-    specialization: infrastructure
+    specialization: pulumi-infrastructure
+    model: openai/gpt-5.6-sol
+    steps: 20
+    delegation_scope: Implement a bounded local Pulumi change without deployment or cloud mutation.
     expected_inputs:
-      - infra_request
+      - infrastructure_scope
+      - pulumi_project_context
+      - resolved_stack_pack
     expected_outputs:
       - pulumi_changes
+      - preview_or_validation_evidence
   - id: tdd-tests-subagent
+    runtime_name: subagent/tdd-tests-subagent
     path: agents/subagent/tdd-tests-subagent.md
     phase_scope: implementation
-    specialization: tests
+    specialization: test-design-and-red-evidence
+    model: openai/gpt-5.6-sol
+    steps: 20
+    delegation_scope: Own bounded test design and test edits; production code only when explicitly delegated.
     expected_inputs:
-      - behavior_change
-      - stack_pack
+      - behavior_requirements
+      - test_scope
+      - resolved_stack_pack
     expected_outputs:
-      - red_green_refactor_tests
+      - tests_and_requirement_mapping
+      - red_green_refactor_evidence

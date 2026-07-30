@@ -1,3 +1,8 @@
+---
+name: rtk
+description: Use when RTK is installed and shell command output may be large, repetitive, noisy, or expensive for model context.
+---
+
 # RTK
 
 Use this skill when RTK is installed and the task involves shell commands whose output may be large, repetitive, noisy, or expensive for LLM context.

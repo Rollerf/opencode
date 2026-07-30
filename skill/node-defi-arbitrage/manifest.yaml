@@ -1,0 +1,9 @@
+name: "node-defi-arbitrage"
+display_name: "Node DeFi Arbitrage Context"
+description: "Reusable Node.js and TypeScript context for DeFi arbitrage, blockchain RPC, simulation, and execution semantics."
+default_prompt: "Use $node-defi-arbitrage for reusable TypeScript and DeFi arbitrage context while preserving project-owned decisions."
+compatibility:
+  codex: true
+  github_copilot: true
+invocation:
+  explicit_tag: "$node-defi-arbitrage"

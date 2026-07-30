@@ -1,0 +1,4 @@
+expected_errors:
+  - phase-catalog-incomplete
+  - phase-catalog-skill-mismatch
+  - phase-catalog-skill-unresolved
