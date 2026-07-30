@@ -44,6 +44,13 @@ run_expect_failure() {
 }
 
 RESOLVER=(node "${ROOT_DIR}/scripts/resolve-pack.mjs" --module-dir "$ROOT_DIR")
+SOURCE_CHANGE="harden-opencode-runtime-definitions"
+if [[ ! -d "${ROOT_DIR}/openspec/changes/${SOURCE_CHANGE}" ]]; then
+  shopt -s nullglob
+  archived_changes=("${ROOT_DIR}"/openspec/changes/archive/*-"${SOURCE_CHANGE}")
+  ((${#archived_changes[@]} > 0)) || fail "Missing source or archived fixture change: ${SOURCE_CHANGE}"
+  SOURCE_CHANGE="archive/$(basename "${archived_changes[-1]}")"
+fi
 
 mkdir -p "$TMP_DIR/unique" "$TMP_DIR/ambiguous" "$TMP_DIR/unsupported" "$TMP_DIR/confirmed" "$TMP_DIR/stale"
 printf '{"dependencies":{"@angular/core":"latest"}}\n' > "$TMP_DIR/unique/package.json"
@@ -84,7 +91,7 @@ assert_contains "$output" 'Unknown pack: missing-pack'
 
 SOURCE_BUNDLE="$TMP_DIR/source-bundle.md"
 output="$("${ROOT_DIR}/opencode-runner.sh" bundle --phase implementation \
-  --change harden-opencode-runtime-definitions --pack generic --skills openspec-workflow \
+  --change "$SOURCE_CHANGE" --pack generic --skills openspec-workflow \
   --user-prompt 'SOURCE_GOAL' --out "$SOURCE_BUNDLE" 2>&1)"
 assert_contains "$output" 'Bundle lines:'
 assert_contains "$output" 'Bundle bytes:'
