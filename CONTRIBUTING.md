@@ -39,6 +39,8 @@ The workstation-wide OpenCode installation is a checkout of this repository at `
 4. Preserve and reconcile machine-local `opencode.json`, package metadata, commits, and uncommitted changes before updating the global checkout.
 5. Run dependency/submodule setup and restart OpenCode after updating because configuration-time definitions are not hot-reloaded.
 6. Keep non-local `push`, release merge, and global checkout update as explicit operator actions with command evidence.
+7. Keep portable runtime defaults such as `instructions/caveman-default.md` and `plugins/rtk.ts` versioned so global installations receive them through `git pull`.
+8. Keep provider credentials, MCP endpoints, permissions, absolute references, and the active `opencode.json` machine-owned; merge `core/templates/opencode.global.json` into new or existing installations instead of overwriting local configuration.
 
 ## Recommended flow
 

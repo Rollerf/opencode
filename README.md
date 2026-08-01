@@ -48,6 +48,7 @@ The standard workstation setup uses this repository as the global OpenCode platf
 - Feature and release branches are validation stages and do not affect other local projects until their changes reach `main`.
 - `~/.config/opencode` is a checkout of this repository on `main`.
 - `~/.config/opencode/opencode.json` selects `orchestrator` as the default agent, registers global skill paths, and exposes the checkout as the `opencode-platform` reference.
+- `instructions/caveman-default.md` enables Caveman full mode by default, while `plugins/rtk.ts` automatically rewrites eligible shell commands when the `rtk` binary is installed.
 
 This means every project opened on the workstation receives the agents, skills, packs, workflow contracts, and quality rules from the `main` revision checked out under `~/.config/opencode`.
 
@@ -59,9 +60,11 @@ Publishing a platform change and activating it globally are separate operations:
 4. Merge the release into `main` and push `main` to `origin`.
 5. In `~/.config/opencode`, reconcile any machine-local commits or configuration changes, then update from `origin/main` without discarding them.
 6. Run `npm install` and initialize required external submodules when dependency or submodule metadata changed.
-7. Restart OpenCode because agents, skills, and configuration are loaded only at startup.
+7. Ensure the machine-owned `opencode.json` includes `instructions/caveman-default.md`; use `core/templates/opencode.global.json` as the portable baseline for a new installation.
+8. Install the `rtk` binary separately if automatic command compaction is required. The versioned plugin disables itself safely when RTK is unavailable.
+9. Restart OpenCode because agents, skills, plugins, and configuration are loaded only at startup.
 
-Do not point the global installation at a feature branch for normal use. Do not reset or overwrite `~/.config/opencode/opencode.json` blindly: it is machine-owned configuration and may contain local provider, MCP, permission, or reference settings that must be merged deliberately.
+Pulling `main` updates the versioned Caveman instruction and RTK plugin for every project that consumes the global checkout. Do not point the global installation at a feature branch for normal use. Do not reset or overwrite `~/.config/opencode/opencode.json` blindly: it is machine-owned configuration and may contain local provider, MCP, permission, or reference settings that must be merged deliberately.
 
 ## Branching strategy (gitflow)
 
