@@ -1,6 +1,6 @@
 # Agent Catalog Routing Delta
 
-## MODIFIED Requirements
+## ADDED Requirements
 
 ### Requirement: Default token-saving communication policy
 

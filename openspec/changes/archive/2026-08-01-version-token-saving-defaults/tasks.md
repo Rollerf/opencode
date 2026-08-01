@@ -26,10 +26,6 @@
 - [x] 4.4 Run `openspec validate "version-token-saving-defaults" --strict` and resolve all critical findings.
 - [x] 4.5 Run `git diff --check` and verify the intended tracked-file set.
 
-## 5. Distribution closure
+## 5. Implementation closure
 
-- [ ] 5.1 Commit the verified implementation on `feature/version-token-saving-defaults`.
-- [ ] 5.2 Archive the completed OpenSpec change and validate synchronized specs.
-- [ ] 5.3 Merge locally through `develop`, `release/*`, and `main`.
-- [ ] 5.4 Reconcile ignored global copies, update `~/.config/opencode` to released `main`, and verify effective Caveman and RTK discovery.
-- [ ] 5.5 Provide operator handoff for remote pushes and restart OpenCode.
+- [x] 5.1 Commit the verified implementation on `feature/version-token-saving-defaults`.
