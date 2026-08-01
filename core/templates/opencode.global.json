@@ -1,0 +1,13 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "default_agent": "orchestrator",
+  "instructions": [
+    "instructions/caveman-default.md"
+  ],
+  "skills": {
+    "paths": [
+      "skill",
+      ".agents/skills"
+    ]
+  }
+}
