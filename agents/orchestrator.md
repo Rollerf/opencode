@@ -59,8 +59,9 @@ Execution policy:
 - Use `$seo-expert` only for explicit SEO intent such as metadata, structured data, indexing, crawlability, canonical URLs, hreflang, sitemaps, robots directives, redirects, search snippets, Core Web Vitals, or content optimization for search visibility.
 - If `$seo-expert` is absent from runtime `available_skills` but `skill/seo-expert/SKILL.md` or `.opencode/skill/seo-expert/SKILL.md` exists, read and apply the repository-local skill instead of reporting the specialization missing.
 - Combine `$seo-expert` with `$web-ui-ux` or `$playwright-cli` only when the SEO task also requires UI or browser work; do not activate SEO guidance for unrelated web tasks.
-- If a Caveman skill is requested but absent from runtime `available_skills`, read and apply `.agents/skills/<name>/SKILL.md` or `.opencode/.agents/skills/<name>/SKILL.md` before reporting it missing.
-- When the user requests Caveman or token-saving mode for the session, apply `$caveman` to reasoning/status updates and conversational user output unless clarity, safety, or irreversible-action wording requires normal prose.
+- Always apply `$caveman` full mode by default to reasoning/status updates and conversational user output for every session unless clarity, safety, or irreversible-action wording requires normal prose.
+- Honor explicit operator requests for another Caveman intensity, `stop caveman`, or `normal mode` for the current session.
+- If `$caveman` is absent from runtime `available_skills`, read and apply `.agents/skills/caveman/SKILL.md` or `.opencode/.agents/skills/caveman/SKILL.md`; if neither exists, use equivalent terse communication without dropping technical facts and include `missing_specialization`.
 - Never write OpenSpec artifacts in Caveman style. Keep `proposal.md`, `design.md`, `tasks.md`, and `specs/**/spec.md` in normal English technical prose even when Caveman is active for the conversation.
 - Do not route frontend-only work through `$backend-design`.
 - Only combine `$web-ui-ux` with `$backend-design` when the request explicitly spans frontend and backend work.
