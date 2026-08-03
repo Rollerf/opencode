@@ -97,6 +97,8 @@ opencode-runner.sh         # Command helper for OpenSpec phases
 
 This README is the canonical command reference for `opencode-runner.sh`.
 
+Run these source-checkout examples from this repository. From a consumer project, resolve the first available runner in this order: `./opencode-runner.sh`, `./.opencode/opencode-runner.sh`, then `$HOME/.config/opencode/opencode-runner.sh`. Keep the working directory at the consumer project root so the global runner reads that project's OpenSpec artifacts.
+
 1) Check environment health:
 
 ```bash
@@ -348,6 +350,17 @@ Example bundle:
 ```
 
 The hardener does not implement code. It edits OpenSpec artifacts only after the user answers the questions or explicitly asks for artifact updates.
+
+For a project using the global installation instead of a local `.opencode` module, the equivalent command is:
+
+```bash
+$HOME/.config/opencode/opencode-runner.sh bundle \
+  --phase planning \
+  --change <change-name> \
+  --pack <confirmed-pack> \
+  --skills openspec-workflow,openspec-spec-hardening \
+  --user-prompt "Harden this OpenSpec change before implementation"
+```
 
 ## Agent migration and model policy
 

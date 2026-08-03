@@ -36,7 +36,11 @@ require_contains "$ORCHESTRATOR" "Always list touched files and commands execute
 require_contains "$ORCHESTRATOR" "RED -> GREEN -> REFACTOR"
 require_contains "$ORCHESTRATOR" "Single-entrypoint execution mode"
 require_contains "$ORCHESTRATOR" "routing selects the phase contract"
+require_contains "$ORCHESTRATOR" './.opencode/opencode-runner.sh'
+require_contains "$ORCHESTRATOR" '$HOME/.config/opencode/opencode-runner.sh'
+require_contains "$ORCHESTRATOR" 'absence of the first candidate alone does not make the runner unavailable'
 require_contains "${ROOT_DIR}/core/routing-policy.md" "Single-entrypoint orchestration"
+require_contains "${ROOT_DIR}/skill/openspec-workflow/SKILL.md" 'Do not treat a missing `./opencode-runner.sh` as sufficient reason to bypass the runner'
 require_contains "${ROOT_DIR}/skill/openspec-planning/SKILL.md" "OpenSpec Planning Contract"
 require_contains "${ROOT_DIR}/skill/openspec-implementation/SKILL.md" "OpenSpec Implementation Contract"
 require_contains "${ROOT_DIR}/skill/openspec-verification/SKILL.md" "OpenSpec Verification Contract"

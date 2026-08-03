@@ -91,12 +91,17 @@ The validation suite SHALL create a disposable consumer fixture and use installe
 - **AND** `opencode debug config` selects `orchestrator` as the default agent
 
 ### Requirement: Runner integration validation
-The validation suite SHALL exercise runner behavior from both the platform source layout and the consumer `.opencode` layout.
+The validation suite SHALL exercise runner behavior from the platform source layout, the consumer `.opencode` layout, and a global-module layout invoked from an external consumer working directory.
 
 #### Scenario: Consumer change is bundled
 - **WHEN** the fixture invokes `.opencode/opencode-runner.sh bundle --change fixture-change`
 - **THEN** the bundle references the consumer root and consumer-owned change path
 - **AND** module-owned agents, skills, and packs are included from `.opencode`
+
+#### Scenario: Global consumer change is bundled
+- **WHEN** the fixture invokes a platform runner outside the consumer tree from the consumer working directory
+- **THEN** the bundle references the external consumer root and consumer-owned change path
+- **AND** module-owned agents, skills, and packs are included from the platform checkout
 
 #### Scenario: Pack content is checked
 - **WHEN** a bundle is generated with `--pack angular`

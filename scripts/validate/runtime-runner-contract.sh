@@ -104,6 +104,26 @@ assert_contains "$source_content" 'Change Artifact: tasks.md'
 assert_not_contains "$source_content" 'Change Artifact: proposal.md'
 assert_before "$SOURCE_BUNDLE" '## User Goal' '## Generated Context'
 
+GLOBAL_CONSUMER="$TMP_DIR/global-consumer"
+GLOBAL_CHANGE="global-fixture-change"
+mkdir -p "$GLOBAL_CONSUMER/openspec/changes/$GLOBAL_CHANGE/specs/example"
+printf 'GLOBAL_PROPOSAL_ONLY\n' > "$GLOBAL_CONSUMER/openspec/changes/$GLOBAL_CHANGE/proposal.md"
+printf 'GLOBAL_DESIGN_ONLY\n' > "$GLOBAL_CONSUMER/openspec/changes/$GLOBAL_CHANGE/design.md"
+printf 'GLOBAL_TASKS_ONLY\n' > "$GLOBAL_CONSUMER/openspec/changes/$GLOBAL_CHANGE/tasks.md"
+printf 'GLOBAL_SPEC_ONLY\n' > "$GLOBAL_CONSUMER/openspec/changes/$GLOBAL_CHANGE/specs/example/spec.md"
+
+GLOBAL_BUNDLE="$TMP_DIR/global-bundle.md"
+output="$(cd "$GLOBAL_CONSUMER" && "$ROOT_DIR/opencode-runner.sh" bundle --phase verification \
+  --change "$GLOBAL_CHANGE" --pack generic --skills openspec-workflow --out "$GLOBAL_BUNDLE" 2>&1)"
+global_content="$(<"$GLOBAL_BUNDLE")"
+assert_contains "$output" 'Pack selected: generic (explicit --pack)'
+assert_contains "$global_content" "Module directory: \`$ROOT_DIR\`"
+assert_contains "$global_content" "Project root: \`$GLOBAL_CONSUMER\`"
+assert_contains "$global_content" 'GLOBAL_DESIGN_ONLY'
+assert_contains "$global_content" 'GLOBAL_TASKS_ONLY'
+assert_contains "$global_content" 'GLOBAL_SPEC_ONLY'
+assert_not_contains "$global_content" 'GLOBAL_PROPOSAL_ONLY'
+
 CONSUMER="$TMP_DIR/consumer"
 MODULE="$CONSUMER/.opencode"
 mkdir -p "$MODULE/scripts" "$MODULE/agents" "$MODULE/skill/test-skill/references" "$CONSUMER/openspec/changes/fixture-change/specs/example" "$CONSUMER/openspec/changes/fixture-change/evidence"
