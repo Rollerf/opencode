@@ -6,7 +6,13 @@ MODULE_DIR="$SCRIPT_DIR"
 if [[ "$(basename "$MODULE_DIR")" == ".opencode" ]]; then
   PROJECT_ROOT="$(cd -- "${MODULE_DIR}/.." && pwd)"
 else
-  PROJECT_ROOT="$MODULE_DIR"
+  MODULE_DIR_PHYSICAL="$(cd -- "$MODULE_DIR" && pwd -P)"
+  INVOCATION_DIR="$(pwd -P)"
+  if [[ "$INVOCATION_DIR" == "$MODULE_DIR_PHYSICAL" || "$INVOCATION_DIR" == "$MODULE_DIR_PHYSICAL/"* ]]; then
+    PROJECT_ROOT="$MODULE_DIR"
+  else
+    PROJECT_ROOT="$INVOCATION_DIR"
+  fi
 fi
 OPENCODE_DIR="$MODULE_DIR"
 AGENTS_DIR="${MODULE_DIR}/agents"

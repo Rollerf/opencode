@@ -15,6 +15,16 @@ Use this skill as the operational playbook for changes under `openspec/changes/`
 
 Use command templates from [commands.md](references/commands.md).
 
+## Resolve the Runner
+
+Before phase operations, resolve the first executable runner from the consumer project root in this order:
+
+1. `./opencode-runner.sh`
+2. `./.opencode/opencode-runner.sh`
+3. `$HOME/.config/opencode/opencode-runner.sh`
+
+Invoke the resolved path while the working directory remains the consumer project root. Do not treat a missing `./opencode-runner.sh` as sufficient reason to bypass the runner. Use direct `openspec` commands only when no candidate exists or the resolved runner does not cover the operation, and report that reason explicitly.
+
 ## Choose the Phase
 
 1. Planning phase: create or refine proposal/design/specs/tasks.
