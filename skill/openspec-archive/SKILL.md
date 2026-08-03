@@ -17,7 +17,7 @@ Apply this phase contract after the stack pack has been resolved.
 
 1. Confirm artifacts, tasks, verification evidence, and spec synchronization impact.
 2. Run strict validation before mutation.
-3. Prefer the runner when it covers the archive operation; otherwise use `openspec archive` explicitly.
+3. Prefer the runner path resolved by `$openspec-workflow` when it covers the archive operation; otherwise use `openspec archive` explicitly and report why the runner was unavailable or insufficient.
 4. Synchronize delta specs and preserve traceability.
 5. Never archive an incomplete or critically ambiguous change.
 

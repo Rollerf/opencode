@@ -54,6 +54,8 @@ The workstation-wide OpenCode installation is a checkout of this repository at `
 
 ## Useful commands
 
+The commands below assume the platform source checkout. In a consumer project, try `./.opencode/opencode-runner.sh` and then `$HOME/.config/opencode/opencode-runner.sh` when `./opencode-runner.sh` is absent. Invoke the selected runner from the consumer project root.
+
 ```bash
 ./opencode-runner.sh doctor
 ./opencode-runner.sh list agents

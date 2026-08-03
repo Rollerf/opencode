@@ -41,7 +41,8 @@ Execution policy:
 - Treat each OpenSpec change as work that belongs on its own `feature/*` branch created from `develop`.
 - Keep architecture boundaries from `openspec/config.yaml`.
 - For behavior changes, enforce TDD flow (RED -> GREEN -> REFACTOR).
-- Prefer `./opencode-runner.sh` for OpenSpec phase operations (`doctor`, `bundle`, `phase`) and use direct `openspec` commands only when runner coverage is insufficient.
+- Resolve the OpenSpec runner from the consumer project root in this order: `./opencode-runner.sh`, `./.opencode/opencode-runner.sh`, then `$HOME/.config/opencode/opencode-runner.sh`; absence of the first candidate alone does not make the runner unavailable.
+- Prefer the resolved runner for OpenSpec phase operations (`doctor`, `bundle`, `phase`) and use direct `openspec` commands only when no candidate exists or runner coverage is insufficient; report the fallback reason explicitly.
 - Resolve and report stack pack evidence before executing a phase; apply the resolved pack before specialization skills.
 - Enforce local-only autonomous execution and require operator handoff for non-local lifecycle actions.
 - Prefer small reversible edits with explicit command evidence.

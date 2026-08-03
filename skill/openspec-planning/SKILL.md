@@ -21,7 +21,7 @@ Apply this phase contract after the stack pack has been resolved.
 4. Resolve CRITICAL ambiguity before implementation.
 5. Include API, security, data, infrastructure, and stack-pack impact when applicable.
 6. Add concrete, ordered tasks with exact local verification evidence.
-7. Prefer `./opencode-runner.sh` for supported planning operations.
+7. Prefer the runner resolved by `$openspec-workflow` for supported planning operations; do not require it to exist at `./opencode-runner.sh`.
 
 ## Completion criteria
 
