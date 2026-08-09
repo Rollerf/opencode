@@ -28,6 +28,40 @@ require_cmd() {
   command -v "$1" >/dev/null 2>&1 || fail "Missing required command: $1"
 }
 
+resolve_openspec_cli() {
+  local module_cli="${MODULE_DIR}/node_modules/.bin/openspec"
+  local project_cli="${PROJECT_ROOT}/node_modules/.bin/openspec"
+  local path_cli
+
+  if [[ -x "$module_cli" ]]; then
+    printf '%s' "$module_cli"
+    return 0
+  fi
+
+  path_cli="$(command -v openspec 2>/dev/null || true)"
+  if [[ -n "$path_cli" ]]; then
+    printf '%s' "$path_cli"
+    return 0
+  fi
+
+  if [[ -x "$project_cli" ]]; then
+    printf '%s' "$project_cli"
+    return 0
+  fi
+
+  return 1
+}
+
+require_openspec_cli() {
+  [[ -n "$OPENSPEC_BIN" ]] ||
+    fail "OpenSpec CLI unavailable; run npm install --prefix ${MODULE_DIR} to install @fission-ai/openspec@1.1.1"
+}
+
+OPENSPEC_BIN="$(resolve_openspec_cli || true)"
+if [[ -n "$OPENSPEC_BIN" ]]; then
+  export PATH="$(dirname "$OPENSPEC_BIN"):${PATH}"
+fi
+
 strip_quotes() {
   local value="$1"
   value="${value%\"}"
@@ -248,12 +282,12 @@ doctor_cmd() {
   [[ -d "$SKILLS_DIR" ]] || fail "Missing skill directory: $SKILLS_DIR"
   [[ -d "$PACKS_DIR" ]] || fail "Missing packs directory: $PACKS_DIR"
 
-  require_cmd openspec
+  require_openspec_cli
   require_cmd node
   node "${MODULE_DIR}/scripts/resolve-pack.mjs" --help >/dev/null || fail "Pack resolver dependencies are unavailable; run npm install --prefix ${MODULE_DIR}"
   echo "ok: module directory ($MODULE_DIR)"
   echo "ok: project root ($PROJECT_ROOT)"
-  echo "ok: openspec command found ($(openspec --version 2>/dev/null || echo unknown))"
+  echo "ok: openspec command found: $OPENSPEC_BIN ($(openspec --version 2>/dev/null || echo unknown))"
 
   if (cd "$PROJECT_ROOT" && openspec status --json >/dev/null 2>&1); then
     echo "ok: openspec status available"
@@ -513,6 +547,7 @@ phase_cmd() {
   done
 
   [[ -n "$change" ]] || fail "--change is required for phase command"
+  require_openspec_cli
 
   local phase_skill
   phase_skill="$(phase_contract_skill "$phase")"

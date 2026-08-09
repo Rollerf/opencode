@@ -59,7 +59,7 @@ Publishing a platform change and activating it globally are separate operations:
 3. Create and verify a `release/*` branch from `develop`.
 4. Merge the release into `main` and push `main` to `origin`.
 5. In `~/.config/opencode`, reconcile any machine-local commits or configuration changes, then update from `origin/main` without discarding them.
-6. Run `npm install` and initialize required external submodules when dependency or submodule metadata changed.
+6. Run `npm install` and initialize required external submodules when dependency or submodule metadata changed. This installs the pinned module-local OpenSpec CLI used by the runner.
 7. Ensure the machine-owned `opencode.json` includes `instructions/caveman-default.md`; use `core/templates/opencode.global.json` as the portable baseline for a new installation.
 8. Install the `rtk` binary separately if automatic command compaction is required. The versioned plugin disables itself safely when RTK is unavailable.
 9. Restart OpenCode because agents, skills, plugins, and configuration are loaded only at startup.
@@ -102,8 +102,11 @@ Run these source-checkout examples from this repository. From a consumer project
 1) Check environment health:
 
 ```bash
+npm install
 ./opencode-runner.sh doctor
 ```
+
+The runner prefers `node_modules/.bin/openspec` from the platform module, avoiding NVM-specific global npm installations. If dependencies are missing, doctor reports the exact `npm install --prefix <module>` recovery command.
 
 2) View available agents and skills:
 
