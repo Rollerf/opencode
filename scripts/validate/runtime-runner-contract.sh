@@ -52,6 +52,10 @@ if [[ ! -d "${ROOT_DIR}/openspec/changes/${SOURCE_CHANGE}" ]]; then
   SOURCE_CHANGE="archive/$(basename "${archived_changes[-1]}")"
 fi
 
+doctor_output="$("${ROOT_DIR}/opencode-runner.sh" doctor 2>&1)"
+assert_contains "$doctor_output" "openspec command found: ${ROOT_DIR}/node_modules/.bin/openspec"
+assert_contains "$doctor_output" '(1.1.1)'
+
 mkdir -p "$TMP_DIR/unique" "$TMP_DIR/ambiguous" "$TMP_DIR/unsupported" "$TMP_DIR/confirmed" "$TMP_DIR/stale"
 printf '{"dependencies":{"@angular/core":"latest"}}\n' > "$TMP_DIR/unique/package.json"
 printf '{}\n' > "$TMP_DIR/unique/angular.json"
