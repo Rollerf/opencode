@@ -46,4 +46,8 @@ require_contains "${ROOT_DIR}/skill/openspec-implementation/SKILL.md" "OpenSpec 
 require_contains "${ROOT_DIR}/skill/openspec-verification/SKILL.md" "OpenSpec Verification Contract"
 require_contains "${ROOT_DIR}/skill/openspec-archive/SKILL.md" "OpenSpec Archive Contract"
 
+openspec_dependency="$(node -p "require('${ROOT_DIR}/package.json').dependencies?.['@fission-ai/openspec'] || ''")"
+[[ "$openspec_dependency" == "1.1.1" ]] ||
+  fail "package.json must declare exact runtime dependency @fission-ai/openspec@1.1.1"
+
 echo "Contract validation passed"
