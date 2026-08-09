@@ -23,4 +23,4 @@
 
 ## 4. Implementation closure
 
-- [ ] 4.1 Commit the verified feature implementation.
+- [x] 4.1 Commit the verified feature implementation.
