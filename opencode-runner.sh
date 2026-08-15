@@ -151,6 +151,12 @@ phase_default_skills() {
         skills_csv="$(append_skill "$skills_csv" "backend-design")"
       fi
       ;;
+    astro)
+      skills_csv="$(append_skill "$skills_csv" "seo-expert")"
+      if [[ "$backend_intent" == "true" ]]; then
+        skills_csv="$(append_skill "$skills_csv" "backend-design")"
+      fi
+      ;;
     java-onprem|generic)
       ;;
     "")

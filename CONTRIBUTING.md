@@ -70,6 +70,7 @@ The commands below assume the platform source checkout. In a consumer project, t
 ./scripts/validate/gitflow-branching-contract.sh
 ./scripts/validate/tdd-contract.sh
 ./scripts/validate/angular-ui-contract.sh
+./scripts/validate/astro-pack-contract.sh
 ./scripts/validate/web-ui-ux-contract.sh
 ./scripts/validate/playwright-cli-contract.sh
 ./scripts/validate/n8n-skills-contract.sh
@@ -120,9 +121,13 @@ Checklist:
 - [ ] Define `verification_commands` (test/build/lint).
 - [ ] Define `tdd_commands` (red/green/refactor).
 - [ ] If the pack supports frontend/UI work, define `skill_overlays` for shared UI guidance and explicit exclusions.
+- [ ] If the pack establishes explicit SEO intent, document that invariant and validate `$seo-expert` routing without changing unrelated web routes.
+- [ ] If the pack references starter files, list them in a `*_paths` field and validate that every path resolves.
+- [ ] For public-web packs, document API-contract generation, privacy/consent, accessibility, machine-discovery, and legal-review boundaries when applicable.
 - [ ] Include `local_only: true` and prohibited non-local actions.
 - [ ] Align the security baseline in `governance/security-compliance-baseline.md`.
 - [ ] Validate with `./scripts/validate/tdd-contract.sh`.
+- [ ] Add and run a dedicated stack contract when the pack introduces routing, templates, or behavior beyond the generic pack schema.
 
 ## How to change global thresholds
 
