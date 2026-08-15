@@ -28,6 +28,7 @@ After phase selection, apply the already resolved stack pack:
 - `packs/go-aws`
 - `packs/java-onprem`
 - `packs/angular`
+- `packs/astro`
 - `packs/generic`
 
 Stack pack influence is limited to constraints, command sets, and test strategy.
@@ -72,6 +73,19 @@ For Angular frontend/UI requests:
 - Exclude `$backend-design` for frontend-only Angular work.
 - Allow `$backend-design` only when backend scope is explicit in the request.
 
+## Astro public-web requests
+
+For requests under the `astro` pack:
+
+- Treat pack selection as explicit SEO intent and always activate `$seo-expert`.
+- Activate `$web-ui-ux` for frontend/UI, responsive, visual, component, consent-interface, and accessibility intent.
+- Exclude `$backend-design` for frontend-only work; include it only when the request explicitly changes a Go/AWS backend in the same scope.
+- Keep public indexable and CRM-backed primary content SSG by default; mixed or server rendering requires explicit adapter, compute, routing, caching, security, SEO, accessibility, and verification decisions.
+- Require generated TypeScript API clients from backend-owned OpenAPI contracts and reject drift before completion.
+- Require default-denied consent and cookie-policy/browser evidence when Google Analytics is enabled.
+- Require WCAG 2.2 AA as the technical accessibility target, with automated plus manual post-change evidence and project-owned legal applicability review.
+- Keep `/llms.txt` and other AI discovery surfaces synchronized with canonical published content without treating them as access controls or provider guarantees.
+
 ## Node DeFi arbitrage requests
 
 For Node.js/TypeScript requests involving DeFi arbitrage, DEX integrations, blockchain RPC, transaction simulation or execution, MEV, or on-chain trading risk:
@@ -88,6 +102,7 @@ For explicit SEO intent involving metadata, structured data, indexing, crawlabil
 
 - Keep phase selection primary and activate `$seo-expert` as a specialization overlay.
 - Do not activate SEO guidance solely because a task is web-facing, frontend-related, backend-related, or documentation-related.
+- Treat selection of `packs/astro` as explicit SEO intent because that pack is restricted to public SEO-dependent websites.
 - Combine `$seo-expert` with `$web-ui-ux` when SEO changes also affect page hierarchy, semantics, responsive presentation, or UX.
 - Combine `$seo-expert` with `$playwright-cli` when rendered metadata, browser redirects, navigation, or executable browser evidence must be inspected.
 - Reject deceptive or black-hat tactics and never promise ranking outcomes.

@@ -1,0 +1,94 @@
+name: astro
+description: Astro public-web guidance for SEO-first, accessible, API-integrated AWS sites.
+detection:
+  required:
+    - type: path_exists
+      path: astro.config.mjs
+    - type: file_contains
+      path: package.json
+      value: '"astro"'
+context:
+  languages: [typescript, html, css]
+  frameworks: [astro]
+  rendering_profiles: [static, mixed, server]
+  visibility: public
+  seo_required: true
+  ai_discoverability_required: true
+  accessibility_target: "WCAG 2.2 AA"
+  european_accessibility_reference: "EN 301 549"
+  openapi_client_required: true
+  analytics_provider: google-analytics
+  analytics_default_consent: denied
+  deployment_targets: [s3, lambda]
+  deployment_owner: external-operator
+  starter_template_paths:
+    - packs/astro/templates/playwright.config.ts
+    - packs/astro/templates/public/llms.txt
+    - packs/astro/templates/tests/privacy/consent.spec.ts
+    - packs/astro/templates/tests/accessibility/accessibility.spec.ts
+    - packs/astro/templates/cookie-policy-checklist.md
+    - packs/astro/templates/accessibility-checklist.md
+local_only: true
+skill_overlays:
+  public_web:
+    include:
+      - seo-expert
+  ui_frontend:
+    include:
+      - seo-expert
+      - web-ui-ux
+    exclude:
+      - backend-design
+  go_aws_fullstack:
+    include:
+      - seo-expert
+      - web-ui-ux
+      - backend-design
+constraints:
+  - Treat selection of this pack as explicit SEO intent for a public website.
+  - Prefer static generation and S3-hostable output for public indexable routes.
+  - Require active OpenSpec decisions before adding mixed or server rendering, an adapter, or a compute origin.
+  - Keep S3 static assets, Astro rendering compute, and backend API Lambdas as separate runtime responsibilities.
+  - Keep CRM-backed primary public content statically generated from explicitly publishable states.
+  - Generate TypeScript API clients from validated backend-owned OpenAPI contracts; never edit generated files manually.
+  - Keep generated transport code isolated and map it into stable component-facing contracts when reuse requires decoupling.
+  - Publish synchronized semantic HTML, structured data, sitemap, robots policy, and `/llms.txt` discovery surfaces.
+  - Never expose draft, private, authenticated, personalized, or secret-bearing content through public discovery artifacts.
+  - Keep Google Analytics disabled by default until the visitor grants the relevant optional consent category.
+  - Keep analytics events free of secrets, direct identifiers, sensitive data, form values, and uncontrolled URLs.
+  - Target WCAG 2.2 Level AA continuously; prefer native semantic HTML and use ARIA only when necessary.
+  - Require automated accessibility evidence plus manual keyboard and project-declared screen-reader testing after affected changes.
+  - Preserve accessibility, responsive behavior, and minimal client-side JavaScript on frontend changes.
+  - Do not claim rankings, AI discovery, WCAG conformity, or legal conformity from local automated evidence alone.
+verification_commands:
+  test: "npm test"
+  build: "npm run build"
+  lint: "npm run check"
+  api_contract: "npm run api:check"
+  seo: "npm run audit:lighthouse"
+  accessibility: "npm run audit:a11y"
+api_commands:
+  generate: "npm run api:generate"
+  check: "npm run api:check"
+seo_commands:
+  preview: "npm run preview -- --host 0.0.0.0 --port 4321"
+  lighthouse: "AUDIT_URL=http://127.0.0.1:4321 npm run audit:lighthouse"
+  ai_discovery: "curl --fail --silent --show-error http://127.0.0.1:4321/llms.txt"
+browser_commands:
+  privacy: "npx playwright test tests/privacy --config=playwright.config.ts"
+  accessibility: "npx playwright test tests/accessibility --config=playwright.config.ts"
+ui_ux_commands:
+  dev_server: "npm run dev -- --host 0.0.0.0 --port 4321"
+  browser_checks: "npx playwright test --config=playwright.config.ts"
+  headed_review: "npx playwright test --config=playwright.config.ts --headed"
+tdd_commands:
+  red: "npm test"
+  green: "npm test"
+  refactor: "npm test && npm run check && npm run build"
+safety:
+  prohibited_actions:
+    - deploy
+    - release
+    - production-change
+    - production-cookie-policy-approval
+    - production-accessibility-conformity-claim

@@ -1,6 +1,6 @@
 # OpenCode + OpenSpec Agent Platform
 
-Cross-cutting repository for working with OpenCode and OpenSpec across projects with different stacks (for example Go/AWS, Java on-prem, Angular).
+Cross-cutting repository for working with OpenCode and OpenSpec across projects with different stacks (for example Go/AWS, Java on-prem, Angular, Astro).
 
 Its goal is to provide a shared base of agents, skills, quality rules, and workflow so day-to-day development stays consistent, verifiable, and focused on preventing regressions.
 
@@ -19,7 +19,7 @@ The platform is made up of 5 parts:
 1. `agents/`: the primary orchestrator and four bounded specialist subagents (documentation, design document, Pulumi, and TDD).
 2. `skill/`: reusable phase contracts and specialization skills (`openspec-*`, `backend-design`, `node-defi-arbitrage`, `seo-expert`, `web-ui-ux`, `playwright-cli`, optional CodeGraph, RTK, and n8n skills).
 3. `core/`: shared workflow contract, agent catalog, routing policy, and templates.
-4. `packs/`: extensions by stack (`go-aws`, `java-onprem`, `angular`, `generic`).
+4. `packs/`: extensions by stack (`go-aws`, `java-onprem`, `angular`, `astro`, `generic`).
 5. `evals/` + `scripts/`: automated evaluation and validation of contracts and quality thresholds.
 
 Routing is evidence- and intent-first:
@@ -83,7 +83,7 @@ agents/                    # Agents by phase and sub-agents
 skill/                     # Reusable skills
 third_party/n8n_skills/    # Optional external n8n skills source (submodule)
 core/                      # Shared contract and templates
-packs/                     # Pack per stack (go-aws, java-onprem, angular, generic)
+packs/                     # Pack per stack (go-aws, java-onprem, angular, astro, generic)
 governance/                # Local-only matrix, security baseline, handoff, audit
 evals/                     # Golden tasks + global thresholds
 scripts/
@@ -135,6 +135,7 @@ The runner prefers `node_modules/.bin/openspec` from the platform module, avoidi
 ./scripts/validate/gitflow-branching-contract.sh
 ./scripts/validate/tdd-contract.sh
 ./scripts/validate/angular-ui-contract.sh
+./scripts/validate/astro-pack-contract.sh
 ./scripts/validate/web-ui-ux-contract.sh
 ./scripts/validate/playwright-cli-contract.sh
 ./scripts/validate/n8n-skills-contract.sh
@@ -151,13 +152,20 @@ node ./scripts/validate/runtime-definitions.mjs
 ./scripts/evals/run-all.sh
 ```
 
-## Web UI / Angular frontend guidance
+## Web UI frontend guidance
 
 - Use `$web-ui-ux` for frontend/UI tasks involving layout, visual polish, responsive behavior, state coverage, or component reuse.
 - Use `$playwright-cli` alongside `$web-ui-ux` when frontend work needs browser automation, traces, snapshots, or Playwright test debugging.
 - Under `packs/angular`, frontend-only work should use `$web-ui-ux` and should not load `$backend-design`.
 - If a request explicitly combines Angular UI work with backend changes, the guidance set may include both `$web-ui-ux` and `$backend-design`.
-- Future web packs (for example Astro) should reuse `web-ui-ux` for cross-framework UI quality guidance and add framework-specific overlays separately.
+- Under `packs/astro`, pack selection establishes explicit SEO intent because Astro is reserved for public SEO-dependent websites; `$seo-expert` is always included.
+- Astro frontend/UI work composes `$seo-expert` with `$web-ui-ux` and excludes `$backend-design` unless the request explicitly spans a Go/AWS backend.
+- The Astro pack defaults public indexable routes to SSG/S3, supports explicitly designed mixed or server rendering, and keeps Astro compute separate from backend API Lambdas.
+- Astro projects generate TypeScript API clients through `npm run api:generate` and reject OpenAPI drift through `npm run api:check`.
+- Google Analytics is conditional and default-denied until accessible consent; cookie-policy ownership and browser network/storage evidence are mandatory.
+- Astro accessibility targets WCAG 2.2 AA continuously, references EN 301 549, and combines automated checks with manual keyboard, screen-reader, zoom/reflow, media, dynamic-UI, and maps/plans review.
+- Astro AI discovery publishes synchronized `/llms.txt` guidance without treating it as crawler permission or promising external AI retrieval or citation.
+- Full Astro constraints, commands, templates, and legal-review boundaries are documented in `packs/astro/README.md`.
 
 If a consumer runtime exposes a narrower `available_skills` list than the module imports, module-owned skills remain usable through the repository-local skill files. For example, when `$web-ui-ux` is not available through the runtime skill loader but `.opencode/skill/web-ui-ux/SKILL.md` exists in the consumer project, agents should read and apply that local file instead of reporting `missing_specialization`.
 
@@ -397,7 +405,7 @@ If the runtime does not expose them, agents should read and apply the local `SKI
 
 - New agent: add file in `agents/` and register metadata in `core/agent-catalog.yaml`.
 - New skill: create `skill/<name>/manifest.yaml` + `SKILL.md` and validate its routing/pack integration.
-- New stack pack: create `packs/<stack>/pack.yaml` + `README.md` with `detection.required`, verification, TDD, and safety commands.
+- New stack pack: create `packs/<stack>/pack.yaml` + `README.md` with `detection.required`, verification, TDD, safety commands, referenced templates, and a dedicated validation contract when behavior is stack-specific.
 - New global rule: update `core/workflow-contract.md` and validation scripts in `scripts/validate/`.
 - New quality metric: update `evals/config/global-thresholds.json` and `scripts/evals/run-all.sh`.
 
