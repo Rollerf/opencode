@@ -1,0 +1,19 @@
+# <Site Name>
+
+> <Factual summary of the public site>
+
+<Optional concise context needed to interpret the linked public information. Do not include private facts, crawler permissions, or claims absent from the visible site.>
+
+## Key pages
+
+- [Home](https://www.example.com/): <Canonical public entry point>
+- [Primary information](https://www.example.com/example/): <Short factual description>
+
+## Policies
+
+- [Accessibility](https://www.example.com/accessibility/): <Accessibility information or statement when applicable>
+- [Privacy and cookies](https://www.example.com/privacy/): <Privacy and cookie information>
+
+## Optional
+
+- [Additional public resource](https://www.example.com/resource/): <Why an agent may need this resource>

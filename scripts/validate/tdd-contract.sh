@@ -24,7 +24,7 @@ if not packs_dir.exists():
     print(f"Error: missing packs directory: {packs_dir}", file=sys.stderr)
     sys.exit(1)
 
-required_packs = ["go-aws", "java-onprem", "angular", "generic"]
+required_packs = ["go-aws", "java-onprem", "angular", "astro", "generic"]
 required_keys = ["red", "green", "refactor"]
 
 errors = []
