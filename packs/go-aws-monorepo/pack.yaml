@@ -1,0 +1,41 @@
+name: go-aws-monorepo
+description: Go Lambda backend and TypeScript Pulumi infrastructure in a repository with nested modules.
+detection:
+  required:
+    - type: path_exists
+      path: lambda-handlers/go.mod
+    - type: file_contains
+      path: lambda-handlers/go.mod
+      value: github.com/aws/aws-sdk-go
+    - type: path_exists
+      path: infra/Pulumi.yaml
+    - type: file_contains
+      path: infra/package.json
+      value: '"@pulumi/aws"'
+context:
+  languages: [go, typescript]
+  platforms: [aws]
+  deployment_owner: external-operator
+  go_module: lambda-handlers
+  infrastructure_module: infra
+local_only: true
+constraints:
+  - Run Go commands against the nested lambda-handlers module.
+  - Keep Handler -> UseCase -> Storage boundaries.
+  - Preserve RFC 7807 Problem Details semantics.
+  - Keep Pulumi resources and stack configuration under infra.
+  - Treat CORS origins as exact scheme, host, and port values for authenticated APIs.
+  - Avoid hard-coded secrets and account-specific values.
+verification_commands:
+  test: "go -C lambda-handlers test ./..."
+  build: "go -C lambda-handlers build ./..."
+  lint: "go -C lambda-handlers vet ./..."
+tdd_commands:
+  red: "go -C lambda-handlers test ./..."
+  green: "go -C lambda-handlers test ./..."
+  refactor: "go -C lambda-handlers test ./... && go -C lambda-handlers vet ./..."
+safety:
+  prohibited_actions:
+    - deploy
+    - apply-infra
+    - production-release
