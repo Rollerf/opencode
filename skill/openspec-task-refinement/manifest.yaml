@@ -1,0 +1,9 @@
+name: "openspec-task-refinement"
+display_name: "OpenSpec Task-Refinement Specialization"
+description: "Planning specialization that rewrites hard-spec-ready draft tasks into executor-ready blocks."
+default_prompt: "Use $openspec-task-refinement after hard-spec readiness to make tasks decision-free and executor-ready."
+compatibility:
+  codex: true
+  github_copilot: true
+invocation:
+  explicit_tag: "$openspec-task-refinement"

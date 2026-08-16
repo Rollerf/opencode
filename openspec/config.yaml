@@ -36,3 +36,8 @@ rules:
   tasks:
     - Write all task descriptions and verification commands in English.
     - Include concrete implementation and verification steps traceable to hard-spec requirements and scenarios.
+    - Treat planning tasks as drafts until post-hard-spec task refinement sets the Task Refinement Gate to READY.
+    - Give every incomplete implementation task a bounded outcome, requirement and scenario references, dependencies, execution-block ID, exact executor, exact targets and symbols, ordered steps, exact commands, expected evidence, and objective completion conditions.
+    - Require RED, GREEN, and REFACTOR steps for behavior changes; use `TDD: Not applicable — <reason>` only for non-behavior tasks.
+    - Group tasks into ordered executor-ready blocks with allowed targets, forbidden scope, stop conditions, exact block checks, and two to five cohesive tasks unless a single-task bootstrap, final-integration, or indivisible exception is justified.
+    - Mark task refinement BLOCKED and return to spec hardening whenever implementation would require an unresolved product or technical decision.

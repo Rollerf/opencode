@@ -7,5 +7,8 @@
   "critical_scenario_coverage": 100,
   "total_scenario_coverage": 98,
   "strict_validation_pass_rate": 100,
-  "high_critical_security_findings": 0
+  "high_critical_security_findings": 0,
+  "executor_ready_task_rate": 100,
+  "luna_refined_block_dispatch_rate": 100,
+  "api_cost_accounting_coverage": 100
 }

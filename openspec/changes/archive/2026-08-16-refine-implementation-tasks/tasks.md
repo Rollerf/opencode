@@ -65,7 +65,7 @@
 
 ## 1. Runtime executor and task-refinement specialization
 
-- [ ] 1.1 Bootstrap and validate the Luna/high refined-task executor.
+- [x] 1.1 Bootstrap and validate the Luna/high refined-task executor.
   - Outcome: OpenCode exposes a hidden leaf implementation subagent that executes exactly one executor-ready task block with Luna high while Sol retains orchestration and final review.
   - Requirements: `implementation-task-refinement` — “Default Luna high implementation executor”; `agent-catalog-routing` — “Refined-task executor ownership”; `runtime-definition-integrity` — “Luna high refined-task executor distribution”.
   - Scenarios: “Ready normal block enters implementation”, “Refined-task executor receives bounded ownership”, “Executor runtime metadata is validated”, and “Consumer discovers the executor”.
@@ -79,7 +79,7 @@
   - Evidence: RED unresolved-path failure; GREEN runtime-definition pass; REFACTOR consumer discovery pass.
   - Completion: Agent, catalog, and centralized policy agree on runtime name, model, variant, steps, leaf status, scope, inputs, and outputs. Report required operator action: restart OpenCode before Task 1.2 so Task-tool discovery refreshes.
 
-- [ ] 1.2 Add and validate the repository-owned `openspec-task-refinement` skill.
+- [x] 1.2 Add and validate the repository-owned `openspec-task-refinement` skill.
   - Outcome: Consumer runtimes discover a native planning specialization that converts hard-spec-ready draft tasks into executor-ready tasks without making decisions.
   - Requirements: `implementation-task-refinement` — “Mandatory post-hard-spec task refinement”, “Executor-ready task contract”, and “Task refinement readiness gate”; `runtime-definition-integrity` — “Task-refinement specialization distribution”.
   - Scenarios: “Hard spec is ready for task refinement”, “Hard spec is not ready”, “Runtime definitions are validated”.
@@ -95,7 +95,7 @@
 
 ## 2. Executor-ready task authoring contract
 
-- [ ] 2.1 Replace the minimal task template and authoring rules with the fixed executor-ready task shape.
+- [x] 2.1 Replace the minimal task template and authoring rules with the fixed executor-ready task shape.
   - Outcome: Newly refined `tasks.md` files expose a deterministic gate and give every incomplete implementation task all information required for decision-free execution.
   - Requirements: `implementation-task-refinement` — “Executor-ready task contract”, “Task refinement readiness gate”, and “Low-reasoning executor boundary”.
   - Scenarios: “Behavior-changing task satisfies the contract”, “Non-behavior task satisfies the contract”, “Task contains an implementation choice”, “All tasks are executor-ready”, “One task is not executor-ready”, and “Luna high executes a refined block”.
@@ -111,7 +111,7 @@
 
 ## 3. Routing and implementation entry gate
 
-- [ ] 3.1 Route task-refinement intent through planning and block implementation until the refinement gate is `READY`.
+- [x] 3.1 Route task-refinement intent through planning and block implementation until the refinement gate is `READY`.
   - Outcome: Orchestrator preserves exactly one phase contract, enforces task refinement before code edits, and delegates normal ready blocks to Luna/high as the cost-efficient default.
   - Requirements: `core-workflow-contracts` — “Unified OpenSpec lifecycle contract”; `agent-catalog-routing` — “Deterministic routing policy”, “Single-entrypoint orchestration”, and “Refined-task executor ownership”; `implementation-task-refinement` — “Mandatory post-hard-spec task refinement”, “Task refinement readiness gate”, “Default Luna high implementation executor”, “Cost-efficient model allocation”, and “Expensive-output minimization”.
   - Scenarios: “Task refinement follows spec hardening”, “Task refinement is requested”, “Implementation is requested with unrefined tasks”, “Implementation is requested with a refined normal block”, “Orchestrator refines tasks locally”, “Orchestrator delegates refined implementation”, “Normal block uses lower-cost execution”, “Sol execution is requested for a normal block”, “Luna completes a block”, “Partial block resumes”, “Clarity or safety requires more output”, “Planning artifacts change after refinement”, “Luna reports a decision gap”, “Luna reports a non-decision execution failure”, “Executor reaches the step checkpoint”, and “Executor encounters an unplanned choice”.
@@ -127,7 +127,7 @@
 
 ## 4. Runner bundle specialization selection
 
-- [ ] 4.1 Include task-refinement specialization automatically in planning bundles whose user prompt expresses refinement intent.
+- [x] 4.1 Include task-refinement specialization automatically in planning bundles whose user prompt expresses refinement intent.
   - Outcome: Source, vendored, and global consumers can generate complete task-refinement context with the existing `bundle --phase planning` interface.
   - Requirements: `runtime-definition-integrity` — “Task-refinement specialization distribution”; `agent-catalog-routing` — “Deterministic routing policy”.
   - Scenarios: “Consumer bundles task-refinement context” and “Task refinement is requested”.
@@ -143,7 +143,7 @@
 
 ## 5. Cost accounting and quality evaluation
 
-- [ ] 5.1 Add versioned API-equivalent model cost accounting.
+- [x] 5.1 Add versioned API-equivalent model cost accounting.
   - Outcome: Observed execution token usage can be normalized to USD with a subscription-independent standard short-context API rate card, while unsupported profiles report `unknown`.
   - Requirements: `implementation-task-refinement` — “API-equivalent execution cost accounting” and “Expensive-output minimization”.
   - Scenarios: “Standard-profile execution has token telemetry”, “Deterministic rate fixture is calculated”, “Subscription changes”, “Unsupported pricing profile or missing telemetry”, and “API prices change”.
@@ -157,7 +157,7 @@
   - Evidence: RED missing-target failure; GREEN deterministic cost outputs; REFACTOR JSON parse and focused contract pass.
   - Completion: Rate source/profile/date are explicit, formula does not double-count cached input, subscription plan is absent from calculation, unsupported profiles return `unknown`, and focused validation passes.
 
-- [ ] 5.2 Add executor-ready task, Luna block-dispatch, and cost-accounting coverage metrics plus a golden fixture.
+- [x] 5.2 Add executor-ready task, Luna block-dispatch, and cost-accounting coverage metrics plus a golden fixture.
   - Outcome: Promotion metrics enforce task readiness, the cost-efficient Luna/high route, and API-equivalent cost presence for eligible telemetry without benchmarking complete Sol and Luna workloads.
   - Requirements: `implementation-task-refinement` — “Executor-ready task contract”, “Task refinement readiness gate”, “Default Luna high implementation executor”, “Cost-efficient model allocation”, and “API-equivalent execution cost accounting”.
   - Scenarios: “All tasks are executor-ready”, “One task is not executor-ready”, “Task contains an implementation choice”, “Cohesive normal block is ready”, “Ready normal block enters implementation”, “Normal block uses lower-cost execution”, “Sol execution is requested for a normal block”, “Standard-profile execution has token telemetry”, and “Eligible cost-accounting coverage is evaluated”.
@@ -173,7 +173,7 @@
 
 ## 6. Consumer and operator documentation
 
-- [ ] 6.1 Document the post-hard-spec refinement flow and existing-runner usage.
+- [x] 6.1 Document the post-hard-spec refinement flow and existing-runner usage.
   - Outcome: Consumers know when refinement runs, how it differs from spec hardening, how to invoke it, why `READY` is required, and how Luna/high reduces expected implementation cost by reserving Sol for decision-heavy work.
   - Requirements: `core-workflow-contracts` — “Unified OpenSpec lifecycle contract”; `runtime-definition-integrity` — “Task-refinement specialization distribution”; `implementation-task-refinement` — “Cost-efficient model allocation”, “API-equivalent execution cost accounting”, and “Expensive-output minimization”.
   - Scenarios: “Task refinement follows spec hardening”, “Consumer bundles task-refinement context”, “Implementation is requested with unrefined tasks”, “Normal block uses lower-cost execution”, “Subscription changes”, “Unsupported pricing profile or missing telemetry”, “Luna completes a block”, and “Cost comparison is requested”.
@@ -189,7 +189,7 @@
 
 ## 7. Final traceability and regression validation
 
-- [ ] 7.1 Validate the complete change and record implementation evidence before marking tasks complete.
+- [x] 7.1 Validate the complete change and record implementation evidence before marking tasks complete.
   - Outcome: All new requirements and scenarios are covered by implementation tasks and repository checks pass without regressions.
   - Requirements: All requirements in `implementation-task-refinement`, modified `core-workflow-contracts`, modified `agent-catalog-routing`, and added `runtime-definition-integrity` delta specs.
   - Scenarios: All scenarios in the four delta spec files.

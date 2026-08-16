@@ -20,12 +20,14 @@ Apply this phase contract after the stack pack has been resolved.
 3. Keep requirements observable and scenarios deterministic.
 4. Resolve CRITICAL ambiguity before implementation.
 5. Include API, security, data, infrastructure, and stack-pack impact when applicable.
-6. Add concrete, ordered tasks with exact local verification evidence.
-7. Prefer the runner resolved by `$openspec-workflow` for supported planning operations; do not require it to exist at `./opencode-runner.sh`.
+6. Create Draft tasks with concrete outcomes, traceability, dependencies, and local verification evidence; draft planning does not by itself make tasks executor-ready.
+7. After spec-hardening decision closure, apply `openspec-task-refinement` in the planning phase to rewrite draft tasks into ordered executor-ready blocks.
+8. Prefer the runner resolved by `$openspec-workflow` for supported planning operations; do not require it to exist at `./opencode-runner.sh`.
 
 ## Completion criteria
 
 - Proposal, design, specs, and tasks are present or intentionally omitted with a documented reason.
 - No unresolved CRITICAL ambiguity remains.
-- Requirements, scenarios, tasks, and verification evidence are traceable.
+- Requirements, scenarios, Draft tasks, and verification evidence are traceable.
+- When task refinement is in scope, every incomplete task belongs to a valid block and the Task Refinement Gate is `READY`; otherwise blockers return to spec hardening.
 - The response reports phase, touched files, commands, blockers, and missing decisions.
