@@ -9,6 +9,7 @@ phases:
     completion_criteria:
       - Planning artifacts are consistent and written in English.
       - No unresolved critical implementation ambiguity remains.
+      - When task refinement is requested, every incomplete task belongs to a valid executor-ready block and the Task Refinement Gate is READY.
   - id: spec-hardening
     skill: openspec-spec-hardening
     path: skill/openspec-spec-hardening/SKILL.md
@@ -22,7 +23,8 @@ phases:
     skill: openspec-implementation
     path: skill/openspec-implementation/SKILL.md
     entry_criteria:
-      - The change is implementation-ready.
+      - The change has complete artifacts, strict validation, and no critical ambiguity.
+      - The Task Refinement Gate is READY and remains valid after planning changes.
       - The stack pack is resolved.
     completion_criteria:
       - Completed tasks have implementation and verification evidence.

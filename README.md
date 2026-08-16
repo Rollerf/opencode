@@ -16,8 +16,8 @@ Its goal is to provide a shared base of agents, skills, quality rules, and workf
 
 The platform is made up of 5 parts:
 
-1. `agents/`: the primary orchestrator and four bounded specialist subagents (documentation, design document, Pulumi, and TDD).
-2. `skill/`: reusable phase contracts and specialization skills (`openspec-*`, `backend-design`, `node-defi-arbitrage`, `seo-expert`, `web-ui-ux`, `playwright-cli`, optional CodeGraph, RTK, and n8n skills).
+1. `agents/`: the primary orchestrator and five bounded subagents (refined-task execution, documentation, design document, Pulumi, and TDD).
+2. `skill/`: reusable phase contracts and specialization skills, including post-hard-spec `openspec-task-refinement`, `backend-design`, `node-defi-arbitrage`, `seo-expert`, `web-ui-ux`, `playwright-cli`, optional CodeGraph, RTK, and n8n skills.
 3. `core/`: shared workflow contract, agent catalog, routing policy, and templates.
 4. `packs/`: extensions by stack (`go-aws`, `java-onprem`, `angular`, `astro`, `generic`).
 5. `evals/` + `scripts/`: automated evaluation and validation of contracts and quality thresholds.
@@ -26,6 +26,7 @@ Routing is evidence- and intent-first:
 
 - First, the stack pack is resolved from explicit selection, compatible project confirmation, or pack detection markers. Ambiguous or unsupported stacks require operator confirmation before phase work.
 - Then, the type of work is detected and exactly one phase-contract skill is loaded.
+- After spec hardening, task refinement remains under planning and rewrites `tasks.md` into executor-ready blocks; it does not add a sixth phase.
 - Finally, stack and specialization overlays are applied and bounded delegation remains optional.
 - `orchestrator.md` is the recommended single interactive entrypoint: it selects the phase contract and executes local work directly unless a specialized subagent clearly reduces context, adds expertise, enables parallelism, or produces a distinct deliverable.
 
@@ -134,6 +135,8 @@ The runner prefers `node_modules/.bin/openspec` from the platform module, avoidi
 ./scripts/validate/contracts.sh
 ./scripts/validate/gitflow-branching-contract.sh
 ./scripts/validate/tdd-contract.sh
+./scripts/validate/task-refinement-contract.sh
+./scripts/validate/model-cost-contract.sh
 ./scripts/validate/angular-ui-contract.sh
 ./scripts/validate/astro-pack-contract.sh
 ./scripts/validate/web-ui-ux-contract.sh
@@ -212,6 +215,9 @@ git submodule update --init --recursive third_party/n8n_skills
 - total scenario coverage >= 95
 - strict validation pass rate = 100
 - high/critical security findings = 0
+- executor-ready task rate = 100
+- Luna refined-block dispatch rate = 100
+- eligible API cost-accounting coverage = 100
 
 ## Optional CodeGraph support
 
@@ -328,6 +334,14 @@ Workflow phases are native skills:
 - `.opencode/skill/openspec-verification/SKILL.md`
 - `.opencode/skill/openspec-archive/SKILL.md`
 
+Post-hard-spec task refinement is a planning specialization:
+
+- `.opencode/skill/openspec-task-refinement/SKILL.md`
+
+Normal executor-ready implementation blocks use:
+
+- `.opencode/agents/subagent/refined-task-executor-subagent.md`
+
 OpenCode can also use specialization skills from the submodule, including:
 
 - `.opencode/skill/codegraph/SKILL.md`
@@ -338,12 +352,13 @@ Recommended consumer flow:
 1. Keep OpenSpec as the source of truth for the change (`proposal`, `design`, `specs`, `tasks`).
 2. Write every OpenSpec artifact in English, regardless of the conversation language, to keep shared specs portable and token-efficient.
 3. Define implementation-ready hard specs before coding: no unresolved CRITICAL ambiguity, deterministic requirements/scenarios, traceable tasks, and explicit verification evidence.
-4. Use `$openspec-spec-hardening` after drafting artifacts and before implementation to establish hard-spec readiness.
-5. Under gitflow, each OpenSpec change should map to its own `feature/<change-name>` branch created from `develop`.
-6. Let the orchestrator infer the pack from project evidence; confirm ambiguous matches, or explicitly confirm `generic`/request a new pack when none matches.
-7. Run implementation with TDD evidence.
-8. Verify against global thresholds.
-9. If the flow needs to leave local, generate handoff for an external operator using `governance/operator-handoff-template.md`.
+4. Use `$openspec-spec-hardening` after drafting artifacts to close product and technical decisions.
+5. Run `$openspec-task-refinement` under planning to rewrite decision-complete draft tasks into executor-ready blocks and set the Task Refinement Gate to `READY`.
+6. Under gitflow, each OpenSpec change should map to its own `feature/<change-name>` branch created from `develop`.
+7. Let the orchestrator infer the pack from project evidence; confirm ambiguous matches, or explicitly confirm `generic`/request a new pack when none matches.
+8. Run block implementation with TDD evidence. Normal blocks default to the bounded Luna/high executor while Sol retains orchestration and review.
+9. Verify against global thresholds.
+10. If the flow needs to leave local, generate handoff for an external operator using `governance/operator-handoff-template.md`.
 
 ## OpenSpec spec hardening
 
@@ -373,6 +388,79 @@ $HOME/.config/opencode/opencode-runner.sh bundle \
   --user-prompt "Harden this OpenSpec change before implementation"
 ```
 
+## OpenSpec task refinement
+
+Task refinement runs after hard-spec decision closure and before implementation. It uses `$openspec-planning` as the sole phase contract plus `$openspec-task-refinement` as a specialization. It updates the canonical `tasks.md`; it does not create another artifact, top-level phase, or primary agent.
+
+Every incomplete task records a bounded outcome, requirement/scenario traceability, dependencies, execution-block ID, exact executor, exact paths and symbols, ordered steps, exact local commands, evidence, and objective completion conditions. Behavior changes define RED, GREEN, and REFACTOR. Non-behavior tasks state `TDD: Not applicable — <reason>`.
+
+Normal blocks contain two to five cohesive tasks with deterministic order, shared context, allowed targets, forbidden scope, stop conditions, and block-level checks. Bootstrap, final-integration, or indivisible work may use one task only with an explicit reason. The gate is `READY` only when every task and block is decision-free and strict validation passes; otherwise it is `BLOCKED` and returns to spec hardening. Planning changes that affect implementation invalidate an existing `READY` gate.
+
+`READY` proves contract completeness, not guaranteed executor success. Tool availability, context limits, or mechanical failures can still block execution; tests and safety boundaries are never weakened to accommodate an executor.
+
+Source-checkout bundle:
+
+```bash
+./opencode-runner.sh bundle \
+  --phase planning \
+  --change <change-name> \
+  --pack <confirmed-pack> \
+  --user-prompt "Refine tasks into executor-ready steps without implementation decisions"
+```
+
+Vendored consumer bundle:
+
+```bash
+./.opencode/opencode-runner.sh bundle \
+  --phase planning \
+  --change <change-name> \
+  --pack <confirmed-pack> \
+  --user-prompt "Refine tasks into executor-ready steps without implementation decisions"
+```
+
+Global runner bundle, executed from the consumer project root:
+
+```bash
+$HOME/.config/opencode/opencode-runner.sh bundle \
+  --phase planning \
+  --change <change-name> \
+  --pack <confirmed-pack> \
+  --user-prompt "Refinar las tareas para que sean ejecutables sin decisiones de implementación"
+```
+
+The runner detects English and Spanish refinement intent and includes both the planning contract and task-refinement specialization. Existing phase syntax remains unchanged.
+
+For normal `READY` blocks, Sol sends one compact structured handoff to `subagent/refined-task-executor-subagent`, which uses `openai/gpt-5.6-luna`, variant `high`, and a 50-step checkpoint. The handoff contains only block identity, referenced requirements/scenarios, satisfied dependencies, declared targets, ordered steps, commands, stop conditions, applicable pack constraints, and expected evidence. The result contains status, task progress, touched files, command evidence, decision gaps, verification failures, and scope deviations.
+
+On a `PARTIAL` checkpoint, Sol resumes the same child session with only changed instructions or evidence. Luna remains owner of the complete block. A decision gap returns to spec hardening and task refinement. A mechanical failure returns to block refinement and Luna retry. Sol does not silently take implementation ownership. An explicit operator override or existing mandatory specialist route may replace Luna/high, but the effective executor and rationale must be reported before edits.
+
+Bootstrap requires creating the executor definition and restarting OpenCode before later blocks can discover it. Repository source changes do not affect a separate global checkout until they reach that checkout and OpenCode restarts.
+
+### API-equivalent cost accounting
+
+`core/model-api-prices.json` defines versioned `standard-short-context` normalization rates in USD per one million tokens, checked against `https://platform.openai.com/docs/pricing` on 2026-08-16:
+
+| Model | Input | Cached input | Output |
+| --- | ---: | ---: | ---: |
+| `openai/gpt-5.6-sol` | `$5.00` | `$0.50` | `$30.00` |
+| `openai/gpt-5.6-terra` | `$2.00` | `$0.20` | `$12.00` |
+| `openai/gpt-5.6-luna` | `$0.20` | `$0.02` | `$1.20` |
+
+When input includes cached tokens:
+
+```text
+uncached_input_tokens = max(input_tokens - cached_input_tokens, 0)
+api_equivalent_cost_usd = (
+  uncached_input_tokens * input_usd_per_million
+  + cached_input_tokens * cached_input_usd_per_million
+  + output_tokens * output_usd_per_million
+) / 1_000_000
+```
+
+This normalized metric is independent of Plus, Pro, Business, Enterprise, or API-key subscription allowances. Output receives its full model-specific weight, so orchestration avoids repeating source, full diffs, child envelopes, or unchanged context. This is a normalization profile, not an invoice or measured end-to-end Sol-versus-Luna comparison.
+
+Long-context, Batch, Flex, Fast, regional processing, separately charged tools/containers, unsupported profiles, or missing telemetry report `api_equivalent_cost_usd: unknown`; the workflow never invents token counts or substitutes message limits. Price updates must change the source-checked date and deterministic fixtures in the same reviewed change. Comparative model benchmarking belongs to a separate OpenSpec change.
+
 ## Agent migration and model policy
 
 | Previous primary agent | Replacement phase skill |
@@ -383,7 +471,7 @@ $HOME/.config/opencode/opencode-runner.sh bundle \
 | `verifier` | `$openspec-verification` |
 | `archiver` | `$openspec-archive` |
 
-`orchestrator` is the only phase-owning primary agent and uses `openai/gpt-5.6-sol` with 40 steps. Documentation and design-document helpers use Luna with 10 and 12 steps. Pulumi and TDD helpers use Sol with 20 steps. Feature iteration is part of `$openspec-implementation`, not a subagent.
+`orchestrator` is the only phase-owning primary agent and uses `openai/gpt-5.6-sol` with 40 steps. The hidden refined-task executor uses `openai/gpt-5.6-luna`, variant `high`, and 50 steps while denying nested delegation. Documentation and design-document helpers use Luna with 10 and 12 steps. Pulumi and TDD helpers use Sol with 20 steps. Feature iteration is part of `$openspec-implementation`, not another primary agent.
 
 ## Caveman in consumer projects
 

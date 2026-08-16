@@ -36,21 +36,29 @@ Use completion criteria from [phase-checklists.md](references/phase-checklists.m
 
 ## Planning Rules
 
+Lifecycle order: `draft planning -> spec hardening -> task refinement -> block implementation`.
+
 1. Check status before writing artifacts.
 2. Build artifacts in sequence if missing: proposal -> specs -> design -> tasks.
 3. Keep artifacts consistent with `openspec/config.yaml`.
 4. Write all OpenSpec artifacts in English (`proposal.md`, `design.md`, `tasks.md`, and `specs/**/spec.md`), regardless of the user's conversation language.
 5. Define hard specs before implementation: resolve CRITICAL ambiguity, make requirements/scenarios deterministic, and map tasks to verification evidence.
-6. Keep requirements testable and tasks concrete.
+6. Keep requirements testable and draft tasks concrete.
+7. After hard-spec decision closure, apply `openspec-task-refinement` under planning and rewrite `tasks.md` into fixed executor-ready tasks and ordered blocks.
+8. Normal blocks contain two to five cohesive tasks. Justify bootstrap, final-integration, or indivisible single-task blocks.
+9. Set the Task Refinement Gate to `BLOCKED` and return to spec hardening when any implementation decision remains; set it to `READY` only after every task and block passes.
+10. Use compact structured block handoff and result envelopes; do not duplicate unrelated artifact or repository context.
 
 ## Implementation Rules
 
 1. Read active change artifacts before coding.
-2. Confirm hard-spec readiness before coding; if CRITICAL ambiguity remains, return to planning/spec hardening.
-3. Execute tasks in order and keep changes small.
-4. Follow RED -> GREEN -> REFACTOR for behavior changes.
-5. Mark completed tasks in `tasks.md`.
-6. Run affected tests during execution, not only at the end.
+2. Confirm hard-spec readiness and a `READY` Task Refinement Gate before coding; if either fails, return to spec hardening followed by task refinement.
+3. Reject any block that lacks fixed task fields, exact targets, deterministic order, exact commands, stop conditions, or decision-free completion criteria.
+4. Execute ready blocks and their tasks in dependency order and keep changes small.
+5. Follow RED -> GREEN -> REFACTOR for behavior changes; require `TDD: Not applicable — <reason>` for non-behavior tasks.
+6. Stop instead of guessing when implementation reveals an unplanned product or technical choice.
+7. Mark completed tasks in `tasks.md` only after evidence passes.
+8. Run affected tests during execution, not only at the end.
 
 ## Verification and Archive Rules
 

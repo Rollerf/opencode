@@ -106,6 +106,11 @@ is_backend_intent() {
   text_matches "$text" 'backend|\bapi\b|handler|usecase|use-case|storage|pulumi|infra|infrastructure|lambda|migration|database|schema|endpoint'
 }
 
+is_task_refinement_intent() {
+  local text="$1"
+  text_matches "$text" 'task[ -]?refinement|refin(e|ing)[[:space:]]+(the[[:space:]]+)?tasks|decompose[[:space:]]+(the[[:space:]]+)?tasks|executor[ -]?ready|decision[ -]?free[[:space:]]+tasks|without[[:space:]]+implementation[[:space:]]+decisions|refina(r)?[[:space:]]+(las[[:space:]]+)?tareas|descomponer[[:space:]]+(las[[:space:]]+)?tareas|tareas[[:space:]]+(ejecutables|sin[[:space:]]+decisiones)'
+}
+
 append_skill() {
   local skills_csv="$1"
   local skill="$2"
@@ -127,6 +132,10 @@ phase_default_skills() {
   local backend_intent="false"
 
   skills_csv="$(append_skill "$skills_csv" "$(phase_contract_skill "$phase")")"
+
+  if [[ "$phase" == "planning" ]] && is_task_refinement_intent "$user_prompt"; then
+    skills_csv="$(append_skill "$skills_csv" "openspec-task-refinement")"
+  fi
 
   [[ "$phase" != "archive" ]] || {
     echo "$skills_csv"

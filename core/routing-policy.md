@@ -10,16 +10,17 @@ Before phase work, resolve one pack from an explicit selection, compatible `.ope
 
 1. Planning artifacts (`proposal`, `design`, `specs`, `tasks`) -> `$openspec-planning`.
 2. Spec hardening, ambiguity review, or turning drafted OpenSpec artifacts into an implementation-ready hard spec -> `$openspec-spec-hardening`.
-3. Code implementation and feature iteration from `tasks.md` -> `$openspec-implementation`.
-4. Readiness checks and traceability -> `$openspec-verification`.
-5. Archive/closure -> `$openspec-archive`.
-6. Documentation requests -> `subagent/code-documentation-subagent.md`.
-7. Design-document requests -> `subagent/design-doc-subagent.md`.
-8. Pulumi/IaC requests -> `subagent/pulumi-infrastructure-subagent.md`.
-9. TDD test planning/creation -> `subagent/tdd-tests-subagent.md`.
-10. Semantic code exploration, call graph questions, impact analysis, or affected-test discovery -> apply `$codegraph` when CodeGraph MCP tools are available.
-11. Shell commands with large or noisy output -> apply `$rtk` when RTK is installed or the OpenCode RTK hook is active.
-12. n8n workflow design/debug/validation requests -> apply `$n8n-gateway` then `$n8n-mcp-tools-expert`.
+3. Task refinement intent, including decomposition into executor-ready or decision-free tasks -> `$openspec-planning` plus `$openspec-task-refinement` after hard-spec readiness.
+4. Code implementation and feature iteration from `tasks.md` -> `$openspec-implementation` only when the Task Refinement Gate is `READY`.
+5. Readiness checks and traceability -> `$openspec-verification`.
+6. Archive/closure -> `$openspec-archive`.
+7. Documentation requests -> `subagent/code-documentation-subagent.md`.
+8. Design-document requests -> `subagent/design-doc-subagent.md`.
+9. Pulumi/IaC requests -> `subagent/pulumi-infrastructure-subagent.md`.
+10. TDD test planning/creation -> `subagent/tdd-tests-subagent.md`.
+11. Semantic code exploration, call graph questions, impact analysis, or affected-test discovery -> apply `$codegraph` when CodeGraph MCP tools are available.
+12. Shell commands with large or noisy output -> apply `$rtk` when RTK is installed or the OpenCode RTK hook is active.
+13. n8n workflow design/debug/validation requests -> apply `$n8n-gateway` then `$n8n-mcp-tools-expert`.
 
 ## Secondary Selector: Stack Pack
 
@@ -41,12 +42,29 @@ OpenSpec artifact language is global: write and maintain `proposal.md`, `design.
 
 Hard-spec readiness is mandatory for OpenSpec-backed implementation: before coding, artifacts must resolve CRITICAL ambiguity, contain deterministic requirements/scenarios, and define concrete tasks plus verification evidence. If readiness is unclear, apply `$openspec-spec-hardening` first.
 
+Task refinement is also mandatory. Under the planning phase, `$openspec-task-refinement` rewrites decision-complete draft tasks into ordered executor-ready blocks. Implementation remains blocked until every incomplete task and block passes and the Task Refinement Gate is `READY`. Any implementation-affecting planning change invalidates that gate.
+
 Use phase skills and subagents as contracts or targeted helpers:
 
 - Load exactly one phase-contract skill according to `core/phase-contract-catalog.yaml`.
 - Apply `$openspec-spec-hardening` during planning to resolve ambiguity before implementation.
+- Apply `$openspec-task-refinement` after hard-spec readiness without adding another phase contract.
 - Invoke specialized subagents only when expertise, parallelism, context reduction, or a distinct deliverable justifies the handoff.
 - Keep the orchestrator responsible for final decisions, command evidence, touched files, blockers, and missing decisions.
+
+## Refined implementation ownership
+
+For each normal ready block:
+
+1. Keep `$openspec-implementation` as the sole active phase contract.
+2. Report `subagent/refined-task-executor-subagent`, model `openai/gpt-5.6-luna`, and variant `high` as the effective executor.
+3. Delegate one complete block with only its structured handoff, referenced artifact excerpts, focused source context, and resolved pack constraints.
+4. On `PARTIAL`, resume the same child session with only the instruction or evidence delta.
+5. On a decision gap, stop and return to spec hardening followed by task refinement.
+6. On a non-decision execution failure, refine the block and retry Luna/high; do not silently fall back to Sol.
+7. Allow Sol or a mandatory specialist to implement only after an explicit operator override or an existing mandatory route, and report the rationale before edits.
+
+Sol retains cross-block coordination, direct diff and evidence review, task-completion authority, and final accountability. It minimizes output by not reproducing unchanged context, source, full diffs, or child result envelopes.
 
 ## OpenSpec spec hardening
 

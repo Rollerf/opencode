@@ -50,6 +50,9 @@ checks = [
     ("total_scenario_coverage", ">=", thresholds["total_scenario_coverage_min"]),
     ("strict_validation_pass_rate", ">=", thresholds["strict_validation_pass_rate_min"]),
     ("high_critical_security_findings", "<=", thresholds["high_critical_security_findings_max"]),
+    ("executor_ready_task_rate", ">=", thresholds["executor_ready_task_rate_min"]),
+    ("luna_refined_block_dispatch_rate", ">=", thresholds["luna_refined_block_dispatch_rate_min"]),
+    ("api_cost_accounting_coverage", ">=", thresholds["api_cost_accounting_coverage_min"]),
 ]
 
 failed = []

@@ -46,6 +46,23 @@ agents:
     expected_outputs:
       - design_document
       - open_decisions
+  - id: refined-task-executor-subagent
+    runtime_name: subagent/refined-task-executor-subagent
+    path: agents/subagent/refined-task-executor-subagent.md
+    phase_scope: implementation
+    specialization: executor-ready-task-block-implementation
+    model: openai/gpt-5.6-luna
+    variant: high
+    steps: 50
+    delegation_scope: Execute exactly one executor-ready task block within declared targets without making product or technical decisions.
+    expected_inputs:
+      - execution_block_handoff
+      - relevant_artifact_excerpts
+      - resolved_stack_pack
+    expected_outputs:
+      - structured_block_result
+      - changed_files
+      - command_evidence
   - id: pulumi-infrastructure-subagent
     runtime_name: subagent/pulumi-infrastructure-subagent
     path: agents/subagent/pulumi-infrastructure-subagent.md

@@ -16,6 +16,7 @@ Before phase work, resolve exactly one stack pack from an explicit selection, co
 
 Route every request to the right phase skill:
 - Planning artifacts (`proposal`, `design`, `specs`, `tasks`) -> `$openspec-planning`
+- Task-refinement intent -> `$openspec-planning` plus `$openspec-task-refinement` after hard-spec readiness
 - Spec hardening or implementation-readiness review -> `$openspec-spec-hardening`
 - Code implementation and feature iteration from `tasks.md` -> `$openspec-implementation`
 - Readiness checks and traceability validation -> `$openspec-verification`
@@ -33,11 +34,14 @@ Single-entrypoint execution mode:
 - Keep subagent use intentional and small: pass only the goal, relevant files, constraints, and expected output, then make the final decision in the orchestrator context.
 - If routing selects a phase but execution is blocked by missing OpenSpec artifacts, non-local lifecycle actions, or missing decisions, report the blocker instead of handing off silently.
 - In single-entrypoint mode, routing selects the phase contract; it does not require the operator to manually switch agents before planning, implementing, verifying, or archiving local work.
+- Task refinement remains a planning specialization and never becomes a sixth phase or phase-owning agent.
 
 Execution policy:
 - Treat OpenSpec artifacts under `openspec/changes/<name>/` as source of truth.
 - Require all OpenSpec artifacts (`proposal.md`, `design.md`, `tasks.md`, and `specs/**/spec.md`) to be written in English, even when the user request is in another language, to keep artifacts portable and token-efficient across consumer projects.
 - Require every OpenSpec-backed change to define implementation-ready hard specs before implementation starts; if CRITICAL ambiguity remains, apply `$openspec-spec-hardening` instead of coding.
+- After hard-spec readiness, require `$openspec-task-refinement` to rewrite draft tasks into executor-ready blocks and set the Task Refinement Gate to `READY` before implementation.
+- Invalidate a prior `READY` gate whenever proposal, design, specs, or task scope changes in an implementation-affecting way.
 - Treat each OpenSpec change as work that belongs on its own `feature/*` branch created from `develop`.
 - Keep architecture boundaries from `openspec/config.yaml`.
 - For behavior changes, enforce TDD flow (RED -> GREEN -> REFACTOR).
@@ -46,6 +50,11 @@ Execution policy:
 - Resolve and report stack pack evidence before executing a phase; apply the resolved pack before specialization skills.
 - Enforce local-only autonomous execution and require operator handoff for non-local lifecycle actions.
 - Prefer small reversible edits with explicit command evidence.
+- For each normal `READY` block, report effective executor `subagent/refined-task-executor-subagent`, model `openai/gpt-5.6-luna`, and variant `high`, then delegate the complete block to `subagent/refined-task-executor-subagent` using one compact handoff.
+- Keep Sol responsible for orchestration, cross-block integration, direct diff inspection, evidence review, blockers, and checkbox completion. Sol does not silently implement the block with Sol; direct Sol implementation requires an explicit operator override with rationale.
+- If the executor returns `PARTIAL` without a hard blocker, resume the same child session with only the instruction or evidence delta.
+- If the executor reports a decision gap, stop implementation and return to spec hardening followed by task refinement. For a non-decision execution failure, improve the block instructions and retry Luna/high rather than weakening checks or silently switching executor.
+- Keep block communication compact: send only referenced artifacts, focused source context, applicable pack constraints, commands, stop conditions, and expected evidence; inspect returned files and diffs directly.
 - Use `$openspec-workflow` for phase command order and completion criteria.
 - Use `$openspec-spec-hardening` to establish and verify hard-spec readiness before implementation.
 - Use `$backend-design` for Go/AWS backend architecture constraints and test strategy.
