@@ -1,0 +1,53 @@
+id: cross-stack-refine-tasks-for-basic-model
+phase_coverage:
+  - planning
+  - implementation
+  - verification
+stack: cross-stack
+description: Refine decision-complete draft tasks into cohesive blocks that Luna/high can execute without implementation-time decisions.
+fixture:
+  task_refinement_gate:
+    status: READY
+    decision_gaps: None
+    strict_validation: passed
+  blocks:
+    - block_id: B1
+      ordered_task_ids: [1.1, 1.2]
+      cohesive_target_area: runtime-contracts
+      executor:
+        runtime: subagent/refined-task-executor-subagent
+        model: openai/gpt-5.6-luna
+        variant: high
+      requirements_and_scenarios: explicit
+      dependencies_satisfied: true
+      exact_allowed_targets: true
+      forbidden_scope: explicit
+      ordered_steps: true
+      exact_commands: true
+      stop_conditions: explicit
+      command_evidence: required
+  handoff_envelope:
+    fields: [change, block_id, task_ids, goal, requirements, dependencies_satisfied, targets, steps, commands, stop_conditions, pack_constraints, expected_evidence]
+  result_envelope:
+    fields: [status, block_id, completed_task_ids, remaining_task_ids, touched_files, evidence, decision_gaps, verification_failures, scope_deviations]
+  override_policy:
+    default: luna-high
+    non_default_requires_explicit_operator_evidence: true
+  cost_accounting:
+    eligible_standard_profile_telemetry_requires_api_equivalent_cost_usd: true
+expected:
+  - ready_gate_with_no_decision_gaps
+  - two_to_five_task_cohesive_blocks
+  - exact_targets_and_ordered_steps
+  - requirement_scenario_traceability
+  - luna_high_default_block_dispatch
+  - compact_structured_handoff_and_result
+  - explicit_executor_override_evidence
+  - eligible_api_equivalent_cost_present
+  - red_green_refactor_and_block_command_evidence
+reject:
+  - decision_bearing_task_marked_ready
+  - one_task_per_child_session_default_routing
+  - silent_sol_implementation
+  - eligible_telemetry_without_api_equivalent_cost_usd
+  - executor_deviation_without_explicit_override

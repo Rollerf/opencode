@@ -22,6 +22,12 @@ assert_not_contains() {
   [[ "$text" != *"$unexpected"* ]] || fail "Expected output not to contain: $unexpected"
 }
 
+assert_line() {
+  local file="$1"
+  local expected="$2"
+  grep -Fqx -- "$expected" "$file" || fail "Expected file to contain exact line: $expected"
+}
+
 assert_before() {
   local file="$1"
   local first="$2"
@@ -107,6 +113,14 @@ assert_contains "$source_content" 'Change Artifact: design.md'
 assert_contains "$source_content" 'Change Artifact: tasks.md'
 assert_not_contains "$source_content" 'Change Artifact: proposal.md'
 assert_before "$SOURCE_BUNDLE" '## User Goal' '## Generated Context'
+
+REFINEMENT_BUNDLE="$TMP_DIR/refinement-bundle.md"
+output="$("${ROOT_DIR}/opencode-runner.sh" bundle --phase planning \
+  --change refine-implementation-tasks --pack generic \
+  --user-prompt 'Refine tasks into executor-ready steps without implementation decisions' \
+  --out "$REFINEMENT_BUNDLE" 2>&1)"
+assert_line "$REFINEMENT_BUNDLE" '### Skill: openspec-planning'
+assert_line "$REFINEMENT_BUNDLE" '### Skill: openspec-task-refinement'
 
 GLOBAL_CONSUMER="$TMP_DIR/global-consumer"
 GLOBAL_CHANGE="global-fixture-change"

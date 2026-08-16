@@ -11,6 +11,13 @@ Every non-trivial response MUST include:
 3. Executed commands.
 4. Blockers.
 5. Missing decisions.
+6. Effective executor, model, variant, and override rationale when implementation delegates or overrides a refined block.
+
+## OpenSpec Task-Refinement Contract
+
+Hard-spec decision closure precedes task refinement. Task refinement runs as a planning specialization and does not add a top-level phase. Implementation requires a `READY` Task Refinement Gate covering every incomplete task and execution block. Implementation-affecting changes to planning artifacts invalidate readiness.
+
+Normal executor-ready blocks use `subagent/refined-task-executor-subagent` with Luna/high by default. The Sol orchestrator retains final decisions, cross-block coordination, diff and evidence review, and completion authority. Direct Sol implementation requires an explicit operator override; no silent fallback is allowed.
 
 ## TDD Contract
 
@@ -62,7 +69,8 @@ Blocked categories:
 Use this skeleton for implementation and verification responses:
 
 ```text
-Fase actual: <planning|implementation|verification|archive>
+Fase actual: <planning|spec-hardening|implementation|verification|archive>
+Executor efectivo: <runtime, model, variant, override reason|not applicable>
 Archivos tocados:
 - <path>
 Comandos ejecutados:

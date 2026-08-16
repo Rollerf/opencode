@@ -34,6 +34,7 @@ const MODEL_POLICY = new Map([
   ["orchestrator", { model: "openai/gpt-5.6-sol", steps: 40, leaf: false }],
   ["subagent/code-documentation-subagent", { model: "openai/gpt-5.6-luna", steps: 10, leaf: true }],
   ["subagent/design-doc-subagent", { model: "openai/gpt-5.6-luna", steps: 12, leaf: true }],
+  ["subagent/refined-task-executor-subagent", { model: "openai/gpt-5.6-luna", variant: "high", steps: 50, leaf: true }],
   ["subagent/pulumi-infrastructure-subagent", { model: "openai/gpt-5.6-sol", steps: 20, leaf: true }],
   ["subagent/tdd-tests-subagent", { model: "openai/gpt-5.6-sol", steps: 20, leaf: true }],
 ])
@@ -227,6 +228,14 @@ function validateAgentPolicy(root, path, runtimeName, frontmatter, result) {
       `${runtimeName} model must be '${policy.model}', found '${frontmatter.model ?? "<missing>"}'`,
     )
   }
+  if (policy.variant && frontmatter.variant !== policy.variant) {
+    addError(
+      result,
+      "agent-variant-policy-mismatch",
+      shownPath,
+      `${runtimeName} variant must be '${policy.variant}', found '${frontmatter.variant ?? "<missing>"}'`,
+    )
+  }
   if (frontmatter.steps !== policy.steps) {
     addError(
       result,
@@ -404,6 +413,14 @@ function validateAgentCatalog(root, result, agents) {
           "agent-catalog-steps-mismatch",
           location,
           `catalog steps '${entry.steps ?? "<missing>"}' differs from agent steps '${agent.frontmatter.steps ?? "<missing>"}'`,
+        )
+      }
+      if (entry.variant !== agent.frontmatter.variant) {
+        addError(
+          result,
+          "agent-catalog-variant-mismatch",
+          location,
+          `catalog variant '${entry.variant ?? "<missing>"}' differs from agent variant '${agent.frontmatter.variant ?? "<missing>"}'`,
         )
       }
     }

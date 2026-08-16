@@ -7,15 +7,21 @@
 - All OpenSpec artifact prose is in English.
 - Hard-spec readiness is defined: no unresolved CRITICAL ambiguity, deterministic requirements/scenarios, traceable tasks, and explicit verification evidence.
 - API/security/data model impacts are documented.
-- Tasks include concrete verification commands.
+- Draft tasks include concrete verification commands.
+- Spec hardening owns decision closure; post-hard-spec Task refinement owns executor-ready decomposition.
+- Every incomplete task has fixed traceability, dependency, executor, target, TDD or non-behavior, command, evidence, and completion fields.
+- Normal execution blocks contain two to five cohesive tasks; single-task exceptions are justified.
+- Task Refinement Gate is `READY` with no decision gaps before implementation.
 
 ## Implementation
 
-- Tasks executed in order.
+- Task Refinement Gate confirmed `READY` and invalidated when planning artifacts changed.
+- Executor-ready blocks and tasks executed in dependency order.
 - Hard-spec readiness confirmed before code edits.
-- Tests added/updated before or with behavior changes.
+- Tests follow RED -> GREEN -> REFACTOR for behavior changes; non-behavior tasks state why TDD is not applicable.
+- Executors stop on unplanned decisions, undeclared targets, security conflicts, or non-local actions.
 - `tasks.md` updated to reflect progress.
-- Baseline checks run (`go test ./...`, lambda build).
+- Exact block checks and stack-pack validation commands run.
 
 ## Verification
 
