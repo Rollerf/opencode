@@ -32,11 +32,11 @@ const PHASE_SKILLS = new Map([
 const OBSOLETE_PHASE_AGENTS = new Set(["planner", "spec-hardener", "implementer", "verifier", "archiver"])
 const MODEL_POLICY = new Map([
   ["orchestrator", { model: "openai/gpt-5.6-sol", steps: 40, leaf: false }],
-  ["subagent/code-documentation-subagent", { model: "openai/gpt-5.6-luna", steps: 10, leaf: true }],
-  ["subagent/design-doc-subagent", { model: "openai/gpt-5.6-luna", steps: 12, leaf: true }],
+  ["subagent/code-documentation-subagent", { model: "openai/gpt-5.6-luna", variant: "medium", steps: 10, leaf: true }],
+  ["subagent/design-doc-subagent", { model: "openai/gpt-5.6-luna", variant: "high", steps: 12, leaf: true }],
   ["subagent/refined-task-executor-subagent", { model: "openai/gpt-5.6-luna", variant: "high", steps: 50, leaf: true }],
-  ["subagent/pulumi-infrastructure-subagent", { model: "openai/gpt-5.6-sol", steps: 20, leaf: true }],
-  ["subagent/tdd-tests-subagent", { model: "openai/gpt-5.6-sol", steps: 20, leaf: true }],
+  ["subagent/pulumi-infrastructure-subagent", { model: "openai/gpt-5.6-luna", variant: "high", steps: 30, leaf: true }],
+  ["subagent/tdd-tests-subagent", { model: "openai/gpt-5.6-luna", variant: "high", steps: 30, leaf: true }],
 ])
 
 function toPosix(path) {
