@@ -471,7 +471,7 @@ Long-context, Batch, Flex, Fast, regional processing, separately charged tools/c
 | `verifier` | `$openspec-verification` |
 | `archiver` | `$openspec-archive` |
 
-`orchestrator` is the only phase-owning primary agent and uses `openai/gpt-5.6-sol` with 40 steps. The hidden refined-task executor uses `openai/gpt-5.6-luna`, variant `high`, and 50 steps while denying nested delegation. Documentation and design-document helpers use Luna with 10 and 12 steps. Pulumi and TDD helpers use Sol with 20 steps. Feature iteration is part of `$openspec-implementation`, not another primary agent.
+`orchestrator` is the only phase-owning primary agent and uses `openai/gpt-5.6-sol` with 40 steps. The hidden refined-task executor uses `openai/gpt-5.6-luna`, variant `high`, and 50 steps while denying nested delegation. The documentation helper uses Luna variant `medium` with 10 steps, while the design-document helper uses Luna variant `high` with 12 steps. Pulumi and TDD helpers use Luna variant `high` with 30 steps. Feature iteration is part of `$openspec-implementation`, not another primary agent.
 
 ## Caveman in consumer projects
 
