@@ -2,6 +2,7 @@
 description: "SUBAGENT | Create pragmatic design docs with architecture, trade-offs, and rollout plan."
 mode: subagent
 model: openai/gpt-5.6-luna
+variant: high
 steps: 12
 temperature: 0.1
 permission:

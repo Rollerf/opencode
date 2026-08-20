@@ -122,12 +122,15 @@ Runtime agent definitions SHALL use centralized model and step assignments based
 #### Scenario: Bounded prose helper is validated
 - **WHEN** a documentation or design-document subagent is inspected
 - **THEN** its model is `openai/gpt-5.6-luna`
+- **AND** the documentation subagent uses variant `medium`
+- **AND** the design-document subagent uses variant `high`
 - **AND** its configured step limit matches the central role matrix
 
 #### Scenario: Code-changing helper is validated
 - **WHEN** a Pulumi or TDD subagent is inspected
-- **THEN** its model is `openai/gpt-5.6-sol`
-- **AND** its step limit is `20`
+- **THEN** its model is `openai/gpt-5.6-luna`
+- **AND** its variant is `high`
+- **AND** its step limit is `30`
 
 #### Scenario: Feature iteration is not a runtime agent
 - **WHEN** runtime agent definitions and catalogs are inspected
@@ -200,4 +203,3 @@ The platform SHALL distribute `subagent/refined-task-executor-subagent` with `mo
 - **WHEN** a consumer runs `opencode debug agent subagent/refined-task-executor-subagent`
 - **THEN** the effective agent uses provider `openai`, model `gpt-5.6-luna`, and variant `high`
 - **AND** the agent is available for orchestrator delegation without becoming a primary agent
-

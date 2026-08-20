@@ -22,6 +22,7 @@ agents:
     phase_scope: cross-phase
     specialization: bounded-documentation-deliverable
     model: openai/gpt-5.6-luna
+    variant: medium
     steps: 10
     delegation_scope: Produce or update a distinct documentation deliverable from supplied code, contracts, pack, and scope.
     expected_inputs:
@@ -37,6 +38,7 @@ agents:
     phase_scope: planning
     specialization: bounded-design-deliverable
     model: openai/gpt-5.6-luna
+    variant: high
     steps: 12
     delegation_scope: Draft a standalone design document for orchestrator review without owning final decisions.
     expected_inputs:
@@ -68,8 +70,9 @@ agents:
     path: agents/subagent/pulumi-infrastructure-subagent.md
     phase_scope: implementation
     specialization: pulumi-infrastructure
-    model: openai/gpt-5.6-sol
-    steps: 20
+    model: openai/gpt-5.6-luna
+    variant: high
+    steps: 30
     delegation_scope: Implement a bounded local Pulumi change without deployment or cloud mutation.
     expected_inputs:
       - infrastructure_scope
@@ -83,8 +86,9 @@ agents:
     path: agents/subagent/tdd-tests-subagent.md
     phase_scope: implementation
     specialization: test-design-and-red-evidence
-    model: openai/gpt-5.6-sol
-    steps: 20
+    model: openai/gpt-5.6-luna
+    variant: high
+    steps: 30
     delegation_scope: Own bounded test design and test edits; production code only when explicitly delegated.
     expected_inputs:
       - behavior_requirements

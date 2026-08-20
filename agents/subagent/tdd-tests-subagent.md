@@ -1,8 +1,9 @@
 ---
 description: "SUBAGENT | Plan and implement tests using a strict RED-GREEN-REFACTOR workflow."
 mode: subagent
-model: openai/gpt-5.6-sol
-steps: 20
+model: openai/gpt-5.6-luna
+variant: high
+steps: 30
 temperature: 0.1
 permission:
   task: deny
