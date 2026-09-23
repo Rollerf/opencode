@@ -57,7 +57,7 @@ Use phase skills and subagents as contracts or targeted helpers:
 For each normal ready block:
 
 1. Keep `$openspec-implementation` as the sole active phase contract.
-2. Report `subagent/refined-task-executor-subagent`, model `openai/gpt-5.6-luna`, and variant `high` as the effective executor.
+2. Report `subagent/refined-task-executor-subagent`, model `openai/gpt-6-luna`, and variant `high` as the effective executor.
 3. Delegate one complete block with only its structured handoff, referenced artifact excerpts, focused source context, and resolved pack constraints.
 4. On `PARTIAL`, resume the same child session with only the instruction or evidence delta.
 5. On a decision gap, stop and return to spec hardening followed by task refinement.

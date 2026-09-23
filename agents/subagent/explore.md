@@ -1,7 +1,7 @@
 ---
 description: "Bounded read-only repository exploration."
 mode: subagent
-model: openai/gpt-5.6-luna
+model: openai/gpt-6-luna
 variant: medium
 steps: 8
 permission:

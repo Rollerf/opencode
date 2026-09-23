@@ -430,7 +430,7 @@ $HOME/.config/opencode/opencode-runner.sh bundle \
 
 The runner detects English and Spanish refinement intent and includes both the planning contract and task-refinement specialization. Existing phase syntax remains unchanged.
 
-For normal `READY` blocks, Sol sends one compact structured handoff to `subagent/refined-task-executor-subagent`, which uses `openai/gpt-5.6-luna`, variant `high`, and a 50-step checkpoint. The handoff contains only block identity, referenced requirements/scenarios, satisfied dependencies, declared targets, ordered steps, commands, stop conditions, applicable pack constraints, and expected evidence. The result contains status, task progress, touched files, command evidence, decision gaps, verification failures, and scope deviations.
+For normal `READY` blocks, Sol sends one compact structured handoff to `subagent/refined-task-executor-subagent`, which uses `openai/gpt-6-luna`, variant `high`, and a 50-step checkpoint. The handoff contains only block identity, referenced requirements/scenarios, satisfied dependencies, declared targets, ordered steps, commands, stop conditions, applicable pack constraints, and expected evidence. The result contains status, task progress, touched files, command evidence, decision gaps, verification failures, and scope deviations.
 
 On a `PARTIAL` checkpoint, Sol resumes the same child session with only changed instructions or evidence. Luna remains owner of the complete block. A decision gap returns to spec hardening and task refinement. A mechanical failure returns to block refinement and Luna retry. Sol does not silently take implementation ownership. An explicit operator override or existing mandatory specialist route may replace Luna/high, but the effective executor and rationale must be reported before edits.
 
@@ -442,9 +442,9 @@ Bootstrap requires creating the executor definition and restarting OpenCode befo
 
 | Model | Input | Cached input | Output |
 | --- | ---: | ---: | ---: |
-| `openai/gpt-5.6-sol` | `$5.00` | `$0.50` | `$30.00` |
-| `openai/gpt-5.6-terra` | `$2.00` | `$0.20` | `$12.00` |
-| `openai/gpt-5.6-luna` | `$0.20` | `$0.02` | `$1.20` |
+| `openai/gpt-6-sol` | `$5.00` | `$0.50` | `$30.00` |
+| `openai/gpt-6-terra` | `$2.00` | `$0.20` | `$12.00` |
+| `openai/gpt-6-luna` | `$0.20` | `$0.02` | `$1.20` |
 
 When input includes cached tokens:
 
@@ -471,7 +471,7 @@ Long-context, Batch, Flex, Fast, regional processing, separately charged tools/c
 | `verifier` | `$openspec-verification` |
 | `archiver` | `$openspec-archive` |
 
-`orchestrator` is the only phase-owning primary agent and uses `openai/gpt-5.6-sol` with 40 steps. The hidden refined-task executor uses `openai/gpt-5.6-luna`, variant `high`, and 50 steps while denying nested delegation. The documentation helper uses Luna variant `medium` with 10 steps, while the design-document helper uses Luna variant `high` with 12 steps. Pulumi and TDD helpers use Luna variant `high` with 30 steps. Feature iteration is part of `$openspec-implementation`, not another primary agent.
+`orchestrator` is the only phase-owning primary agent and uses `openai/gpt-6-sol` with 40 steps. The hidden refined-task executor uses `openai/gpt-6-luna`, variant `high`, and 50 steps while denying nested delegation. The documentation helper uses Luna variant `medium` with 10 steps, while the design-document helper uses Luna variant `high` with 12 steps. Pulumi and TDD helpers use Luna variant `high` with 30 steps. Feature iteration is part of `$openspec-implementation`, not another primary agent.
 
 ## Caveman in consumer projects
 

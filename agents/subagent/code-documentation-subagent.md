@@ -1,7 +1,7 @@
 ---
 description: "SUBAGENT | Produce and update technical documentation from real code and contracts."
 mode: subagent
-model: openai/gpt-5.6-luna
+model: openai/gpt-6-luna
 variant: medium
 steps: 10
 temperature: 0.1
