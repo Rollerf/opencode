@@ -5,7 +5,7 @@ agents:
     path: agents/orchestrator.md
     phase_scope: cross-phase
     specialization: workflow-orchestration
-    model: openai/gpt-5.6-sol
+    model: openai/gpt-6-sol
     steps: 40
     delegation_scope: Final decisions, phase execution, local edits, and bounded specialist delegation.
     expected_inputs:
@@ -21,7 +21,7 @@ agents:
     path: agents/subagent/code-documentation-subagent.md
     phase_scope: cross-phase
     specialization: bounded-documentation-deliverable
-    model: openai/gpt-5.6-luna
+    model: openai/gpt-6-luna
     variant: medium
     steps: 10
     delegation_scope: Produce or update a distinct documentation deliverable from supplied code, contracts, pack, and scope.
@@ -37,7 +37,7 @@ agents:
     path: agents/subagent/design-doc-subagent.md
     phase_scope: planning
     specialization: bounded-design-deliverable
-    model: openai/gpt-5.6-luna
+    model: openai/gpt-6-luna
     variant: high
     steps: 12
     delegation_scope: Draft a standalone design document for orchestrator review without owning final decisions.
@@ -53,7 +53,7 @@ agents:
     path: agents/subagent/refined-task-executor-subagent.md
     phase_scope: implementation
     specialization: executor-ready-task-block-implementation
-    model: openai/gpt-5.6-luna
+    model: openai/gpt-6-luna
     variant: high
     steps: 50
     delegation_scope: Execute exactly one executor-ready task block within declared targets without making product or technical decisions.
@@ -70,7 +70,7 @@ agents:
     path: agents/subagent/pulumi-infrastructure-subagent.md
     phase_scope: implementation
     specialization: pulumi-infrastructure
-    model: openai/gpt-5.6-luna
+    model: openai/gpt-6-luna
     variant: high
     steps: 30
     delegation_scope: Implement a bounded local Pulumi change without deployment or cloud mutation.
@@ -86,7 +86,7 @@ agents:
     path: agents/subagent/tdd-tests-subagent.md
     phase_scope: implementation
     specialization: test-design-and-red-evidence
-    model: openai/gpt-5.6-luna
+    model: openai/gpt-6-luna
     variant: high
     steps: 30
     delegation_scope: Own bounded test design and test edits; production code only when explicitly delegated.

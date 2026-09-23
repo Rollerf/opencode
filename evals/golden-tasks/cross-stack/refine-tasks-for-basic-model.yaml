@@ -16,7 +16,7 @@ fixture:
       cohesive_target_area: runtime-contracts
       executor:
         runtime: subagent/refined-task-executor-subagent
-        model: openai/gpt-5.6-luna
+        model: openai/gpt-6-luna
         variant: high
       requirements_and_scenarios: explicit
       dependencies_satisfied: true

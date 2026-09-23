@@ -44,12 +44,12 @@ done
 
 agent_output="$(cd "$CONSUMER" && opencode debug agent orchestrator)"
 require_contains "$agent_output" '"providerID": "openai"'
-require_contains "$agent_output" '"modelID": "gpt-5.6-sol"'
+require_contains "$agent_output" '"modelID": "gpt-6-sol"'
 require_contains "$agent_output" 'workflow orchestrator'
 
 executor_output="$(cd "$CONSUMER" && opencode debug agent subagent/refined-task-executor-subagent)"
 require_contains "$executor_output" '"providerID": "openai"'
-require_contains "$executor_output" '"modelID": "gpt-5.6-luna"'
+require_contains "$executor_output" '"modelID": "gpt-6-luna"'
 require_contains "$executor_output" '"variant": "high"'
 
 config_output="$(cd "$CONSUMER" && opencode debug config)"

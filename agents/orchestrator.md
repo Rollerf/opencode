@@ -1,7 +1,7 @@
 ---
 description: "ORCH | Route requests across OpenSpec planning, implementation, verification, and archive."
 mode: primary
-model: openai/gpt-5.6-sol
+model: openai/gpt-6-sol
 variant: medium
 steps: 40
 temperature: 0.1
@@ -68,7 +68,7 @@ Execution policy:
 - Resolve and report stack pack evidence before executing a phase; apply the resolved pack before specialization skills.
 - Enforce local-only autonomous execution and require operator handoff for non-local lifecycle actions.
 - Prefer small reversible edits with explicit command evidence.
-- For each normal `READY` block, report effective executor `subagent/refined-task-executor-subagent`, model `openai/gpt-5.6-luna`, and variant `high`, then delegate the complete block to `subagent/refined-task-executor-subagent` using one compact handoff.
+- For each normal `READY` block, report effective executor `subagent/refined-task-executor-subagent`, model `openai/gpt-6-luna`, and variant `high`, then delegate the complete block to `subagent/refined-task-executor-subagent` using one compact handoff.
 - Keep Sol responsible for orchestration, cross-block integration, direct diff inspection, evidence review, blockers, and checkbox completion. Sol does not silently implement the block with Sol; direct Sol implementation requires an explicit operator override with rationale.
 - If the executor returns `PARTIAL` without a hard blocker, resume the same child session with only the instruction or evidence delta.
 - If the executor reports a decision gap, stop implementation and return to spec hardening followed by task refinement. For a non-decision execution failure, improve the block instructions and retry Luna/high rather than weakening checks or silently switching executor.
