@@ -15,11 +15,11 @@ cat >"$TMP_DIR/usage.json" <<'JSON'
 {
   "profile": "standard-short-context",
   "executions": [
-    {"id":"sol-fixture","model":"openai/gpt-5.6-sol","input_tokens":1000000,"cached_input_tokens":200000,"output_tokens":100000},
-    {"id":"terra-fixture","model":"openai/gpt-5.6-terra","input_tokens":1000000,"cached_input_tokens":200000,"output_tokens":100000},
-    {"id":"luna-fixture","model":"openai/gpt-5.6-luna","input_tokens":1000000,"cached_input_tokens":200000,"output_tokens":100000},
-    {"id":"unsupported-profile","model":"openai/gpt-5.6-luna","profile":"long-context","input_tokens":10,"cached_input_tokens":0,"output_tokens":10},
-    {"id":"missing-telemetry","model":"openai/gpt-5.6-luna","input_tokens":10}
+    {"id":"sol-fixture","model":"openai/gpt-6-sol","input_tokens":1000000,"cached_input_tokens":200000,"output_tokens":100000},
+    {"id":"terra-fixture","model":"openai/gpt-6-terra","input_tokens":1000000,"cached_input_tokens":200000,"output_tokens":100000},
+    {"id":"luna-fixture","model":"openai/gpt-6-luna","input_tokens":1000000,"cached_input_tokens":200000,"output_tokens":100000},
+    {"id":"unsupported-profile","model":"openai/gpt-6-luna","profile":"long-context","input_tokens":10,"cached_input_tokens":0,"output_tokens":10},
+    {"id":"missing-telemetry","model":"openai/gpt-6-luna","input_tokens":10}
   ]
 }
 JSON
@@ -45,7 +45,7 @@ if (Math.abs(result.total.api_equivalent_cost_usd - 10.224) > 1e-12) {
 NODE
 
 cat >"$TMP_DIR/invalid.json" <<'JSON'
-{"profile":"standard-short-context","executions":[{"id":"negative","model":"openai/gpt-5.6-luna","input_tokens":-1,"cached_input_tokens":0,"output_tokens":0}]}
+{"profile":"standard-short-context","executions":[{"id":"negative","model":"openai/gpt-6-luna","input_tokens":-1,"cached_input_tokens":0,"output_tokens":0}]}
 JSON
 if node "$CALCULATOR" "$TMP_DIR/invalid.json" >/dev/null 2>&1; then
   echo "Error: Negative token counts must fail" >&2

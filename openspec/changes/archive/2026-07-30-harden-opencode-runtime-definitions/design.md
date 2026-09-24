@@ -4,7 +4,7 @@ The repository is both a source module and a distributable `.opencode` submodule
 
 The advertised single-entrypoint model has a second mismatch: phase contracts are defined as separate primary agents, but a primary orchestrator cannot load another primary agent's prompt by naming its Markdown file. Routing rules, catalog metadata, and runner behavior have consequently drifted. Shared subagents also embed Go/AWS assumptions despite cross-stack routing.
 
-OpenCode 1.17.19 provides native debug commands (`opencode debug skill`, `opencode debug agent`, and `opencode debug config`) that can validate a disposable consumer fixture. Available model identifiers include `openai/gpt-5.6-sol` and `openai/gpt-5.6-luna`.
+OpenCode 1.17.19 provides native debug commands (`opencode debug skill`, `opencode debug agent`, and `opencode debug config`) that can validate a disposable consumer fixture. Available model identifiers include `openai/gpt-6-sol` and `openai/gpt-5.6-luna`.
 
 ## Goals / Non-Goals
 
@@ -86,11 +86,11 @@ OpenCode 1.17.19 provides native debug commands (`opencode debug skill`, `openco
 
   | Runtime role | Model | Steps |
   | --- | --- | ---: |
-  | `orchestrator` | `openai/gpt-5.6-sol` | 40 |
+  | `orchestrator` | `openai/gpt-6-sol` | 40 |
   | `subagent/code-documentation-subagent` | `openai/gpt-5.6-luna` | 10 |
   | `subagent/design-doc-subagent` | `openai/gpt-5.6-luna` | 12 |
-  | `subagent/pulumi-infrastructure-subagent` | `openai/gpt-5.6-sol` | 20 |
-  | `subagent/tdd-tests-subagent` | `openai/gpt-5.6-sol` | 20 |
+  | `subagent/pulumi-infrastructure-subagent` | `openai/gpt-6-sol` | 20 |
+  | `subagent/tdd-tests-subagent` | `openai/gpt-6-sol` | 20 |
 
   Leaf subagents receive `permission.task: deny` to prevent nested delegation. The broader migration from deprecated `tools` to least-privilege permissions remains deferred.
 - **Rationale:** Luna handles bounded prose-oriented deliverables at lower cost, while Sol owns final decisions and code-changing or high-risk work. Step limits prevent unbounded loops while leaving the orchestrator enough room for multi-phase local work.

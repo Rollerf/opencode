@@ -1,7 +1,7 @@
 ---
 description: "SUBAGENT | Execute one executor-ready implementation block with bounded Luna/high ownership."
 mode: subagent
-model: openai/gpt-5.6-luna
+model: openai/gpt-6-luna
 variant: high
 steps: 50
 hidden: true

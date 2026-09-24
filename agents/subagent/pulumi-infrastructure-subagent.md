@@ -1,7 +1,7 @@
 ---
 description: "SUBAGENT | Design and implement Pulumi infrastructure changes safely."
 mode: subagent
-model: openai/gpt-5.6-luna
+model: openai/gpt-6-luna
 variant: high
 steps: 30
 temperature: 0.1
