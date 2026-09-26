@@ -8,22 +8,22 @@ detection:
       path: lambda-handlers/go.mod
       value: github.com/aws/aws-sdk-go
     - type: path_exists
-      path: infra/Pulumi.yaml
+      path: infrastructure/Pulumi.yaml
     - type: file_contains
-      path: infra/package.json
+      path: infrastructure/package.json
       value: '"@pulumi/aws"'
 context:
   languages: [go, typescript]
   platforms: [aws]
   deployment_owner: external-operator
   go_module: lambda-handlers
-  infrastructure_module: infra
+  infrastructure_module: infrastructure
 local_only: true
 constraints:
   - Run Go commands against the nested lambda-handlers module.
   - Keep Handler -> UseCase -> Storage boundaries.
   - Preserve RFC 7807 Problem Details semantics.
-  - Keep Pulumi resources and stack configuration under infra.
+  - Keep Pulumi resources and stack configuration under infrastructure.
   - Treat CORS origins as exact scheme, host, and port values for authenticated APIs.
   - Avoid hard-coded secrets and account-specific values.
 verification_commands:
@@ -37,5 +37,5 @@ tdd_commands:
 safety:
   prohibited_actions:
     - deploy
-    - apply-infra
+    - apply-infrastructure
     - production-release
